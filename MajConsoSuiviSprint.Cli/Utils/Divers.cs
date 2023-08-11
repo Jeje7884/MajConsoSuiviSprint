@@ -1,0 +1,41 @@
+﻿namespace MajConsoSuiviSprint.Cli.Utils
+{
+    internal static class Divers
+    {
+        public static bool IsFileOpened(string fullNameFile)
+        {
+            try
+            {
+
+                File.OpenRead(fullNameFile).Close();
+                return false;
+            }
+            catch
+            {
+                return true;
+            }
+        }
+        public static void DisplayErrorInConsole(string message)
+        {
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"!!!!!! {message} !!!!!!!");
+            Console.ResetColor();
+        }
+
+        public static string GetFileNameFromFullPathFilename(string fullPath)
+        {
+            return Path.GetFileName(fullPath);
+        }
+
+        public static string GetPathFromFullPathFilename(string fullPath)
+        {
+            return Path.GetDirectoryName(fullPath)??"";
+        }
+
+        public static bool IsFileExist(string fullPath)
+        {
+            return File.Exists(fullPath);
+        }
+    }
+}
