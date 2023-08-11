@@ -1,4 +1,5 @@
 ﻿using MajConsoSuiviSprint.Cli.Model;
+using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
 
 namespace MajConsoSuiviSprint.Cli.Business
@@ -9,7 +10,8 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         public string FileBilanErreurCSV { get; set; }
         public string PathSharepointSuiviSprint { get; set; }
-        public WebTTTInfoModel WebTTTFile { get; set; } = default!;
+        public string PathSharepointSuiviSprint2 { get; set; }
+        public WebTTTInfoModel WebTTTModel { get; set; } = default!;
 
         public Configuration()
         {
@@ -22,24 +24,54 @@ namespace MajConsoSuiviSprint.Cli.Business
             //FileBilanErreurCSV = config.GetSection(nameof(Applications)).Get<List<Application>>().AsReadOnly();
             FileBilanErreurCSV = config.GetValue<string>("fileNameBilanErreurSaisieDansWebTTT") ?? "";
             PathSharepointSuiviSprint = config.GetValue<string>(nameof(PathSharepointSuiviSprint)) ?? "";
-            
-            var sectionWebTTT = config.GetSection(WebTTTSection);
+            PathSharepointSuiviSprint2 = config.GetValue<string>(nameof(PathSharepointSuiviSprint2)) ?? "";
 
-            WebTTTFile.FolderName = sectionWebTTT.GetValue<string>("FolderName") ?? "";
-            WebTTTFile.FileName = sectionWebTTT.GetValue<string>("FileName") ?? "";
-            WebTTTFile.SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "";
-            WebTTTFile.NbreSprintAPrendreEnCompte = sectionWebTTT.GetValue<int>("NbreSprintAPrendreEnCompte");
-            WebTTTFile.Headers = sectionWebTTT
+            var sectionWebTTT = config.GetSection(WebTTTSection);
+            var webTTTInfo = new WebTTTInfoModel()
+            {
+                FolderName = sectionWebTTT.GetValue<string>("FolderName") ?? "",
+                FileName = sectionWebTTT.GetValue<string>("FileName") ?? "",
+                SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "",
+                NbreSprintAPrendreEnCompte = sectionWebTTT.GetValue<int>("NbreSprintAPrendreEnCompte"),
+                Headers = sectionWebTTT
                                 .GetSection("Headers")
                                 .Get<List<HeadersWebTTT>>()
                                 ?.AsReadOnly()
-                                ?? new List<HeadersWebTTT>().AsReadOnly();
+                                ?? new List<HeadersWebTTT>().AsReadOnly()
+            };
 
+
+            InitWebTTT(ref webTTTInfo, PathSharepointSuiviSprint, PathSharepointSuiviSprint);
+            WebTTTModel = webTTTInfo;
 
         }
         private static string InitFileNameBilanErreurSaisieDansWebTTT()
         {
             return "";
+        }
+
+        private static void InitWebTTT(ref WebTTTInfoModel WebTTTFile, string pathSharepointSuiviSprint, string pathSharepointSuiviSprint2)
+        {
+            if (string.IsNullOrEmpty(WebTTTFile.FileName))
+            {
+                WebTTTFile.FileName = InfoSprint.GetFileNameSuiviSprintEC();
+            }
+            else
+            {
+                WebTTTFile.FileName = WebTTTFile.FileName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
+            }
+
+            WebTTTFile.SheetName = WebTTTFile.FileName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
+
+            if (Directory.Exists(pathSharepointSuiviSprint))
+            {
+                WebTTTFile.FullFileName = pathSharepointSuiviSprint + WebTTTFile.FolderName + WebTTTFile.FullFileName;
+            }
+            else if (Directory.Exists(pathSharepointSuiviSprint2))
+            {
+                WebTTTFile.FullFileName = pathSharepointSuiviSprint2 + WebTTTFile.FolderName + WebTTTFile.FullFileName;
+            }
+
         }
     }
 }

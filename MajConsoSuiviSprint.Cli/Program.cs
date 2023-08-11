@@ -1,5 +1,5 @@
 ﻿using MajConsoSuiviSprint.Cli.Business;
-using MajConsoSuiviSprint.Cli.Helper;
+using MajConsoSuiviSprint.Cli.Utils;
 
 namespace MajConsoSuiviSprint.Cli
 {
@@ -17,7 +17,7 @@ namespace MajConsoSuiviSprint.Cli
                 var result = InfoSprint.GetFileNameSuiviSprintEC();
                 //var test = InfoSprint.GetFileNameSuiviSprintEC();
                 Console.WriteLine(Environment.UserName);
-                Configuration configuration = new();
+                Configuration configurationProcess = new();
                 var date = DateTime.Now.Year;
 
             }
@@ -31,9 +31,11 @@ namespace MajConsoSuiviSprint.Cli
             finally
             {
                 Console.WriteLine("Fin du script. Merci d'avoir joué");
+                Console.WriteLine("Au revoir");
                 Console.WriteLine("Taper sur 'Entrée' pour terminer...");
                 Console.ReadLine();
             }
         }
     }
 }
+
