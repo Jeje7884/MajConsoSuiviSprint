@@ -15,11 +15,18 @@
                 return true;
             }
         }
-        public static void DisplayErrorInConsole(string message)
+        public static void DisplayErrorMessageInConsole(string message)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"!!!!!! {message} !!!!!!!");
+            Console.ResetColor();
+        }
+
+        public static void DisplayWarningMessageInConsole(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($" --> {message} ");
             Console.ResetColor();
         }
 
@@ -30,12 +37,25 @@
 
         public static string GetPathFromFullPathFilename(string fullPath)
         {
-            return Path.GetDirectoryName(fullPath)??"";
+            return Path.GetDirectoryName(fullPath) ?? "";
         }
 
         public static bool IsFileExist(string fullPath)
         {
             return File.Exists(fullPath);
         }
+
+        public static bool IsFileWithPath(string path)
+        {
+            string fileName = Path.GetFileName(path);
+            return path != fileName;
+
+        }
+
+        public static bool IsFileWithExtention(string file)
+        {
+            return Path.HasExtension(file);
+        }
+
     }
 }

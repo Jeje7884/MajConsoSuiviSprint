@@ -6,12 +6,12 @@ namespace MajConsoSuiviSprint.Cli.Utils
 {
     internal static class InfoSprint
     {
+        
         public static string GetFileNameSuiviSprintEC()
-
         {
             Console.WriteLine("GetFileNameSuiviSprintEC");
-            int numSemaineEC = GetNumSemaineEC();
-            string result = SprintConstant.templateSuiviDeSprint;
+            int numSemaineEC = GetNumSemaine(DateTime.Now);
+            string result = AppliConstant.TemplateSuiviDeSprint;
             string numSemaineFinsSprint;
             string numSemaineDebutSprint;
             int numPI = GetNumPIEC(numSemaineEC);
@@ -36,23 +36,30 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            var semainesSprint = ExtractSemainesSprintTableau(result);
-            Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
-            Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
-            (int debutSprint, int finSprint) = ExtractSemainesSprint(result);
-            Console.WriteLine($"Semaine debut de sprint {debutSprint}");
-            Console.WriteLine($"Semaine fin de sprint {finSprint}");
+         
             return result;
         }
+        
+        public static bool IsPeriodeToManaged(DateTime dateSaisie, int numSemaineDebut, int numSemaineFin)
+        {
+            int numSemaineSaisie = GetNumSemaine(dateSaisie);
+            
+            return (numSemaineSaisie  >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
+        }
+
+        public static bool IsActivityToManaged(string activite)
+        {
+            List<string> list = new() { AppliConstant.LblActiviteDev,AppliConstant.LblActiviteQual,AppliConstant.LblActiviteDev};
+            return list.Contains(activite);
+        }
+
         private static int GetNumPIEC(int numSemaine)
         {
             return (int)Math.Ceiling(numSemaine / 4.0);
         }
 
-        private static int GetNumSemaineEC()
+        public static int GetNumSemaine(DateTime date)
         {
-
-            DateTime date = DateTime.Now;
 
             CultureInfo culture = new("fr-FR", false);
             Calendar calendar = culture.Calendar;
@@ -89,7 +96,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return resultSemainesSprint;
         }
 
-        private static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
+        public static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
         {
             var debutSemaineSprint = default(int);
             var finSemaineSprint = default(int);
