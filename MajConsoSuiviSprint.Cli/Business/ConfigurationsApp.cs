@@ -1,17 +1,18 @@
 ﻿using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
+using MajConsoSuiviSprint.Cli.Business.Interfaces;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
-    internal class Configuration
+    internal class ConfigurationsApp : IConfigurationsApp
     {
         private const string WebTTTSection = "WebTTT";
         private const string SuiviSprintSection = "SuiviSprint";
         public WebTTTInfoModel WebTTTModel { get; set; } = default!;
         public SuiviSprintModel SuiviSprintModel { get; set; } = default!;
 
-        public Configuration(string pathSettings)
+        public ConfigurationsApp(string pathSettings)
         {
             string pathAppSettings = pathSettings;
             Console.WriteLine("Configuration");

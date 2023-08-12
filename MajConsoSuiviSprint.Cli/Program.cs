@@ -23,7 +23,7 @@ namespace MajConsoSuiviSprint.Cli
                 {
                     throw new Exception("Erreur dans le nombre de paramètre passé");
                 }
-                Configuration configurationProcess = new(pathConfigJson);
+                ConfigurationsApp configurationProcess = new(pathConfigJson);
 
                 var result = InfoSprint.GetFileNameSuiviSprintEC();
                 Console.WriteLine("La valeur du fichier de siuvi est en cours est " + result);
