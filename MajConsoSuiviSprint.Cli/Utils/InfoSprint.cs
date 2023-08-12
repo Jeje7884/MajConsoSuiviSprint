@@ -36,9 +36,12 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            var semaines=ExtractSemainesSprint(result);
-            Console.WriteLine($"Semaine debut de sprint {semaines[0]}");
-            Console.WriteLine($"Semaine fin de sprint {semaines[1]}");
+            var semainesSprint=ExtractSemainesSprint(result);
+            Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
+            Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
+            (int debutSprint, int finSprint) = ExtractSemainesSprintTuple(result);
+            Console.WriteLine($"Semaine debut de sprint {debutSprint}");
+            Console.WriteLine($"Semaine fin de sprint {finSprint}");
             return result;
         }
         private static int GetNumPIEC(int numSemaine)
@@ -84,6 +87,23 @@ namespace MajConsoSuiviSprint.Cli.Utils
             resultSemainesSprint[0] = debutSemaineSprint;
             resultSemainesSprint[1] = finSemaineSprint;
             return resultSemainesSprint;
+        }
+
+        private static (int debutSprint, int finSprint) ExtractSemainesSprintTuple(string fichierDeSuivi)
+        {
+            var debutSemaineSprint = default(int);
+            var finSemaineSprint = default(int);
+           
+
+            Match match = Regex.Match(fichierDeSuivi, @"CD13_PI\d{2}_S(\d+)-(\d+)");
+
+            if (match.Success && match.Groups.Count > 2)
+            {
+                debutSemaineSprint = int.Parse(match.Groups[1].Value);
+                finSemaineSprint = int.Parse(match.Groups[2].Value);
+            }
+           
+            return (debutSemaineSprint,finSemaineSprint);
         }
     }
 }
