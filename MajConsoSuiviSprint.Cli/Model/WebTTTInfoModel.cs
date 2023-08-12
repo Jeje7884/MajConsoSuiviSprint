@@ -9,7 +9,8 @@
         public string FileName { get; set; } = default!;
         public string SheetName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;
-
+        public  int NumDebutSemaineAImporter { get; set; }
+        public int NumFinSemaineAImporter { get; set; }
         public IReadOnlyCollection<HeadersWebTTT> Headers { get; set; } = default!;
 
         public List<MaskSaisie> ReglesSaisiesAutorisePourUneActivite { get; set; } = default!;
