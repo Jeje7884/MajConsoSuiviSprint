@@ -15,5 +15,12 @@
                 return true;
             }
         }
-    } 
+        public static void DisplayErrorInConsole(string message)
+        {
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"!!!!!! {message} !!!!!!!");
+            Console.ResetColor();
+        }
+    }
 }

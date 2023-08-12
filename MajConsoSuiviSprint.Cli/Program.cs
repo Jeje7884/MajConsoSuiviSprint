@@ -23,10 +23,7 @@ namespace MajConsoSuiviSprint.Cli
             }
             catch (Exception ex)
             {
-                Console.BackgroundColor = ConsoleColor.Yellow;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.Message);
-                Console.ResetColor();
+                Divers.DisplayErrorInConsole( ex.Message);
             }
             finally
             {
