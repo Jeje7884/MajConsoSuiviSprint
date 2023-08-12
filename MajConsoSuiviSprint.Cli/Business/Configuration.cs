@@ -11,13 +11,22 @@ namespace MajConsoSuiviSprint.Cli.Business
         public WebTTTInfoModel WebTTTModel { get; set; } = default!;
         public SuiviSprintModel SuiviSprintModel { get; set; } = default!;
 
-        public Configuration()
+        public Configuration(string pathSettings)
         {
+            string pathAppSettings = pathSettings;
             Console.WriteLine("Configuration");
 
+            if (string.IsNullOrEmpty(pathAppSettings))
+            {
+                pathAppSettings = Directory.GetCurrentDirectory();
+            }
+            else
+            {
+                pathAppSettings = pathSettings;
+            }
             IConfiguration config = new ConfigurationBuilder()
-                                    .SetBasePath(Directory.GetCurrentDirectory())
-                                    .AddJsonFile("appSettings.json",optional: false, reloadOnChange: true)
+                                    .SetBasePath(pathAppSettings)
+                                    .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
                                     .Build();
 
             WebTTTInfoModel webTTTInfo = LoadInfosWebTTTFromSettings(config);
@@ -35,7 +44,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             var suiviSprintInfo = new SuiviSprintModel()
             {
                 FileName = sectionSuiviSprint.GetValue<string>("FolderName") ?? "",
-                Path= sectionSuiviSprint.GetValue<string>("Path") ?? ""
+                Path = sectionSuiviSprint.GetValue<string>("Path") ?? ""
             };
 
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint.GetSection("TabSuivi").GetValue<string>("SheetName") ?? "";
@@ -61,11 +70,11 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private static WebTTTInfoModel LoadInfosWebTTTFromSettings(IConfiguration config)
         {
-            
+
             var sectionWebTTT = config.GetSection(WebTTTSection);
             var webTTTInfo = new WebTTTInfoModel()
             {
-                FileBilanErreurCSV= sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? "",
+                FileBilanErreurCSV = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? "",
                 Path = sectionWebTTT.GetValue<string>("Path") ?? "",
                 FileName = sectionWebTTT.GetValue<string>("FileName") ?? "",
                 SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "",
@@ -96,7 +105,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             WebTTTFile.Path = WebTTTFile.Path
                                         .Replace("{anneeEC}", anneeEC)
                                         .Replace("{userName}", username);
-           
+
 
 
             WebTTTFile.SheetName = WebTTTFile.SheetName.Replace("{anneeEC}", DateTime.Now.Year.ToString());

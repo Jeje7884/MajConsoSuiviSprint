@@ -3,7 +3,7 @@
     public class SuiviSprintModel
     {
         public string Path { get; set; } = default!;
-        
+
         public string FileName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;
 
