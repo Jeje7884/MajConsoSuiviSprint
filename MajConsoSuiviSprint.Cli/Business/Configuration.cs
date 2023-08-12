@@ -18,7 +18,7 @@ namespace MajConsoSuiviSprint.Cli.Business
         public Configuration()
         {
             Console.WriteLine("Configuration");
-            PathSharepointSuiviSprint = PathSharepointSuiviSprint2= FileBilanErreurCSV =string.Empty;
+            PathSharepointSuiviSprint = PathSharepointSuiviSprint2 = FileBilanErreurCSV = string.Empty;
 
             IConfiguration config = new ConfigurationBuilder()
                                     .SetBasePath(Directory.GetCurrentDirectory())
@@ -27,14 +27,14 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             //FileBilanErreurCSV = config.GetSection(nameof(Applications)).Get<List<Application>>().AsReadOnly();
             WebTTTInfoModel webTTTInfo = LoadInfosWebTTTFromSettings(config);
-            LoadInfosSuiviSprintFromSettings(config);
+            SuiviSprintModel = LoadInfosSuiviSprintFromSettings(config);
 
             InitWebTTT(ref webTTTInfo, PathSharepointSuiviSprint, PathSharepointSuiviSprint);
             WebTTTModel = webTTTInfo;
 
         }
 
-        private static void LoadInfosSuiviSprintFromSettings(IConfiguration config)
+        private static SuiviSprintModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
         {
             var sectionSuiviSprint = config.GetSection(SuiviSprintSection);
 
@@ -45,7 +45,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             };
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint.GetSection("TabSuivi").GetValue<string>("SheetName") ?? "";
-            suiviSprintInfo.TabSuivi.TableName = sectionSuiviSprint.GetSection("TabSuivi").GetValue<string>("SheetName") ?? "";
+            suiviSprintInfo.TabSuivi.TableName = sectionSuiviSprint.GetSection("TabSuivi").GetValue<string>("TableName") ?? "";
             int? numColonne = int.Parse(sectionSuiviSprint.GetSection("TabSuivi")
                                     .GetSection("NumColumnTable")
                                     .GetValue<string>("NoColumnApplication") ?? "");
@@ -62,7 +62,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                             .GetSection("NumColumnTable")
                             .GetValue<string>("NoColumnHoursDevConsumed") ?? "");
             suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ?? 0;
-
+            return suiviSprintInfo;
         }
 
         private WebTTTInfoModel LoadInfosWebTTTFromSettings(IConfiguration config)
@@ -104,7 +104,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 WebTTTFile.FileName = WebTTTFile.FileName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
             }
 
-            WebTTTFile.SheetName = WebTTTFile.FileName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
+            WebTTTFile.SheetName = WebTTTFile.SheetName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
 
             if (Directory.Exists(pathSharepointSuiviSprint))
             {
