@@ -18,6 +18,10 @@ namespace MajConsoSuiviSprint.Cli
 
                 Console.WriteLine(result);
                 Configuration configurationProcess = new();
+                if (configurationProcess.WebTTTModel.FullFileName is null)
+                {
+                    throw new Exception("Les paramétrages en lien avec le fichier WebTTT sont erronés");
+                }
                 var date = DateTime.Now.Year;
 
             }

@@ -87,22 +87,27 @@ namespace MajConsoSuiviSprint.Cli.Business
             return webTTTInfo;
         }
 
-        private static string InitFileNameBilanErreurSaisieDansWebTTT()
-        {
-            return "";
-        }
-
         private static void InitWebTTT(ref WebTTTInfoModel WebTTTFile, string pathSharepointSuiviSprint, string pathSharepointSuiviSprint2)
         {
             Console.WriteLine("InitWebTTT");
+            string anneeEC = DateTime.Now.Year.ToString();
+            string username = Environment.UserName;
+
             if (string.IsNullOrEmpty(WebTTTFile.FileName))
             {
                 WebTTTFile.FileName = InfoSprint.GetFileNameSuiviSprintEC();
             }
             else
             {
-                WebTTTFile.FileName = WebTTTFile.FileName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
+                WebTTTFile.FileName = WebTTTFile.FileName.Replace("{anneeEC}", anneeEC);
             }
+            pathSharepointSuiviSprint = pathSharepointSuiviSprint
+                                        .Replace("{anneeEC}", anneeEC)
+                                        .Replace("{userName}", username);
+            pathSharepointSuiviSprint2 = pathSharepointSuiviSprint2
+                                        .Replace("{anneeEC}", anneeEC)
+                                        .Replace("{userName}", username);
+
 
             WebTTTFile.SheetName = WebTTTFile.SheetName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
 
