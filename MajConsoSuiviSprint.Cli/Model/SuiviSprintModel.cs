@@ -6,14 +6,14 @@
         public string FileName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;
 
-        public TableauSuivi TabSuivi { get; set; } = default!;
+        public TableauSuivi TabSuivi { get; set; } = new TableauSuivi();
     }
 
     public class TableauSuivi
     {
         public string SheetName { get; set; } = default!;
         public string TableName { get; set; } = default!;
-        public ColumnTableauSuivi NumColumnTable { get; set; } = default!;
+        public ColumnTableauSuivi NumColumnTable { get; set; } = new ColumnTableauSuivi();
     }
 
     public class ColumnTableauSuivi

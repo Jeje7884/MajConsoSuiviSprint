@@ -15,15 +15,15 @@ namespace MajConsoSuiviSprint.Cli
             {
                 //TODO
                 var result = InfoSprint.GetFileNameSuiviSprintEC();
-                //var test = InfoSprint.GetFileNameSuiviSprintEC();
-                Console.WriteLine(Environment.UserName);
+
+                Console.WriteLine(result);
                 Configuration configurationProcess = new();
                 var date = DateTime.Now.Year;
 
             }
             catch (Exception ex)
             {
-                Divers.DisplayErrorInConsole( ex.Message);
+                Divers.DisplayErrorInConsole(ex.Message);
             }
             finally
             {

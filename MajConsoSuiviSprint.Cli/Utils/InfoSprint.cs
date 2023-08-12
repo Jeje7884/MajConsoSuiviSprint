@@ -8,6 +8,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
         public static string GetFileNameSuiviSprintEC()
 
         {
+            Console.WriteLine("GetFileNameSuiviSprintEC");
             int numSemaineEC = GetNumSemaineEC();
             string result = SprintConstant.templateSuiviDeSprint;
             string numSemaineFinsSprint;
@@ -34,7 +35,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            Console.WriteLine($"résulat {result}");
+
             return result;
         }
         private static int GetNumPIEC(int numSemaine)
