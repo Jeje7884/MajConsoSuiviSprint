@@ -36,10 +36,10 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            var semainesSprint=ExtractSemainesSprint(result);
+            var semainesSprint=ExtractSemainesSprintTableau(result);
             Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
             Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
-            (int debutSprint, int finSprint) = ExtractSemainesSprintTuple(result);
+            (int debutSprint, int finSprint) = ExtractSemainesSprint(result);
             Console.WriteLine($"Semaine debut de sprint {debutSprint}");
             Console.WriteLine($"Semaine fin de sprint {finSprint}");
             return result;
@@ -71,7 +71,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return (jourCourant.Equals("Monday") || jourCourant.Equals("Lundi"));
         }
 
-        private static int[] ExtractSemainesSprint(string fichierDeSuivi)
+        private static int[] ExtractSemainesSprintTableau(string fichierDeSuivi)
         {
             var debutSemaineSprint = default(int);
             var finSemaineSprint = default(int);
@@ -89,13 +89,12 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return resultSemainesSprint;
         }
 
-        private static (int debutSprint, int finSprint) ExtractSemainesSprintTuple(string fichierDeSuivi)
+        private static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
         {
             var debutSemaineSprint = default(int);
             var finSemaineSprint = default(int);
            
-
-            Match match = Regex.Match(fichierDeSuivi, @"CD13_PI\d{2}_S(\d+)-(\d+)");
+            Match match = Regex.Match(fichierDeSuivi, @"CD13_PI\d{2}_S(\d{2})-(\d{2})");
 
             if (match.Success && match.Groups.Count > 2)
             {
