@@ -11,4 +11,9 @@
         public IReadOnlyCollection<HeadersWebTTT> Headers { get; set; } = new List<HeadersWebTTT>();
 
     }
+    public class HeadersWebTTT
+
+    {
+        public string Valeur { get; set; } = default!;
+    }
 }
