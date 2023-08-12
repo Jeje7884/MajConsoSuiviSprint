@@ -48,6 +48,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                     if (activite.Contains(mask.Contain))
                     {
                         result = false;
+                        break;
                     }
                 });
                 if(result)
@@ -56,9 +57,9 @@ namespace MajConsoSuiviSprint.Cli.Business
                 }
             }
 
-            else if (activite == infoWebTTT.MaskSaisieAutorise["Qual-Dev"].ToString())
+            else if (activite == infoWebTTT.MaskSaisieAutorise["DevQual"].ToString())
             {
-                infoWebTTT.MaskSaisieAutorise["Qual-Dev"].ForEach(mask =>
+                infoWebTTT.MaskSaisieAutorise["DevQual"].ForEach(mask =>
                 {
                     if (activite.Contains(mask.Contain))
                     {
