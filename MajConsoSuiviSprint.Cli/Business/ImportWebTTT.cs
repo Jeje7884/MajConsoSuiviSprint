@@ -1,6 +1,7 @@
 ﻿using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Utils;
+using MajConsoSuiviSprint.Cli.Constants;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -35,15 +36,45 @@ namespace MajConsoSuiviSprint.Cli.Business
             var result = ExceLNPOIHelper.ImportExcel(path, sheetName, columnsToImport);
             return new ResultatImport();
         }
-        private bool ErrorSaisie(string activite, string numDemande,string nomAppli)
+        private bool ErrorSaisie(string activite, string numDemande, string nomAppli, WebTTTInfoModel infoWebTTT)
         {
-            return true;
+            bool result = true;
+
+
+            if (activite == infoWebTTT.MaskSaisieAutorise["Spec"].ToString())
+            {
+                infoWebTTT.MaskSaisieAutorise["Spec"].ForEach(mask => 
+                {
+                    if (activite.Contains(mask.Contain))
+                    {
+                        result = false;
+                    }
+                });
+                if(result)
+                {
+                    result = (nomAppli == AppliConstant.LblApplicationParDefaut);
+                }
+            }
+
+            else if (activite == infoWebTTT.MaskSaisieAutorise["Qual-Dev"].ToString())
+            {
+                infoWebTTT.MaskSaisieAutorise["Qual-Dev"].ForEach(mask =>
+                {
+                    if (activite.Contains(mask.Contain))
+                    {
+                        result = false;
+                    }
+                });
+
+            }
+               
+            return result;
         }
 
-        private bool SaisieAprendreEnCompte(string activite, string numDemande, string nomAppli,DateTime dateSaisie)
+        private bool SaisieAprendreEnCompte(string activite,DateTime dateSaisie, WebTTTInfoModel infoWebTTT)
         {
-            return (InfoSprint.IsActivityToManaged(activite) && InfoSprint.IsPeriodeToManaged(dateSaisie,28,29,0));
+            int numDebut=  (infoWebTTT.NumDebutSemaineAImporter - (infoWebTTT.NbreSprintAPrendreEnCompte * 2)) ;
+            return (InfoSprint.IsActivityToManaged(activite) && InfoSprint.IsPeriodeToManaged(dateSaisie, numDebut, infoWebTTT.NumFinSemaineAImporter));
         }
-
     }
 }

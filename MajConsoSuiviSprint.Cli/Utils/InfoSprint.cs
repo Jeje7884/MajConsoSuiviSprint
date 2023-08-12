@@ -11,7 +11,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
         {
             Console.WriteLine("GetFileNameSuiviSprintEC");
             int numSemaineEC = GetNumSemaine(DateTime.Now);
-            string result = SprintConstant.TemplateSuiviDeSprint;
+            string result = AppliConstant.TemplateSuiviDeSprint;
             string numSemaineFinsSprint;
             string numSemaineDebutSprint;
             int numPI = GetNumPIEC(numSemaineEC);
@@ -45,15 +45,16 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return result;
         }
         
-        public static bool IsPeriodeToManaged(DateTime dateSaisie, int numSemaineDebut, int numSemaineFin, int nbSemaineATraiterEnAmont)
+        public static bool IsPeriodeToManaged(DateTime dateSaisie, int numSemaineDebut, int numSemaineFin)
         {
             int numSemaineSaisie = GetNumSemaine(dateSaisie);
-            return (numSemaineSaisie + (nbSemaineATraiterEnAmont * 2) >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
+            //return (numSemaineSaisie + (nbSemaineATraiterEnAmont * 2) >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
+            return (numSemaineSaisie  >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
         }
 
         public static bool IsActivityToManaged(string activite)
         {
-            List<string> list = new() { SprintConstant.LblActiviteDev,SprintConstant.LblActiviteQual,SprintConstant.LblActiviteDev};
+            List<string> list = new() { AppliConstant.LblActiviteDev,AppliConstant.LblActiviteQual,AppliConstant.LblActiviteDev};
             return list.Contains(activite);
         }
 
