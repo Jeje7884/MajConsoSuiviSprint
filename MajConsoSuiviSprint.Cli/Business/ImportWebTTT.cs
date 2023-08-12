@@ -34,5 +34,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             var result = ExceLNPOIHelper.ImportExcel(path, sheetName, columnsToImport);
             return new ResultatImport();
         }
+
+        
     }
 }
