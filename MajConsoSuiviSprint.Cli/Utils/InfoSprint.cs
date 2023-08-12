@@ -1,5 +1,6 @@
 ﻿using MajConsoSuiviSprint.Cli.Constants;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MajConsoSuiviSprint.Cli.Utils
 {
@@ -35,7 +36,9 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-
+            var semaines=ExtractSemainesSprint(result);
+            Console.WriteLine($"Semaine debut de sprint {semaines[0]}");
+            Console.WriteLine($"Semaine fin de sprint {semaines[1]}");
             return result;
         }
         private static int GetNumPIEC(int numSemaine)
@@ -63,6 +66,24 @@ namespace MajConsoSuiviSprint.Cli.Utils
             var jourCourant = DateTime.Now.DayOfWeek.ToString();
 
             return (jourCourant.Equals("Monday") || jourCourant.Equals("Lundi"));
+        }
+
+        private static int[] ExtractSemainesSprint(string fichierDeSuivi)
+        {
+            var debutSemaineSprint = default(int);
+            var finSemaineSprint = default(int);
+            int[] resultSemainesSprint = new int[2];
+
+            Match match = Regex.Match(fichierDeSuivi, @"CD13_PI\d{2}_S(\d+)-(\d+)");
+
+            if (match.Success && match.Groups.Count > 2)
+            {
+                debutSemaineSprint = int.Parse(match.Groups[1].Value);
+                finSemaineSprint = int.Parse(match.Groups[2].Value);
+            }
+            resultSemainesSprint[0] = debutSemaineSprint;
+            resultSemainesSprint[1] = finSemaineSprint;
+            return resultSemainesSprint;
         }
     }
 }
