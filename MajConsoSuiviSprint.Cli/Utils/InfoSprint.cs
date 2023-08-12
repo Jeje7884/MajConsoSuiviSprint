@@ -36,7 +36,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            var semainesSprint=ExtractSemainesSprintTableau(result);
+            var semainesSprint = ExtractSemainesSprintTableau(result);
             Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
             Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
             (int debutSprint, int finSprint) = ExtractSemainesSprint(result);
@@ -93,7 +93,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
         {
             var debutSemaineSprint = default(int);
             var finSemaineSprint = default(int);
-           
+
             Match match = Regex.Match(fichierDeSuivi, @"CD13_PI\d{2}_S(\d{2})-(\d{2})");
 
             if (match.Success && match.Groups.Count > 2)
@@ -101,8 +101,8 @@ namespace MajConsoSuiviSprint.Cli.Utils
                 debutSemaineSprint = int.Parse(match.Groups[1].Value);
                 finSemaineSprint = int.Parse(match.Groups[2].Value);
             }
-           
-            return (debutSemaineSprint,finSemaineSprint);
+
+            return (debutSemaineSprint, finSemaineSprint);
         }
     }
 }
