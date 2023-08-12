@@ -1,5 +1,6 @@
 ﻿using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Helper;
+using MajConsoSuiviSprint.Cli.Utils;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -34,7 +35,15 @@ namespace MajConsoSuiviSprint.Cli.Business
             var result = ExceLNPOIHelper.ImportExcel(path, sheetName, columnsToImport);
             return new ResultatImport();
         }
+        private bool ErrorSaisie(string activite, string numDemande,string nomAppli)
+        {
+            return true;
+        }
 
-        
+        private bool SaisieAprendreEnCompte(string activite, string numDemande, string nomAppli,DateTime dateSaisie)
+        {
+            return (InfoSprint.IsActivityToManaged(activite) && InfoSprint.IsPeriodeToManaged(dateSaisie,28,29,0));
+        }
+
     }
 }
