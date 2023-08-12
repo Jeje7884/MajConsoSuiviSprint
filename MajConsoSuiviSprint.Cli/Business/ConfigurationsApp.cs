@@ -38,37 +38,6 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         }
 
-        private static SuiviSprintModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
-        {
-            var sectionSuiviSprint = config.GetSection(SuiviSprintSection);
-
-            var suiviSprintInfo = new SuiviSprintModel()
-            {
-                FileName = sectionSuiviSprint.GetValue<string>("FolderName") ?? "",
-                Path = sectionSuiviSprint.GetValue<string>("Path") ?? ""
-            };
-
-            suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint.GetSection("TabSuivi").GetValue<string>("SheetName") ?? "";
-            suiviSprintInfo.TabSuivi.TableName = sectionSuiviSprint.GetSection("TabSuivi").GetValue<string>("TableName") ?? "";
-            int? numColonne = int.Parse(sectionSuiviSprint.GetSection("TabSuivi")
-                                    .GetSection("NumColumnTable")
-                                    .GetValue<string>("NoColumnApplication") ?? "");
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnApplication = numColonne ?? 0;
-
-            numColonne = int.Parse(sectionSuiviSprint
-                            .GetSection("TabSuivi")
-                            .GetSection("NumColumnTable")
-                            .GetValue<string>("NoColumnDemande") ?? "");
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnDemande = numColonne ?? 0;
-
-            numColonne = int.Parse(sectionSuiviSprint
-                            .GetSection("TabSuivi")
-                            .GetSection("NumColumnTable")
-                            .GetValue<string>("NoColumnHoursDevConsumed") ?? "");
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ?? 0;
-            return suiviSprintInfo;
-        }
-
         private static WebTTTInfoModel LoadInfosWebTTTFromSettings(IConfiguration config)
         {
 
@@ -86,7 +55,58 @@ namespace MajConsoSuiviSprint.Cli.Business
                                 ?.AsReadOnly()
                                 ?? new List<HeadersWebTTT>().AsReadOnly()
             };
+            var maskSpecAutorise = sectionWebTTT
+                                .GetSection("MaskSaisieDemande").GetSection("Spec")
+                                .Get<List<MaskSaisie>>()
+                                ?? new List<MaskSaisie>()
+                               ;
+
+            webTTTInfo.MaskSaisieAutorise.Add("Spec", maskSpecAutorise );
+
+            var maskdevQualAutorise = sectionWebTTT
+                                .GetSection("MaskSaisieDemande").GetSection("DevQual")
+                                .Get<List<MaskSaisie>>()
+                                ?? new List<MaskSaisie>();
+
+            webTTTInfo.MaskSaisieAutorise.Add("DevQual", maskdevQualAutorise);
             return webTTTInfo;
+        }
+
+
+        private static SuiviSprintModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
+        {
+            var sectionSuiviSprint = config.GetSection(SuiviSprintSection);
+
+            var suiviSprintInfo = new SuiviSprintModel()
+            {
+                FileName = sectionSuiviSprint.GetValue<string>("FolderName") ?? "",
+                Path = sectionSuiviSprint.GetValue<string>("Path") ?? ""
+            };
+
+            suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint
+                                                .GetSection("TabSuivi")
+                                                .GetValue<string>("SheetName") ?? "";
+
+            suiviSprintInfo.TabSuivi.TableName = sectionSuiviSprint
+                                                .GetSection("TabSuivi")
+                                                .GetValue<string>("TableName") ?? "";
+            int? numColonne = int.Parse(sectionSuiviSprint.GetSection("TabSuivi")
+                                    .GetSection("NumColumnTable")
+                                    .GetValue<string>("NoColumnApplication") ?? "");
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnApplication = numColonne ?? 0;
+
+            numColonne = int.Parse(sectionSuiviSprint
+                            .GetSection("TabSuivi")
+                            .GetSection("NumColumnTable")
+                            .GetValue<string>("NoColumnDemande") ?? "");
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnDemande = numColonne ?? 0;
+
+            numColonne = int.Parse(sectionSuiviSprint
+                            .GetSection("TabSuivi")
+                            .GetSection("NumColumnTable")
+                            .GetValue<string>("NoColumnHoursDevConsumed") ?? "");
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ?? 0;
+            return suiviSprintInfo;
         }
 
         private static void InitWebTTT(ref WebTTTInfoModel WebTTTFile)
