@@ -12,18 +12,18 @@
 
         public IReadOnlyCollection<HeadersWebTTT> Headers { get; set; } = default!;
 
-        public List<MaskSaisie> MaskSaisies { get; set; } = default!;
+        public List<MaskSaisie> ReglesSaisiesAutorisePourUneActivite { get; set; } = default!;
 
-        public Dictionary<string, List<MaskSaisie>> MaskSaisieAutorise { get; set; } =  new Dictionary<string, List<MaskSaisie>>();
+        public Dictionary<string, List<MaskSaisie>> ReglesSaisiesAutorisesParActivite { get; set; } = new Dictionary<string, List<MaskSaisie>>();
     }
     public class HeadersWebTTT
 
     {
-        public string Valeur { get; set; } = default!;
+        public string Value { get; set; } = default!;
     }
 
     public class MaskSaisie
     {
-        public string Contain { get; set; } = default!;
+        public string Rule { get; set; } = default!;
     }
 }
