@@ -51,22 +51,22 @@ namespace MajConsoSuiviSprint.Cli.Business
                 NbreSprintAPrendreEnCompte = sectionWebTTT.GetValue<int>("NbreSprintAPrendreEnCompte"),
                 Headers = sectionWebTTT
                                 .GetSection("Headers")
-                                .Get<List<HeadersWebTTT>>()
+                                .Get<List<HeadersWebTTTModel>>()
                                 ?.AsReadOnly()
-                                ?? new List<HeadersWebTTT>().AsReadOnly()
+                                ?? new List<HeadersWebTTTModel>().AsReadOnly()
             };
             var maskSpecAutorise = sectionWebTTT
-                                .GetSection("MaskSaisieDemande").GetSection("Spec")
-                                .Get<List<MaskSaisie>>()
-                                ?? new List<MaskSaisie>()
+                                .GetSection("MaskSaisieModelDemande").GetSection("Spec")
+                                .Get<List<MaskSaisieModel>>()
+                                ?? new List<MaskSaisieModel>()   
                                ;
 
             webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("Spec", maskSpecAutorise);
 
             var maskdevQualAutorise = sectionWebTTT
-                                .GetSection("MaskSaisieDemande").GetSection("DevQual")
-                                .Get<List<MaskSaisie>>()
-                                ?? new List<MaskSaisie>();
+                                .GetSection("MaskSaisieModelDemande").GetSection("DevQual")
+                                .Get<List<MaskSaisieModel>>()
+                                ?? new List<MaskSaisieModel>();
 
             webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("DevQual", maskdevQualAutorise);
             return webTTTInfo;
