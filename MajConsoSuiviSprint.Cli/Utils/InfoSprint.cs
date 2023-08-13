@@ -25,7 +25,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
             {
                 if (IsMondayToday())
                 {
-                    numSemaineEC = -2;
+                    numSemaineEC -= 2;
                 }
                 numSemaineDebutSprint = numSemaineEC.ToString("D2");
                 numSemaineFinsSprint = (numSemaineEC + 1).ToString("D2");

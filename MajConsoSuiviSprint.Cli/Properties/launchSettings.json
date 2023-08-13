@@ -2,8 +2,8 @@
   "profiles": {
     "MajConsoSuiviSprint.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\bruga\\Documents\\Developpement\\sourcesGitHub\\.NET\\MajConsoSuiviSprint\\MajConsoSuiviSprint.Cli\\appSettingsJeje.json"
-      //"commandLineArgs": ""
+      //"commandLineArgs": "D:\\bruga\\Documents\\Developpement\\sourcesGitHub\\.NET\\MajConsoSuiviSprint\\MajConsoSuiviSprint.Cli\\appSettingsJeje.json"
+      "commandLineArgs": ""
     }
   }
 }
