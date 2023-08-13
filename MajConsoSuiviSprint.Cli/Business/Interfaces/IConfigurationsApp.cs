@@ -2,9 +2,9 @@
 
 namespace MajConsoSuiviSprint.Cli.Business.Interfaces
 {
-    internal  interface IConfigurationsApp
+    internal interface IConfigurationsApp
     {
         public WebTTTInfoModel WebTTTModel { get; }
-        public SuiviSprintModel SuiviSprintModel { get;  }
+        public SuiviSprintModel SuiviSprintModel { get; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using MajConsoSuiviSprint.Cli.Model;
+﻿using MajConsoSuiviSprint.Cli.Business.Interfaces;
+using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
-using MajConsoSuiviSprint.Cli.Business.Interfaces;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -61,14 +61,14 @@ namespace MajConsoSuiviSprint.Cli.Business
                                 ?? new List<MaskSaisie>()
                                ;
 
-            webTTTInfo.MaskSaisieAutorise.Add("Spec", maskSpecAutorise );
+            webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("Spec", maskSpecAutorise);
 
             var maskdevQualAutorise = sectionWebTTT
                                 .GetSection("MaskSaisieDemande").GetSection("DevQual")
                                 .Get<List<MaskSaisie>>()
                                 ?? new List<MaskSaisie>();
 
-            webTTTInfo.MaskSaisieAutorise.Add("DevQual", maskdevQualAutorise);
+            webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("DevQual", maskdevQualAutorise);
             return webTTTInfo;
         }
 
