@@ -15,7 +15,7 @@
                 return true;
             }
         }
-        public static void DisplayErrorInConsole(string message)
+        public static void DisplayErrorMessageInConsole(string message)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Red;

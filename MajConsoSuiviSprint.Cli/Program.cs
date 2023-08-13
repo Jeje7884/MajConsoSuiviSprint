@@ -30,7 +30,7 @@ namespace MajConsoSuiviSprint.Cli
             }
             catch (Exception ex)
             {
-                Divers.DisplayErrorInConsole(ex.Message);
+                Divers.DisplayErrorMessageInConsole(ex.Message);
             }
             finally
             {
