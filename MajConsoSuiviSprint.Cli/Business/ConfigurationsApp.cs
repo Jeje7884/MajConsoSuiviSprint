@@ -9,25 +9,25 @@ namespace MajConsoSuiviSprint.Cli.Business
     {
         private const string WebTTTSection = "WebTTT";
         private const string SuiviSprintSection = "SuiviSprint";
+        private string JsonFile = "appSettings.json";
+        private string PathJson= Directory.GetCurrentDirectory();
+
         public WebTTTInfoModel WebTTTModel { get; set; } = default!;
         public SuiviSprintModel SuiviSprintModel { get; set; } = default!;
 
-        public ConfigurationsApp(string pathSettings)
+        public ConfigurationsApp(string pathAppSettings)
         {
-            string pathAppSettings = pathSettings;
+           
             Console.WriteLine("Configuration");
 
-            if (string.IsNullOrEmpty(pathAppSettings))
+            if (!string.IsNullOrEmpty(pathAppSettings))
             {
-                pathAppSettings = Directory.GetCurrentDirectory();
-            }
-            else
-            {
-                pathAppSettings = pathSettings;
+                JsonFile= Divers.GetFileNameFromFullPathFilename(pathAppSettings);
+                PathJson= Divers.GetPathFromFullPathFilename(pathAppSettings);
             }
             IConfiguration config = new ConfigurationBuilder()
-                                    .SetBasePath(pathAppSettings)
-                                    .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
+                                    .SetBasePath(PathJson)
+                                    .AddJsonFile(JsonFile, optional: false, reloadOnChange: true)
                                     .Build();
 
             WebTTTInfoModel webTTTInfo = LoadInfosWebTTTFromSettings(config);

@@ -22,5 +22,20 @@
             Console.WriteLine($"!!!!!! {message} !!!!!!!");
             Console.ResetColor();
         }
+
+        public static string GetFileNameFromFullPathFilename(string fullPath)
+        {
+            return Path.GetFileName(fullPath);
+        }
+
+        public static string GetPathFromFullPathFilename(string fullPath)
+        {
+            return Path.GetDirectoryName(fullPath)??"";
+        }
+
+        public static bool IsFileExist(string fullPath)
+        {
+            return File.Exists(fullPath);
+        }
     }
 }
