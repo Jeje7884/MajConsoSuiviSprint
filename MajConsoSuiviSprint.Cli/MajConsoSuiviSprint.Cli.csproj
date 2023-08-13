@@ -17,6 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="appSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="C:\CD13\Sources\DevOps\majconsosuivisprint\MajConsoSuiviSprint.Cli\.editorconfig" />
   </ItemGroup>
 
@@ -26,12 +36,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="NPOI" Version="2.6.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="appSettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
