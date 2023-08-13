@@ -11,20 +11,11 @@
         public string FullFileName { get; set; } = default!;
         public  int NumDebutSemaineAImporter { get; set; }
         public int NumFinSemaineAImporter { get; set; }
-        public IReadOnlyCollection<HeadersWebTTT> Headers { get; set; } = default!;
+        public IReadOnlyCollection<HeadersWebTTTModel> Headers { get; set; } = default!;
 
-        public List<MaskSaisie> ReglesSaisiesAutorisePourUneActivite { get; set; } = default!;
+        public List<MaskSaisieModel> ReglesSaisiesAutorisePourUneActivite { get; set; } = default!;
 
-        public Dictionary<string, List<MaskSaisie>> ReglesSaisiesAutorisesParActivite { get; set; } = new Dictionary<string, List<MaskSaisie>>();
-    }
-    public class HeadersWebTTT
-
-    {
-        public string Value { get; set; } = default!;
+        public Dictionary<string, List<MaskSaisieModel>> ReglesSaisiesAutorisesParActivite { get; set; } = new Dictionary<string, List<MaskSaisieModel>>();
     }
 
-    public class MaskSaisie
-    {
-        public string Rule { get; set; } = default!;
-    }
 }
