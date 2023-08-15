@@ -14,30 +14,23 @@ namespace MajConsoSuiviSprint.Cli.Helper
         public static void GenerateCSVFile(string fileName, List<CleValeur<string, object>> data, bool isAppend, string typeEncoding = "utf8BOM")
         {
             Console.WriteLine("CSVModule.GenerateCSVFile");
-         
-            using (var writer = new StreamWriter("output.csv", isAppend, GetEncoding(typeEncoding)))
-            {
-               
-                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                {
-                    csv.WriteRecords(data);
-                }
-            }
 
-           
+            using var writer = new StreamWriter(fileName, isAppend, GetEncoding(typeEncoding));
+
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            csv.WriteRecords(data);
+
+
         }
 
         public static void GenerateCSVFile(string fileName, List<string> data, bool isAppend, string typeEncoding = "utf8BOM")
         {
             Console.WriteLine("CSVModule.GenerateCSVFile");
 
-            using (var writer = new StreamWriter("output.csv", isAppend, GetEncoding(typeEncoding)))
-            {
+            using var writer = new StreamWriter(fileName, isAppend, GetEncoding(typeEncoding));
 
-                using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-             
-                csv.WriteRecords(data);
-            }     
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            csv.WriteRecords(data);
         }
 
         private static Encoding GetEncoding(string typeEncoding)
