@@ -3,8 +3,6 @@ using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -55,7 +53,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes = new();
             Dictionary<string, TempsConsommeDemandeModel> tempsConsommesPardemandesEtParSprint = new();
             Dictionary<string, Dictionary<int, float>> tempsDeclaresParCollab = new();
-            List<ErreurSaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine =new ();
+            List<ErreurSaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
 
 
             foreach (ImportWebTTTExcelModel dataWebTTT in allDataInWebTTT)
