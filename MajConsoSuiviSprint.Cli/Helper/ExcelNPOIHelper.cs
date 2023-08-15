@@ -29,42 +29,49 @@ namespace MajConsoSuiviSprint.Cli.Helper
                 dictionnaireNumeroDecolonne = InitDictionnaireNumeroColonne(headerRow, columnsToImport);
                 Dictionary<int, string> columnIndexToHeader = new();
 
-                for (int cellIndex = 0; cellIndex < headerRow.Cells.Count; cellIndex++)
-                {
-                    string header = headerRow.Cells[cellIndex].StringCellValue;
-                    columnIndexToHeader[cellIndex] = header;
-                }
+              
                 for (int row = 1; row <= worksheet.LastRowNum; row++)
                 {
                     IRow dataRow = worksheet.GetRow(row);
 
                     if (dataRow != null)
                     {
-
-                        string collab = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Collaborator"]) ?? "";
-                        DateTime dateDeSaisie = DateTime.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));
-                        string activite = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Activity"]) ?? "";
-                        string application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? "";
-                        float heureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"]));
-                        int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
-                        //if (IsSaisieAPrendreEnCompte(numeroDeSemaineDateActivite, WebTTTInfoConfigModel))
-                        if (numeroDeSemaineDateActivite >= WebTTTInfoConfigModel.NumeroDeSemaineAPartirDuquelChecker)
+                        var data= GetDataFromRowWebTTT(WebTTTInfoConfigModel, result, dictionnaireNumeroDecolonne, dataRow);
+                        if (null!=data)
                         {
-                            result.Add(new ImportWebTTTExcelModel
-                            {
-                                TrigrammeCollab = collab,
-                                Activite = activite,
-                                Application = application,
-                                DateDeSaisie = dateDeSaisie,
-                                HeureDeclaree = heureDeclaree,
-                                NumeroDeSemaineDateActivite = numeroDeSemaineDateActivite
-                            }); ;
+                            result.Add(data);
                         }
+                        
                     }
                 }
             }
             return result;
 
+        }
+
+        private static ImportWebTTTExcelModel GetDataFromRowWebTTT(WebTTTInfoConfigModel WebTTTInfoConfigModel, List<ImportWebTTTExcelModel> result, Dictionary<string, int> dictionnaireNumeroDecolonne, IRow dataRow)
+        {
+            string collab = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Collaborator"]) ?? "";
+            DateTime dateDeSaisie = DateTime.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));
+            string activite = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Activity"]) ?? "";
+            string application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? "";
+            float heureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"]));
+            int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
+            ImportWebTTTExcelModel dataFromRowWebTTT=default!;
+            //if (IsSaisieAPrendreEnCompte(numeroDeSemaineDateActivite, WebTTTInfoConfigModel))
+            if (numeroDeSemaineDateActivite >= WebTTTInfoConfigModel.NumeroDeSemaineAPartirDuquelChecker)
+            {
+                dataFromRowWebTTT = new ImportWebTTTExcelModel
+                {
+                    TrigrammeCollab = collab,
+                    Activite = activite,
+                    Application = application,
+                    DateDeSaisie = dateDeSaisie,
+                    HeureDeclaree = heureDeclaree,
+                    NumeroDeSemaineDateActivite = numeroDeSemaineDateActivite
+                } ;
+            }
+            return dataFromRowWebTTT ?? new ImportWebTTTExcelModel();
         }
 
         //private static bool IsSaisieAPrendreEnCompte(int numeroDeSemaineDateActivite, WebTTTInfoConfigModel webTTTInfoConfigModel)
