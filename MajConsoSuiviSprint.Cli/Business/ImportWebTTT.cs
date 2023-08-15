@@ -3,6 +3,7 @@ using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MajConsoSuiviSprint.Cli.Business
