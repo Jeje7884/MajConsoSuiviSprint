@@ -9,5 +9,6 @@
         internal const string LblApplicationParDefaut = "Default";
         internal const string NomFichierAppliConfigParDefaut = "appSettings.json";
         internal const string MessageErreurSaisie = "Erreur: La demande ne respecte pas le formalisme de déclaration qui a été définit par Coco.";
-}
+
+    }
 }
