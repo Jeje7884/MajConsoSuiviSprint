@@ -3,7 +3,6 @@ using MajConsoSuiviSprint.Cli.Utils;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
-
 namespace MajConsoSuiviSprint.Cli.Helper
 {
     internal static class ExceLNPOIHelper
@@ -40,10 +39,9 @@ namespace MajConsoSuiviSprint.Cli.Helper
 
                     if (dataRow != null)
                     {
-
                         DateTime dateDeSaisie = DateTime.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));
                         int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
-                        
+
                         if (IsSaisieAPrendreEnCompte(numeroDeSemaineDateActivite, WebTTTInfoConfigModel))
                         {
                             result.Add(new ImportWebTTTExcelModel
@@ -62,14 +60,12 @@ namespace MajConsoSuiviSprint.Cli.Helper
                 }
             }
             return result;
-
         }
 
         private static bool IsSaisieAPrendreEnCompte(int numeroDeSemaineDateActivite, WebTTTInfoConfigModel webTTTInfoConfigModel)
         {
             int numDebutAPrendreEncompte = (webTTTInfoConfigModel.NumeroDebutSemaineAImporter - (webTTTInfoConfigModel.NbreSprintAPrendreEnCompte * 2));
             return numeroDeSemaineDateActivite >= numDebutAPrendreEncompte && numDebutAPrendreEncompte <= webTTTInfoConfigModel.NumeroFinSemaineAImporter;
-
         }
 
         private static Dictionary<string, int> InitDictionnaireNumeroColonne(IRow headerRow, List<HeadersWebTTTModel> columnsToImport)
@@ -101,7 +97,7 @@ namespace MajConsoSuiviSprint.Cli.Helper
             return -1;
         }
 
-        static string GetCellValue(IRow row, int columnIndex)
+        private static string GetCellValue(IRow row, int columnIndex)
         {
             if (columnIndex >= 0 && columnIndex < row.Cells.Count)
             {

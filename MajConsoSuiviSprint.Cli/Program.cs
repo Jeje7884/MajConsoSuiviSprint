@@ -25,7 +25,6 @@ namespace MajConsoSuiviSprint.Cli
                 {
                     throw new Exception("Les paramétrages en lien avec le fichier WebTTT sont erronés");
                 }
-
             }
             catch (Exception ex)
             {
@@ -54,7 +53,7 @@ namespace MajConsoSuiviSprint.Cli
                 {
                     Console.WriteLine(" - Tapez \"D\" ((ou \"Entrer\") pour choisir le fichier de config par défaut  ");
                     Console.WriteLine(" - sinon saisir le fichier de config à utiliser (par exemple c:\\temp\\MonFichierAppSettings.json) : ");
-                    
+
                     choix = Console.ReadLine() ?? valParDefaut;
 
                     if (string.IsNullOrEmpty(choix))
@@ -80,4 +79,3 @@ namespace MajConsoSuiviSprint.Cli
         }
     }
 }
-

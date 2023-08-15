@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MajConsoSuiviSprint.Cli.Utils
+﻿namespace MajConsoSuiviSprint.Cli.Utils
 {
-    
-       internal class CleValeur<TKey, TValue>
-        {
-            public TKey Key { get; set; }
-            public TValue Value { get; set; }
+    internal class CleValeur<TKey, TValue>
+    {
+        public TKey Key { get; set; }
+        public TValue Value { get; set; }
 
-            public CleValeur(TKey key, TValue value)
-            {
-                Key = key;
-                Value = value;
-            }
+        public CleValeur(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
         }
-    
+    }
 }

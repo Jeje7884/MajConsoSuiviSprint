@@ -9,7 +9,7 @@
         public string FileName { get; set; } = default!;
         public string SheetName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;
-        public  int NumeroDebutSemaineAImporter { get; set; }
+        public int NumeroDebutSemaineAImporter { get; set; }
         public int NumeroFinSemaineAImporter { get; set; }
         public int NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine { get; set; }
         public IReadOnlyCollection<HeadersWebTTTModel> Headers { get; set; } = default!;
@@ -23,9 +23,9 @@
     {
         public string Value { get; set; } = default!;
     }
+
     public class MaskSaisieModel
     {
         public string Rule { get; set; } = default!;
     }
-
 }

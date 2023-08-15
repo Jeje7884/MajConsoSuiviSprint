@@ -6,7 +6,6 @@
         {
             try
             {
-
                 File.OpenRead(fullNameFile).Close();
                 return false;
             }
@@ -15,6 +14,7 @@
                 return true;
             }
         }
+
         public static void DisplayErrorMessageInConsole(string message)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -37,7 +37,7 @@
 
         public static string GetPathFromFullPathFilename(string fullPath)
         {
-            return Path.GetDirectoryName(fullPath)??"";
+            return Path.GetDirectoryName(fullPath) ?? "";
         }
 
         public static bool IsFileExist(string fullPath)
@@ -45,6 +45,4 @@
             return File.Exists(fullPath);
         }
     }
-
-
 }
