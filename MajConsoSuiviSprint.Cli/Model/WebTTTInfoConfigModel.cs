@@ -33,9 +33,9 @@ namespace MajConsoSuiviSprint.Cli.Model
     {
         public string Value { get; set; } = default!;
     }
+
     public class MaskSaisieModel
     {
         public string Rule { get; set; } = default!;
     }
-
 }

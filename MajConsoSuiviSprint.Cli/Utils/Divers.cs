@@ -6,7 +6,6 @@
         {
             try
             {
-
                 File.OpenRead(fullNameFile).Close();
                 return false;
             }
@@ -15,6 +14,7 @@
                 return true;
             }
         }
+
         public static void DisplayErrorMessageInConsole(string message)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -58,6 +58,4 @@
         }
 
     }
-
-
 }
