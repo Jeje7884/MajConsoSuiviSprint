@@ -1,8 +1,8 @@
 ﻿using MajConsoSuiviSprint.Cli.Business.Interfaces;
+using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
-using Org.BouncyCastle.Bcpg;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -10,7 +10,7 @@ namespace MajConsoSuiviSprint.Cli.Business
     {
         private const string WebTTTSection = "WebTTT";
         private const string SuiviSprintSection = "SuiviSprint";
-        private readonly string JsonFile = "appSettings.json";
+        private readonly string JsonFile = AppliConstant.NomFichierAppliConfigParDefaut;
         private readonly string PathJson = Directory.GetCurrentDirectory();
 
         public WebTTTInfoConfigModel WebTTTInfoConfig { get; set; } = default!;
@@ -35,8 +35,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             SuiviSprintInfoConfig = LoadInfosSuiviSprintFromSettings(config);
             InitInfosSuiviSprint();
             InitWebTTT();
-            //WebTTTInfoConfig = webTTTInfo;
-
         }
 
         private static WebTTTInfoConfigModel LoadInfosWebTTTFromSettings(IConfiguration config)
@@ -151,7 +149,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 bool isCheminAvecBackSlashALaFin = IsPathWithBackSlash(WebTTTInfoConfig.Path);
 
-                //string fullPathWebbTTTFile = _configurationApp.WebTTTInfoConfig.Path + (!isCheminAvecBackSlashALaFin ? "\\" : "") + _configurationApp.WebTTTInfoConfig.FileName;
                 WebTTTInfoConfig.FullFileName = $@"{WebTTTInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{WebTTTInfoConfig.FileName}";
             }
 
@@ -159,13 +156,11 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             WebTTTInfoConfig.NumeroDebutSemaineAImporter = semainesSprint.debutSprint;
             WebTTTInfoConfig.NumeroFinSemaineAImporter = semainesSprint.finSprint;
-
-
         }
 
-        private bool IsPathWithBackSlash(string path)
+        private static bool IsPathWithBackSlash(string path)
         {
-            return path.EndsWith("\\");
+            return path.EndsWith(@"\");
         }
     }
 }

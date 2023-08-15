@@ -41,22 +41,21 @@ namespace MajConsoSuiviSprint.Cli.Helper
                     if (dataRow != null)
                     {
 
-                        string collab = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Collaborator"]) ?? "";
                         DateTime dateDeSaisie = DateTime.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));
-                        string activite = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Activity"]) ?? "";
-                        string application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? "";
-                        float heureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"]));
                         int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
+                        
                         if (IsSaisieAPrendreEnCompte(numeroDeSemaineDateActivite, WebTTTInfoConfigModel))
                         {
                             result.Add(new ImportWebTTTExcelModel
                             {
-                                TrigrammeCollab = collab,
-                                Activite = activite,
-                                Application = application,
+                                TrigrammeCollab = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Collaborator"]) ?? "",
+                                Activite = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Activity"]) ?? "",
+                                Application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? "",
                                 DateDeSaisie = dateDeSaisie,
-                                HeureDeclaree = heureDeclaree,
-                                NumeroDeSemaineDateActivite = numeroDeSemaineDateActivite
+                                HeureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"])),
+                                NumeroDeSemaineDateActivite = numeroDeSemaineDateActivite,
+                                NumeroDeDemande = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Demand"]) ?? "",
+                                LblDateDeSaisie = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Demand"]) ?? ""
                             }); ;
                         }
                     }
