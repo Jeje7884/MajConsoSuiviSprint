@@ -83,10 +83,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             return result;
         }
 
-        //private bool SaisieAprendreEnCompte(string activite, DateTime dateSaisie, WebTTTInfoConfigModel infoWebTTT)
-        //{
-        //    return (InfoSprint.IsActivityToManaged(activite) && InfoSprint.IsPeriodeToManaged(dateSaisie, infoWebTTT.NumeroDebutSemaineAImporter, infoWebTTT.NumeroFinSemaineAImporter));
-        //}
     }
 }
 

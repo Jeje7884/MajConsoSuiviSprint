@@ -36,19 +36,14 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            //var semainesSprint = ExtractSemainesSprintTableau(result);
-            //Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
-            //Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
-            //(int debutSprint, int finSprint) = ExtractSemainesSprint(result);
-            //Console.WriteLine($"Semaine debut de sprint {debutSprint}");
-            //Console.WriteLine($"Semaine fin de sprint {finSprint}");
+         
             return result;
         }
         
         public static bool IsPeriodeToManaged(DateTime dateSaisie, int numSemaineDebut, int numSemaineFin)
         {
             int numSemaineSaisie = GetNumSemaine(dateSaisie);
-            //return (numSemaineSaisie + (nbSemaineATraiterEnAmont * 2) >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
+            
             return (numSemaineSaisie  >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
         }
 

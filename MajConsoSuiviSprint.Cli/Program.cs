@@ -14,14 +14,13 @@ namespace MajConsoSuiviSprint.Cli
 
             try
             {
-                
-
                 string pathConfigJson = InitPathJsonConfig(args);
 
                 ConfigurationsApp configurationProcess = new(pathConfigJson);
 
                 var importWebTTT = new ImportWebTTT(configurationProcess);
                 var result = importWebTTT.ImportInfosFromWebTTT();
+
                 if (configurationProcess.WebTTTInfoConfig.FullFileName is null)
                 {
                     throw new Exception("Les paramétrages en lien avec le fichier WebTTT sont erronés");
@@ -46,8 +45,6 @@ namespace MajConsoSuiviSprint.Cli
             string pathConfigJson = default!;
             if (args.Length.Equals(0) || args.Length.Equals(1))
             {
-                string? choix = string.Empty;
-               
                 if (args.Length == 1)
                 {
                     pathConfigJson = args[0];
@@ -59,7 +56,7 @@ namespace MajConsoSuiviSprint.Cli
                     Console.WriteLine("      => (par exemple c:\\temp\\MonFichierAppSettings.json) ");
                     Console.WriteLine("       ou seulement le nom du fichier si dans le répertoire courrant (par exemple MonFichierAppSettings.json ");
 
-                    choix = Console.ReadLine() ?? "";
+                    string? choix = Console.ReadLine() ?? "";
 
                     if (string.IsNullOrEmpty(choix))
                     {
