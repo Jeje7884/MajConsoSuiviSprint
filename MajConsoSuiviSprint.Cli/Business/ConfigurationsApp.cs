@@ -10,33 +10,46 @@ namespace MajConsoSuiviSprint.Cli.Business
     {
         private const string WebTTTSection = "WebTTT";
         private const string SuiviSprintSection = "SuiviSprint";
-        private readonly string JsonFile = "appSettings.json";
-        private readonly string PathJson = Directory.GetCurrentDirectory();
+        //private readonly string JsonFile = "appSettings.json";
+        //private readonly string PathJson = Directory.GetCurrentDirectory();
 
         public WebTTTInfoConfigModel WebTTTInfoConfig { get; set; } = default!;
         public SuiviSprintInfoConfigModel SuiviSprintInfoConfig { get; set; } = default!;
 
         public ConfigurationsApp(string pathAppSettings)
         {
-           
+
             Console.WriteLine("Configuration");
 
-            if (!string.IsNullOrEmpty(pathAppSettings))
-            {
-                JsonFile= Divers.GetFileNameFromFullPathFilename(pathAppSettings);
-                PathJson= Divers.GetPathFromFullPathFilename(pathAppSettings);
-            }
+
+            string jsonFile = Divers.GetFileNameFromFullPathFilename(pathAppSettings);
+            string pathJson = Divers.GetPathFromFullPathFilename(pathAppSettings);
+
             IConfiguration config = new ConfigurationBuilder()
-                                    .SetBasePath(PathJson)
-                                    .AddJsonFile(JsonFile, optional: false, reloadOnChange: true)
+                                    .SetBasePath(pathJson)
+                                    .AddJsonFile(jsonFile, optional: false, reloadOnChange: true)
                                     .Build();
+            //IConfiguration config = new ConfigurationBuilder()
+            //                        .SetBasePath(PathJson)
+            //                        .AddJsonFile(JsonFile, optional: false, reloadOnChange: true)
+            //                        .Build();
 
             WebTTTInfoConfig = LoadInfosWebTTTFromSettings(config);
             SuiviSprintInfoConfig = LoadInfosSuiviSprintFromSettings(config);
             InitInfosSuiviSprint();
             InitWebTTT();
+
+            CheckCoherenceParamNumDeSemaineAPartirDe();
             //WebTTTInfoConfig = webTTTInfo;
 
+        }
+
+        private void CheckCoherenceParamNumDeSemaineAPartirDe()
+        {
+            if (WebTTTInfoConfig.NumeroDeSemaineAPartirDuquelChecker > SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint)
+            {
+                throw new Exception($"Erreur de paramétrage. Le paramètre NumeroDeSemaineAPartirDuquelChecker ne peut être supérieur à la semaine du fichier de suivi {SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint}");
+            }
         }
 
         private static WebTTTInfoConfigModel LoadInfosWebTTTFromSettings(IConfiguration config)
@@ -51,6 +64,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "",
                 NbreSprintAPrendreEnCompte = sectionWebTTT.GetValue<int>("NbreSprintAPrendreEnCompte"),
                 NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine = sectionWebTTT.GetValue<int>("NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine"),
+                NumeroDeSemaineAPartirDuquelChecker = sectionWebTTT.GetValue<int>("NumeroDeSemaineAPartirDuquelChecker"),
                 Headers = sectionWebTTT
                                 .GetSection("Headers")
                                 .Get<List<HeadersWebTTTModel>>()
@@ -155,10 +169,10 @@ namespace MajConsoSuiviSprint.Cli.Business
                 WebTTTInfoConfig.FullFileName = $@"{WebTTTInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{WebTTTInfoConfig.FileName}";
             }
 
-            (int debutSprint, int finSprint) semainesSprint = InfoSprint.ExtractSemainesSprint(SuiviSprintInfoConfig.FileName);
+            //(int debutSprint, int finSprint) semainesSprint = InfoSprint.ExtractSemainesSprint(SuiviSprintInfoConfig.FileName);
 
-            WebTTTInfoConfig.NumeroDebutSemaineAImporter = semainesSprint.debutSprint;
-            WebTTTInfoConfig.NumeroFinSemaineAImporter = semainesSprint.finSprint;
+            //WebTTTInfoConfig.NumeroDebutSemaineAImporter = semainesSprint.debutSprint;
+            //WebTTTInfoConfig.NumeroFinSemaineAImporter = semainesSprint.finSprint;
 
 
         }

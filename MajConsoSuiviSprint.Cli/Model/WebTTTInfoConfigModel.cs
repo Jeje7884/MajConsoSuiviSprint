@@ -5,7 +5,7 @@
         public string Path { get; set; } = default!;
         public string FileBilanErreurCSV { get; set; } = default!;
         public int NbreSprintAPrendreEnCompte { get; set; } = 0;
-
+        public int NumeroDeSemaineAPartirDuquelChecker{ get; set; } = 0;
         public string FileName { get; set; } = default!;
         public string SheetName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;

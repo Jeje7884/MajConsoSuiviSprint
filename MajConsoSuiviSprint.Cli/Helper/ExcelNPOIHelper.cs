@@ -47,7 +47,8 @@ namespace MajConsoSuiviSprint.Cli.Helper
                         string application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? "";
                         float heureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"]));
                         int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
-                        if (IsSaisieAPrendreEnCompte(numeroDeSemaineDateActivite, WebTTTInfoConfigModel))
+                        //if (IsSaisieAPrendreEnCompte(numeroDeSemaineDateActivite, WebTTTInfoConfigModel))
+                        if (numeroDeSemaineDateActivite >= WebTTTInfoConfigModel.NumeroDeSemaineAPartirDuquelChecker)
                         {
                             result.Add(new ImportWebTTTExcelModel
                             {
@@ -66,12 +67,12 @@ namespace MajConsoSuiviSprint.Cli.Helper
 
         }
 
-        private static bool IsSaisieAPrendreEnCompte(int numeroDeSemaineDateActivite, WebTTTInfoConfigModel webTTTInfoConfigModel)
-        {
-            int numDebutAPrendreEncompte = (webTTTInfoConfigModel.NumeroDebutSemaineAImporter - (webTTTInfoConfigModel.NbreSprintAPrendreEnCompte * 2));
-            return numeroDeSemaineDateActivite >= numDebutAPrendreEncompte && numDebutAPrendreEncompte <= webTTTInfoConfigModel.NumeroFinSemaineAImporter;
+        //private static bool IsSaisieAPrendreEnCompte(int numeroDeSemaineDateActivite, WebTTTInfoConfigModel webTTTInfoConfigModel)
+        //{
+        //    int numDebutAPrendreEncompte = (webTTTInfoConfigModel.NumeroDebutSemaineAImporter - (webTTTInfoConfigModel.NbreSprintAPrendreEnCompte * 2));
+        //    return numeroDeSemaineDateActivite >= numDebutAPrendreEncompte && numDebutAPrendreEncompte <= webTTTInfoConfigModel.NumeroFinSemaineAImporter;
 
-        }
+        //}
 
         private static Dictionary<string, int> InitDictionnaireNumeroColonne(IRow headerRow, List<HeadersWebTTTModel> columnsToImport)
         {

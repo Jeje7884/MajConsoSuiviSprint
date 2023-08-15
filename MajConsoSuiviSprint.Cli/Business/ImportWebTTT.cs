@@ -43,7 +43,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 throw new ExceptFileOpenException($"Le fichier {_configurationApp.WebTTTInfoConfig.FullFileName} est ouvert");
             }
             var result = ExceLNPOIHelper.ImportFichierWebTTTExcel(_configurationApp.WebTTTInfoConfig);
-
+            Console.WriteLine($" {result.Count} lignes ont été récupérés");
 
             return new ResultatImport();
         }

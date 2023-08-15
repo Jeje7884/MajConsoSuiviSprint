@@ -1,11 +1,48 @@
-﻿namespace MajConsoSuiviSprint.Cli.Model
+﻿using MajConsoSuiviSprint.Cli.Utils;
+
+namespace MajConsoSuiviSprint.Cli.Model
 {
     public class SuiviSprintInfoConfigModel
     {
+      //  private int _debutDeSemaineSprint;
+        private string? _fileName;
         public string Path { get; set; } = default!;
 
-        public string FileName { get; set; } = default!;
+        public string FileName
+        {
+            get
+            {
+                return _fileName ?? "";
+            }
+            set
+            {
+                _fileName= value;
+                //_debutDeSemaineSprint = value;
+                // Appeler une fonction après avoir modifié la valeur de la propriété
+                (int debutSprint, int finSprint) semainesSprint = InfoSprint.ExtractSemainesSprint(value);
+                NumeroSemaineDebutDeSprint = semainesSprint.debutSprint;
+                NumeroSemaineFinDeSprint = semainesSprint.finSprint;
+            }
+        }
+
         public string FullFileName { get; set; } = default!;
+
+        //public int NumeroSemaineDebutDeSprint
+        //{
+        //    get { return _debutDeSemaineSprint; }
+        //    set
+        //    {
+        //        _debutDeSemaineSprint = value;
+        //    }
+        //}
+        public int NumeroSemaineDebutDeSprint { get; set; }
+        public int NumeroSemaineFinDeSprint { get; set; }
+
+        //public int NumeroSemaineFinDeSprint
+        //{
+        //    get => _finDeSemaineSprint;
+        //    set => _finDeSemaineSprint = value;
+        //}
 
         public TableauSuivi TabSuivi { get; set; } = new TableauSuivi();
     }

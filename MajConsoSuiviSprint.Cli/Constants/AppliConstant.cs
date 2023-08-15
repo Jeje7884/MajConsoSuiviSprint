@@ -7,5 +7,7 @@
         internal const string LblActiviteDev = "Développement";
         internal const string LblActiviteQual = "Qualification";
         internal const string LblApplicationParDefaut = "Default";
-}
+        internal const string ExtensionAppSettings = ".json";
+        internal const string FileAppSettingsParDefaut = "appSettings.json";
+    }
 }
