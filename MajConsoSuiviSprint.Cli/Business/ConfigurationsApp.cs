@@ -1,4 +1,5 @@
 ﻿using MajConsoSuiviSprint.Cli.Business.Interfaces;
+using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
@@ -163,7 +164,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 bool isCheminAvecBackSlashALaFin = IsPathWithBackSlash(WebTTTInfoConfig.Path);
 
-                //string fullPathWebbTTTFile = _configurationApp.WebTTTInfoConfig.Path + (!isCheminAvecBackSlashALaFin ? "\\" : "") + _configurationApp.WebTTTInfoConfig.FileName;
                 WebTTTInfoConfig.FullFileName = $@"{WebTTTInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{WebTTTInfoConfig.FileName}";
             }
 
@@ -175,9 +175,9 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         }
 
-        private bool IsPathWithBackSlash(string path)
+        private static bool IsPathWithBackSlash(string path)
         {
-            return path.EndsWith("\\");
+            return path.EndsWith(@"\");
         }
     }
 }
