@@ -61,9 +61,8 @@ namespace MajConsoSuiviSprint.Cli.Business
                 Path = sectionWebTTT.GetValue<string>("Path") ?? "",
                 FileName = sectionWebTTT.GetValue<string>("FileName") ?? "",
                 SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "",
-                NbreSprintAPrendreEnCompte = sectionWebTTT.GetValue<int>("NbreSprintAPrendreEnCompte"),
+                NbreDeSemaineAPrendreAvtLaSemaineEnCours = sectionWebTTT.GetValue<int>("NbreDeSemaineAPrendreAvtLaSemaineEnCours"),
                 NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine = sectionWebTTT.GetValue<int>("NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine"),
-                NumeroDeSemaineAPartirDuquelChecker = sectionWebTTT.GetValue<int>("NumeroDeSemaineAPartirDuquelChecker"),
                 Headers = sectionWebTTT
                                 .GetSection("Headers")
                                 .Get<List<HeadersWebTTTModel>>()

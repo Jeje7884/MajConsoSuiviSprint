@@ -1,16 +1,21 @@
-﻿namespace MajConsoSuiviSprint.Cli.Model
+﻿using MajConsoSuiviSprint.Cli.Utils;
+
+namespace MajConsoSuiviSprint.Cli.Model
 {
     public class WebTTTInfoConfigModel
     {
         public string Path { get; set; } = default!;
         public string FileBilanErreurCSV { get; set; } = default!;
-        public int NbreSprintAPrendreEnCompte { get; set; } = 0;
-        public int NumeroDeSemaineAPartirDuquelChecker{ get; set; } = 0;
+        public int NbreDeSemaineAPrendreAvtLaSemaineEnCours { get; set; } = 0;
+        public int NumeroDeSemaineAPartirDuquelChecker
+        {
+            get { return (InfoSprint.GetNumSemaine(DateTime.Now) - NbreDeSemaineAPrendreAvtLaSemaineEnCours); }            
+        }
         public string FileName { get; set; } = default!;
         public string SheetName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;
-        public  int NumeroDebutSemaineAImporter { get; set; }
-        public int NumeroFinSemaineAImporter { get; set; }
+        //public  int NumeroDebutSemaineAImporter { get; set; }
+        //public int NumeroFinSemaineAImporter { get; set; }
         public int NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine { get; set; }
         public IReadOnlyCollection<HeadersWebTTTModel> Headers { get; set; } = default!;
 
