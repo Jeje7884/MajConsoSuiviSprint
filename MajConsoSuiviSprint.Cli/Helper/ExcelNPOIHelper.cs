@@ -3,7 +3,6 @@ using MajConsoSuiviSprint.Cli.Utils;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
-
 namespace MajConsoSuiviSprint.Cli.Helper
 {
     internal static class ExceLNPOIHelper
@@ -46,7 +45,6 @@ namespace MajConsoSuiviSprint.Cli.Helper
                 }
             }
             return result;
-
         }
 
         private static ImportWebTTTExcelModel GetDataFromRowWebTTT(WebTTTInfoConfigModel WebTTTInfoConfigModel, List<ImportWebTTTExcelModel> result, Dictionary<string, int> dictionnaireNumeroDecolonne, IRow dataRow)
@@ -110,7 +108,7 @@ namespace MajConsoSuiviSprint.Cli.Helper
             return -1;
         }
 
-        static string GetCellValue(IRow row, int columnIndex)
+        private static string GetCellValue(IRow row, int columnIndex)
         {
             if (columnIndex >= 0 && columnIndex < row.Cells.Count)
             {

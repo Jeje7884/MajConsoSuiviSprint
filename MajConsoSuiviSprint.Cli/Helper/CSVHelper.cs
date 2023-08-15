@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using CsvHelper;
-using System.Threading.Tasks;
+﻿using CsvHelper;
 using MajConsoSuiviSprint.Cli.Utils;
+using System.Globalization;
+using System.Text;
 
 namespace MajConsoSuiviSprint.Cli.Helper
 {
@@ -19,8 +15,6 @@ namespace MajConsoSuiviSprint.Cli.Helper
 
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(data);
-
-
         }
 
         public static void GenerateCSVFile(string fileName, List<string> data, bool isAppend, string typeEncoding = "utf8BOM")
@@ -39,13 +33,13 @@ namespace MajConsoSuiviSprint.Cli.Helper
             {
                 case "utf8BOM":
                     return new UTF8Encoding(true);
+
                 case "utf8":
                     return new UTF8Encoding(false);
+
                 default:
                     throw new NotSupportedException($"Encoding '{typeEncoding}' is not supported.");
             }
         }
-
-      
     }
 }

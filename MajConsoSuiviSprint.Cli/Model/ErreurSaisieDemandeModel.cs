@@ -8,6 +8,5 @@
         public string Qui { get; set; } = default!;
         public string DateDeSaisie { get; set; } = default!;
         public string DetailErreur { get; set; } = default!;
-
     }
 }

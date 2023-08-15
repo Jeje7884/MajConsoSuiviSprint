@@ -25,7 +25,6 @@ namespace MajConsoSuiviSprint.Cli
                 {
                     throw new Exception("Les paramétrages en lien avec le fichier WebTTT sont erronés");
                 }
-
             }
             catch (Exception ex)
             {
@@ -95,4 +94,3 @@ namespace MajConsoSuiviSprint.Cli
         }
     }
 }
-
