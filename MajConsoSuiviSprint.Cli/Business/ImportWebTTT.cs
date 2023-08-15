@@ -3,6 +3,7 @@ using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MajConsoSuiviSprint.Cli.Business
@@ -212,6 +213,21 @@ namespace MajConsoSuiviSprint.Cli.Business
             }
 
             return result;
+        }
+
+        private void GenereExportCSVErreurSaisies(Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes)
+        {
+            //var test= List<CleValeur<int, string>> dataList = erreursSaisiesDemandes
+            List<CleValeur<string, object>> dataList = new List<CleValeur<string, object>>();
+            foreach (var demande in erreursSaisiesDemandes)
+            {
+                dataList.Add(new CleValeur<string, object>(demande.Key, demande.Value));
+            }
+            CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, dataList,false);
+
+           // var test= List<CleValeur< Dictionary<string, ErreurSaisieDemandeModel>>>> dataList = erreursSaisiesDemandes
+           //.Select(pair => new CleValeur<int, string>(pair.Key, pair.Value))
+           //.ToList();
         }
 
         private bool SaisieAPrendreEnComptePourTempsConsoFichierDeSuivi(ImportWebTTTExcelModel saisieInWebTTT)
