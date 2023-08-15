@@ -2,7 +2,6 @@
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
-using Org.BouncyCastle.Bcpg;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -74,7 +73,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             var maskSpecAutorise = sectionWebTTT
                                 .GetSection("MaskSaisieModelDemande").GetSection("Spec")
                                 .Get<List<MaskSaisieModel>>()
-                                ?? new List<MaskSaisieModel>()   
+                                ?? new List<MaskSaisieModel>()
                                ;
 
             webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("Spec", maskSpecAutorise);
@@ -127,7 +126,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private void InitInfosSuiviSprint()
         {
-           
+
             string anneeEC = DateTime.Now.Year.ToString();
             if (string.IsNullOrEmpty(SuiviSprintInfoConfig.FileName))
             {
@@ -143,7 +142,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                                        .Replace("{userName}", Environment.UserName);
 
             bool isCheminAvecBackSlashALaFin = IsPathWithBackSlash(SuiviSprintInfoConfig.Path);
-            
+
             SuiviSprintInfoConfig.FullFileName = $@"{SuiviSprintInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{SuiviSprintInfoConfig.FileName}";
 
         }
