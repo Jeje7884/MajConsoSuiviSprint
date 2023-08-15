@@ -1,6 +1,6 @@
 ﻿namespace MajConsoSuiviSprint.Cli.Model
 {
-    public class SuiviSprintModel
+    public class SuiviSprintInfoConfigModel
     {
         public string Path { get; set; } = default!;
 

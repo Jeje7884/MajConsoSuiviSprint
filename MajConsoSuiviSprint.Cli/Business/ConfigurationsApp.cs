@@ -2,6 +2,7 @@
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Bcpg;
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -9,11 +10,11 @@ namespace MajConsoSuiviSprint.Cli.Business
     {
         private const string WebTTTSection = "WebTTT";
         private const string SuiviSprintSection = "SuiviSprint";
-        private string JsonFile = "appSettings.json";
-        private string PathJson= Directory.GetCurrentDirectory();
+        private readonly string JsonFile = "appSettings.json";
+        private readonly string PathJson = Directory.GetCurrentDirectory();
 
-        public WebTTTInfoModel WebTTTModel { get; set; } = default!;
-        public SuiviSprintModel SuiviSprintModel { get; set; } = default!;
+        public WebTTTInfoConfigModel WebTTTInfoConfig { get; set; } = default!;
+        public SuiviSprintInfoConfigModel SuiviSprintInfoConfig { get; set; } = default!;
 
         public ConfigurationsApp(string pathAppSettings)
         {
@@ -30,25 +31,26 @@ namespace MajConsoSuiviSprint.Cli.Business
                                     .AddJsonFile(JsonFile, optional: false, reloadOnChange: true)
                                     .Build();
 
-            WebTTTInfoModel webTTTInfo = LoadInfosWebTTTFromSettings(config);
-            SuiviSprintModel = LoadInfosSuiviSprintFromSettings(config);
-
-            InitWebTTT(ref webTTTInfo);
-            WebTTTModel = webTTTInfo;
+            WebTTTInfoConfig = LoadInfosWebTTTFromSettings(config);
+            SuiviSprintInfoConfig = LoadInfosSuiviSprintFromSettings(config);
+            InitInfosSuiviSprint();
+            InitWebTTT();
+            //WebTTTInfoConfig = webTTTInfo;
 
         }
 
-        private static WebTTTInfoModel LoadInfosWebTTTFromSettings(IConfiguration config)
+        private static WebTTTInfoConfigModel LoadInfosWebTTTFromSettings(IConfiguration config)
         {
 
             var sectionWebTTT = config.GetSection(WebTTTSection);
-            var webTTTInfo = new WebTTTInfoModel()
+            var webTTTInfo = new WebTTTInfoConfigModel()
             {
                 FileBilanErreurCSV = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? "",
                 Path = sectionWebTTT.GetValue<string>("Path") ?? "",
                 FileName = sectionWebTTT.GetValue<string>("FileName") ?? "",
                 SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "",
                 NbreSprintAPrendreEnCompte = sectionWebTTT.GetValue<int>("NbreSprintAPrendreEnCompte"),
+                NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine = sectionWebTTT.GetValue<int>("NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine"),
                 Headers = sectionWebTTT
                                 .GetSection("Headers")
                                 .Get<List<HeadersWebTTTModel>>()
@@ -73,13 +75,13 @@ namespace MajConsoSuiviSprint.Cli.Business
         }
 
 
-        private static SuiviSprintModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
+        private static SuiviSprintInfoConfigModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
         {
             var sectionSuiviSprint = config.GetSection(SuiviSprintSection);
 
-            var suiviSprintInfo = new SuiviSprintModel()
+            var suiviSprintInfo = new SuiviSprintInfoConfigModel()
             {
-                FileName = sectionSuiviSprint.GetValue<string>("FolderName") ?? "",
+                FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? "",
                 Path = sectionSuiviSprint.GetValue<string>("Path") ?? ""
             };
 
@@ -109,32 +111,61 @@ namespace MajConsoSuiviSprint.Cli.Business
             return suiviSprintInfo;
         }
 
-        private static void InitWebTTT(ref WebTTTInfoModel WebTTTFile)
+        private void InitInfosSuiviSprint()
         {
-            Console.WriteLine("InitWebTTT");
+           
             string anneeEC = DateTime.Now.Year.ToString();
-            string username = Environment.UserName;
-
-            if (string.IsNullOrEmpty(WebTTTFile.FileName))
+            if (string.IsNullOrEmpty(SuiviSprintInfoConfig.FileName))
             {
-                WebTTTFile.FileName = InfoSprint.GetFileNameSuiviSprintEC();
+                SuiviSprintInfoConfig.FileName = InfoSprint.GetFileNameSuiviSprintEC();
             }
             else
             {
-                WebTTTFile.FileName = WebTTTFile.FileName.Replace("{anneeEC}", anneeEC);
+                SuiviSprintInfoConfig.FileName = SuiviSprintInfoConfig.FileName.Replace("{anneeEC}", anneeEC);
             }
-            WebTTTFile.Path = WebTTTFile.Path
+
+            SuiviSprintInfoConfig.Path = SuiviSprintInfoConfig.Path
+                                       .Replace("{anneeEC}", anneeEC)
+                                       .Replace("{userName}", Environment.UserName);
+
+            bool isCheminAvecBackSlashALaFin = IsPathWithBackSlash(SuiviSprintInfoConfig.Path);
+            
+            SuiviSprintInfoConfig.FullFileName = $@"{SuiviSprintInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{SuiviSprintInfoConfig.FileName}";
+
+        }
+
+        private void InitWebTTT()
+        {
+            Console.WriteLine("InitWebTTT");
+            string anneeEC = DateTime.Now.Year.ToString();
+            WebTTTInfoConfig.FileName = WebTTTInfoConfig.FileName.Replace("{anneeEC}", anneeEC);
+            WebTTTInfoConfig.Path = WebTTTInfoConfig.Path
                                         .Replace("{anneeEC}", anneeEC)
-                                        .Replace("{userName}", username);
+                                        .Replace("{userName}", Environment.UserName);
 
 
 
-            WebTTTFile.SheetName = WebTTTFile.SheetName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
+            WebTTTInfoConfig.SheetName = WebTTTInfoConfig.SheetName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
 
-            if (Directory.Exists(WebTTTFile.Path))
+            if (Directory.Exists(WebTTTInfoConfig.Path))
             {
-                WebTTTFile.FullFileName = $@"{WebTTTFile.Path}\{WebTTTFile.FileName}";
+                bool isCheminAvecBackSlashALaFin = IsPathWithBackSlash(WebTTTInfoConfig.Path);
+
+                //string fullPathWebbTTTFile = _configurationApp.WebTTTInfoConfig.Path + (!isCheminAvecBackSlashALaFin ? "\\" : "") + _configurationApp.WebTTTInfoConfig.FileName;
+                WebTTTInfoConfig.FullFileName = $@"{WebTTTInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{WebTTTInfoConfig.FileName}";
             }
+
+            (int debutSprint, int finSprint) semainesSprint = InfoSprint.ExtractSemainesSprint(SuiviSprintInfoConfig.FileName);
+
+            WebTTTInfoConfig.NumeroDebutSemaineAImporter = semainesSprint.debutSprint;
+            WebTTTInfoConfig.NumeroFinSemaineAImporter = semainesSprint.finSprint;
+
+
+        }
+
+        private bool IsPathWithBackSlash(string path)
+        {
+            return path.EndsWith("\\");
         }
     }
 }

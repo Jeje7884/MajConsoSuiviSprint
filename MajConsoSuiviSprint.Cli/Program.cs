@@ -19,10 +19,9 @@ namespace MajConsoSuiviSprint.Cli
 
                 ConfigurationsApp configurationProcess = new(pathConfigJson);
 
-                var result = InfoSprint.GetFileNameSuiviSprintEC();
-                Console.WriteLine("La valeur du fichier de siuvi est en cours est " + result);
-
-                if (configurationProcess.WebTTTModel.FullFileName is null)
+                var importWebTTT = new ImportWebTTT(configurationProcess);
+                var result = importWebTTT.ImportInfosFromWebTTT();
+                if (configurationProcess.WebTTTInfoConfig.FullFileName is null)
                 {
                     throw new Exception("Les paramétrages en lien avec le fichier WebTTT sont erronés");
                 }

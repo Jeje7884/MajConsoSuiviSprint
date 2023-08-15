@@ -7,7 +7,5 @@
         internal const string LblActiviteDev = "Développement";
         internal const string LblActiviteQual = "Qualification";
         internal const string LblApplicationParDefaut = "Default";
-
-
 }
 }

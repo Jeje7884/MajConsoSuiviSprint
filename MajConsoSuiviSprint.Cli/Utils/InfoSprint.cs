@@ -36,12 +36,12 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-            var semainesSprint = ExtractSemainesSprintTableau(result);
-            Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
-            Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
-            (int debutSprint, int finSprint) = ExtractSemainesSprint(result);
-            Console.WriteLine($"Semaine debut de sprint {debutSprint}");
-            Console.WriteLine($"Semaine fin de sprint {finSprint}");
+            //var semainesSprint = ExtractSemainesSprintTableau(result);
+            //Console.WriteLine($"Semaine debut de sprint {semainesSprint[0]}");
+            //Console.WriteLine($"Semaine fin de sprint {semainesSprint[1]}");
+            //(int debutSprint, int finSprint) = ExtractSemainesSprint(result);
+            //Console.WriteLine($"Semaine debut de sprint {debutSprint}");
+            //Console.WriteLine($"Semaine fin de sprint {finSprint}");
             return result;
         }
         
@@ -63,7 +63,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return (int)Math.Ceiling(numSemaine / 4.0);
         }
 
-        private static int GetNumSemaine(DateTime date)
+        public static int GetNumSemaine(DateTime date)
         {
 
             CultureInfo culture = new("fr-FR", false);
@@ -101,7 +101,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return resultSemainesSprint;
         }
 
-        private static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
+        public static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
         {
             var debutSemaineSprint = default(int);
             var finSemaineSprint = default(int);

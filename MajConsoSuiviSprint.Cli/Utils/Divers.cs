@@ -23,6 +23,13 @@
             Console.ResetColor();
         }
 
+        public static void DisplayWarningMessageInConsole(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($" --> {message} ");
+            Console.ResetColor();
+        }
+
         public static string GetFileNameFromFullPathFilename(string fullPath)
         {
             return Path.GetFileName(fullPath);
