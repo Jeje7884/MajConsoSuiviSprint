@@ -83,7 +83,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                                                                     let erreurRemplissage = new ErreurSaisieRemplissageTempsParSemaineModel()
                                                                     {
                                                                         Qui = "aa",
-                                                                        HeureDeclaree = heureDeclare,
+                                                                        HeuresDeclarees = heureDeclare,
                                                                         NumeroDeSemaine = 10
                                                                     }
                                                                     select erreurRemplissage);

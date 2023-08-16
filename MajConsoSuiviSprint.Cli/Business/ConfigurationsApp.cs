@@ -1,4 +1,5 @@
 ﻿using MajConsoSuiviSprint.Cli.Business.Interfaces;
+using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +8,6 @@ namespace MajConsoSuiviSprint.Cli.Business
 {
     internal class ConfigurationsApp : IConfigurationsApp
     {
-        private const string WebTTTSection = "WebTTT";
-        private const string SuiviSprintSection = "SuiviSprint";
       
         public WebTTTInfoConfigModel WebTTTInfoConfig { get; set; } = default!;
         public SuiviSprintInfoConfigModel SuiviSprintInfoConfig { get; set; } = default!;
@@ -47,7 +46,7 @@ namespace MajConsoSuiviSprint.Cli.Business
         private static WebTTTInfoConfigModel LoadInfosWebTTTFromSettings(IConfiguration config)
         {
 
-            var sectionWebTTT = config.GetSection(WebTTTSection);
+            var sectionWebTTT = config.GetSection(AppliConstant.WebTTTSection);
             var webTTTInfo = new WebTTTInfoConfigModel()
             {
                 FileBilanErreurCSV = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? "",
@@ -82,7 +81,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private static SuiviSprintInfoConfigModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
         {
-            var sectionSuiviSprint = config.GetSection(SuiviSprintSection);
+            var sectionSuiviSprint = config.GetSection(AppliConstant.SuiviSprintSection);
 
             var suiviSprintInfo = new SuiviSprintInfoConfigModel()
             {
@@ -158,13 +157,6 @@ namespace MajConsoSuiviSprint.Cli.Business
 
                 WebTTTInfoConfig.FullFileName = $@"{WebTTTInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{WebTTTInfoConfig.FileName}";
             }
-
-            //(int debutSprint, int finSprint) semainesSprint = InfoSprint.ExtractSemainesSprint(SuiviSprintInfoConfig.FileName);
-
-            //WebTTTInfoConfig.NumeroDebutSemaineAImporter = semainesSprint.debutSprint;
-            //WebTTTInfoConfig.NumeroFinSemaineAImporter = semainesSprint.finSprint;
-
-
         }
 
         private static bool IsPathWithBackSlash(string path)

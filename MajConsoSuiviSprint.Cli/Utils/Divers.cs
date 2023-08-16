@@ -1,4 +1,6 @@
-﻿namespace MajConsoSuiviSprint.Cli.Utils
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+
+namespace MajConsoSuiviSprint.Cli.Utils
 {
     internal static class Divers
     {

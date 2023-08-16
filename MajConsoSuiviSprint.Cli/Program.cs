@@ -14,17 +14,27 @@ namespace MajConsoSuiviSprint.Cli
 
             try
             {
+                if (args.Length > 1)
+                {
+                    throw new Exception("Erreur dans le nombre de paramètre passé");
+                }
+
                 string pathConfigJson = InitPathJsonConfig(args);
 
                 ConfigurationsApp configurationProcess = new(pathConfigJson);
 
-                var importWebTTT = new ImportWebTTT(configurationProcess);
-                var result = importWebTTT.ImportInfosFromWebTTT();
-
                 if (configurationProcess.WebTTTInfoConfig.FullFileName is null)
                 {
-                    throw new Exception("Les paramétrages en lien avec le fichier WebTTT sont erronés");
+                    throw new Exception("Les paramétrages \"Path\"  et  \"FileName\" de la saction WebTTT sont erronés");
                 }
+
+                if (configurationProcess.SuiviSprintInfoConfig.FullFileName is null)
+                {
+                    throw new Exception("Les paramétrages \"Path\"  et  \"FileName\" de la saction SuiviSprint sont erronés");
+                }
+
+                var importWebTTT = new ImportWebTTT(configurationProcess);
+                var result = importWebTTT.ImportInfosFromWebTTT();
             }
             catch (Exception ex)
             {
@@ -39,52 +49,46 @@ namespace MajConsoSuiviSprint.Cli
             }
         }
 
-        private static string InitPathJsonConfig(string[] args)
+        private static string InitPathJsonConfig(string[] @params)
         {
-            string pathConfigJson = default!;
-            if (args.Length.Equals(0) || args.Length.Equals(1))
+            string pathConfigJson;
+
+            if (@params.Length == 1)
             {
-                if (args.Length == 1)
+                pathConfigJson = @params[0];
+            }
+            else
+            {
+                Console.WriteLine(" - Tapez \"Entrer\" pour choisir le fichier de config par défaut  ");
+                Console.WriteLine(" - sinon saisir le fichier de config à utiliser  : ");
+                Console.WriteLine("      => (par exemple c:\\temp\\MonFichierAppSettings.json) ");
+                Console.WriteLine("       ou seulement le nom du fichier si dans le répertoire courant (par exemple MonFichierAppSettings.json) ");
+
+                string? choix = Console.ReadLine() ?? "";
+
+                if (string.IsNullOrEmpty(choix))
                 {
-                    pathConfigJson = args[0];
+                    pathConfigJson = Directory.GetCurrentDirectory() + "\\" + AppliConstant.FileAppSettingsParDefaut;
                 }
                 else
                 {
-                    Console.WriteLine(" - Tapez \"Entrer\" pour choisir le fichier de config par défaut  ");
-                    Console.WriteLine(" - sinon saisir le fichier de config à utiliser  : ");
-                    Console.WriteLine("      => (par exemple c:\\temp\\MonFichierAppSettings.json) ");
-                    Console.WriteLine("       ou seulement le nom du fichier si dans le répertoire courant (par exemple MonFichierAppSettings.json) ");
-
-                    string? choix = Console.ReadLine() ?? "";
-
-                    if (string.IsNullOrEmpty(choix))
+                    if (Divers.IsFileWithPath(choix))
                     {
-                        pathConfigJson = Directory.GetCurrentDirectory() + "\\" + AppliConstant.FileAppSettingsParDefaut;
+                        pathConfigJson = choix;
                     }
                     else
                     {
-                        if (Divers.IsFileWithPath(choix))
+                        if (!Divers.IsFileWithExtention(choix))
                         {
-                            pathConfigJson = choix;
+                            choix += AppliConstant.ExtensionAppSettings;
                         }
-                        else
-                        {
-                            if (!Divers.IsFileWithExtention(choix))
-                            {
-                                choix += AppliConstant.ExtensionAppSettings;
-                            }
-                            pathConfigJson = Directory.GetCurrentDirectory() + "\\" + choix;
-                        }
+                        pathConfigJson = Directory.GetCurrentDirectory() + "\\" + choix;
                     }
                 }
-                if (!Divers.IsFileExist(pathConfigJson))
-                {
-                    throw new Exception($"Le fichier json passé {pathConfigJson}");
-                }
             }
-            else if (args.Length > 1)
+            if (!Divers.IsFileExist(pathConfigJson))
             {
-                throw new Exception("Erreur dans le nombre de paramètre passé");
+                throw new Exception($"Le fichier json {pathConfigJson} n'existe pas");
             }
 
             return pathConfigJson;

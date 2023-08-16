@@ -12,13 +12,11 @@ namespace MajConsoSuiviSprint.Cli.Model
         {
             get
             {
-                return _fileName ?? "";
+                return _fileName ?? default!; 
             }
             set
             {
                 _fileName= value;
-                //_debutDeSemaineSprint = value;
-                // Appeler une fonction après avoir modifié la valeur de la propriété
                 (int debutSprint, int finSprint) semainesSprint = InfoSprint.ExtractSemainesSprint(value);
                 NumeroSemaineDebutDeSprint = semainesSprint.debutSprint;
                 NumeroSemaineFinDeSprint = semainesSprint.finSprint;
