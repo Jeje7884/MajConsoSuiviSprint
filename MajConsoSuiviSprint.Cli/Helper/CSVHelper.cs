@@ -21,7 +21,6 @@ namespace MajConsoSuiviSprint.Cli.Helper
             Console.WriteLine("CSVModule.GenerateCSVFile");
 
             using var writer = new StreamWriter(fileName, isAppend, GetEncoding(typeEncoding));
-
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(data);
         }

@@ -35,7 +35,11 @@ namespace MajConsoSuiviSprint.Cli
                 }
 
                 var importWebTTT = new ImportWebTTT(configurationProcess);
-                ResultImportWebTTT result = importWebTTT.ImportInfosFromWebTTT();
+
+                List<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
+                ResultImportWebTTT resultAnalyseImport= importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
+                
+                importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
             }
             catch (Exception ex)
             {
