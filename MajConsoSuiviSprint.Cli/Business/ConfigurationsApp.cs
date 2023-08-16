@@ -1,5 +1,4 @@
 ﻿using MajConsoSuiviSprint.Cli.Business.Interfaces;
-using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 using Microsoft.Extensions.Configuration;
@@ -10,9 +9,7 @@ namespace MajConsoSuiviSprint.Cli.Business
     {
         private const string WebTTTSection = "WebTTT";
         private const string SuiviSprintSection = "SuiviSprint";
-        //private readonly string JsonFile = "appSettings.json";
-        //private readonly string PathJson = Directory.GetCurrentDirectory();
-
+      
         public WebTTTInfoConfigModel WebTTTInfoConfig { get; set; } = default!;
         public SuiviSprintInfoConfigModel SuiviSprintInfoConfig { get; set; } = default!;
 
@@ -29,10 +26,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                                     .SetBasePath(pathJson)
                                     .AddJsonFile(jsonFile, optional: false, reloadOnChange: true)
                                     .Build();
-            //IConfiguration config = new ConfigurationBuilder()
-            //                        .SetBasePath(PathJson)
-            //                        .AddJsonFile(JsonFile, optional: false, reloadOnChange: true)
-            //                        .Build();
+           
 
             WebTTTInfoConfig = LoadInfosWebTTTFromSettings(config);
             SuiviSprintInfoConfig = LoadInfosSuiviSprintFromSettings(config);
@@ -40,8 +34,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             InitWebTTT();
 
             CheckCoherenceParamNumDeSemaineAPartirDe();
-            //WebTTTInfoConfig = webTTTInfo;
-
         }
 
         private void CheckCoherenceParamNumDeSemaineAPartirDe()

@@ -4,7 +4,7 @@ namespace MajConsoSuiviSprint.Cli.Model
 {
     public class SuiviSprintInfoConfigModel
     {
-      //  private int _debutDeSemaineSprint;
+     
         private string? _fileName;
         public string Path { get; set; } = default!;
 
@@ -27,23 +27,9 @@ namespace MajConsoSuiviSprint.Cli.Model
 
         public string FullFileName { get; set; } = default!;
 
-        //public int NumeroSemaineDebutDeSprint
-        //{
-        //    get { return _debutDeSemaineSprint; }
-        //    set
-        //    {
-        //        _debutDeSemaineSprint = value;
-        //    }
-        //}
         public int NumeroSemaineDebutDeSprint { get; set; }
         public int NumeroSemaineFinDeSprint { get; set; }
-
-        //public int NumeroSemaineFinDeSprint
-        //{
-        //    get => _finDeSemaineSprint;
-        //    set => _finDeSemaineSprint = value;
-        //}
-
+       
         public TableauSuivi TabSuivi { get; set; } = new TableauSuivi();
     }
 

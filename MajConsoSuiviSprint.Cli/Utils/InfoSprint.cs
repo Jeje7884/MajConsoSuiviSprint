@@ -78,24 +78,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
 
             return (jourCourant.Equals("Monday") || jourCourant.Equals("Lundi"));
         }
-
-        private static int[] ExtractSemainesSprintTableau(string fichierDeSuivi)
-        {
-            var debutSemaineSprint = default(int);
-            var finSemaineSprint = default(int);
-            int[] resultSemainesSprint = new int[2];
-
-            Match match = Regex.Match(fichierDeSuivi, @"CD13_PI\d{2}_S(\d+)-(\d+)");
-
-            if (match.Success && match.Groups.Count > 2)
-            {
-                debutSemaineSprint = int.Parse(match.Groups[1].Value);
-                finSemaineSprint = int.Parse(match.Groups[2].Value);
-            }
-            resultSemainesSprint[0] = debutSemaineSprint;
-            resultSemainesSprint[1] = finSemaineSprint;
-            return resultSemainesSprint;
-        }
+              
 
         public static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
         {

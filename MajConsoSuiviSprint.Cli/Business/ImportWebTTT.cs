@@ -8,9 +8,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 {
     internal class ImportWebTTT
     {
-        //public List<ImportWebTTTExcelModel> ImportSaisisWebTTTExcel = new();
-        //public List<ResultatImport> ResultatsWebTTTExcel = new();
-        //public List<ErreurSaisieDemandeModel> ErreursDeSaisies = new();
+       
         private readonly IConfigurationsApp _configurationApp;
 
         public ImportWebTTT(IConfigurationsApp configuration)
@@ -18,21 +16,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             _configurationApp = configuration;
         }
 
-        //internal class TimeConsumedByActivite
-        //{
-        //    public int HourQual { get; set; } = 0;
-
-        //    public int HourDev { get; set; } = 0;
-        //    public string Application { get; set; } = string.Empty;
-        //    public bool NumDemandeIsValid { get; set; } = true;
-        //}
-
-        //internal class ResultatImport
-        //{
-        //    public List<ErreurSaisieDemandeModel> ErrorsSaisis { get; set; } = new();
-        //    public Dictionary<string, TimeConsumedByActivite> TempsConsommesParDemandes { get; set; } = new();
-
-        //}
 
         internal ResultImportWebTTT ImportInfosFromWebTTT()
         {
@@ -203,17 +186,14 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private void GenereExportCSVErreurSaisies(Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes)
         {
-            //var test= List<CleValeur<int, string>> dataList = erreursSaisiesDemandes
-            List<CleValeur<string, object>> dataList = new List<CleValeur<string, object>>();
+            
+            List<CleValeur<string, object>> dataList = new ();
             foreach (var demande in erreursSaisiesDemandes)
             {
                 dataList.Add(new CleValeur<string, object>(demande.Key, demande.Value));
             }
             CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, dataList, false);
 
-            // var test= List<CleValeur< Dictionary<string, ErreurSaisieDemandeModel>>>> dataList = erreursSaisiesDemandes
-            //.Select(pair => new CleValeur<int, string>(pair.Key, pair.Value))
-            //.ToList();
         }
 
         private bool SaisieAPrendreEnComptePourTempsConsoFichierDeSuivi(ImportWebTTTExcelModel saisieInWebTTT)
