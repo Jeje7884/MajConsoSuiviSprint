@@ -36,8 +36,8 @@ namespace MajConsoSuiviSprint.Cli.Business
             Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes = new();
             List<ErreurSaisieDemandeModel> erreursSaisiesDemandes2 = new();
 
-            bool alreadyExists = erreursSaisiesDemandes2.Any(x => x.NumeroDemande == "ooo");
-            if (erreursSaisiesDemandes2.Exists(x => x.NumeroDemande == "200"))
+            bool alreadyExists = erreursSaisiesDemandes2.Any(x => x.NumeroDeDemande == "ooo");
+            if (erreursSaisiesDemandes2.Exists(x => x.NumeroDeDemande == "200"))
             {
                 //code
             }
@@ -151,7 +151,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 {
                     Activite = dataWebTTT.Activite,
                     Application = dataWebTTT.Application,
-                    NumeroDemande = dataWebTTT.NumeroDeDemande,
+                    NumeroDeDemande = dataWebTTT.NumeroDeDemande,
                     Qui = dataWebTTT.TrigrammeCollab,
                     DateDeSaisie = dataWebTTT.LblDateDeSaisie,
                     DetailErreur = AppliConstant.MessageErreurSaisie

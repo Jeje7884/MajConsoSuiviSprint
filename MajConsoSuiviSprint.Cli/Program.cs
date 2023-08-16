@@ -59,11 +59,9 @@ namespace MajConsoSuiviSprint.Cli
 
                     if (string.IsNullOrEmpty(choix))
                     {
-
                         pathConfigJson = Directory.GetCurrentDirectory() + "\\" + AppliConstant.FileAppSettingsParDefaut;
-          
-    }
-                    else 
+                    }
+                    else
                     {
                         if (Divers.IsFileWithPath(choix))
                         {
@@ -71,13 +69,12 @@ namespace MajConsoSuiviSprint.Cli
                         }
                         else
                         {
-                            if(!Divers.IsFileWithExtention(choix))
+                            if (!Divers.IsFileWithExtention(choix))
                             {
-                                choix +=  AppliConstant.ExtensionAppSettings;
+                                choix += AppliConstant.ExtensionAppSettings;
                             }
                             pathConfigJson = Directory.GetCurrentDirectory() + "\\" + choix;
                         }
-                        
                     }
                 }
                 if (!Divers.IsFileExist(pathConfigJson))
