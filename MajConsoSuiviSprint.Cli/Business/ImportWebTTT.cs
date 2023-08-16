@@ -45,7 +45,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             Dictionary<string, TempsConsommeDemandeModel> tempsConsommesPardemandesEtParSprint = new();
            
             //Dictionary<string, Dictionary<int, float>> tempsDeclaresParCollab = new();
-            List<ErreurSaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
+            List<SaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
 
 
             foreach (ImportWebTTTExcelModel dataWebTTT in allDataInWebTTT)
@@ -73,14 +73,14 @@ namespace MajConsoSuiviSprint.Cli.Business
             };
         }
 
-        private List<ErreurSaisieRemplissageTempsParSemaineModel> GetListCollabErreurRemplissageHeruresWebTTTT(Dictionary<string, Dictionary<int, float>> listSaisiesTotale)
+        private List<SaisieRemplissageTempsParSemaineModel> GetListCollabErreurRemplissageHeruresWebTTTT(Dictionary<string, Dictionary<int, float>> listSaisiesTotale)
         {
-            List<ErreurSaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
+            List<SaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
             int nbreHeureMinimumParSemaineEtParCollab = _configurationApp.WebTTTInfoConfig.NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine;
             erreursSaisiesRemplissageTempsCollabParSemaine.AddRange(from KeyValuePair<string, Dictionary<int, float>> saisieParCollabEtParSemaine in listSaisiesTotale
                                                                     let heureDeclare = 10f
                                                                     where heureDeclare < nbreHeureMinimumParSemaineEtParCollab
-                                                                    let erreurRemplissage = new ErreurSaisieRemplissageTempsParSemaineModel()
+                                                                    let erreurRemplissage = new SaisieRemplissageTempsParSemaineModel()
                                                                     {
                                                                         Qui = "aa",
                                                                         HeuresDeclarees = heureDeclare,
@@ -105,7 +105,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             return erreursSaisiesRemplissageTempsCollabParSemaine;
         }
 
-        private static void AddDictionnaireTempsDeclareParCollabEtParSemaine(List<ErreurSaisieRemplissageTempsParSemaineModel> tempsDeclaresParCollab, ImportWebTTTExcelModel dataWebTTT)
+        private static void AddDictionnaireTempsDeclareParCollabEtParSemaine(List<SaisieRemplissageTempsParSemaineModel> tempsDeclaresParCollab, ImportWebTTTExcelModel dataWebTTT)
         {
             //if (!tempsDeclaresParCollab.ContainsKey(dataWebTTT.TrigrammeCollab))
             //{

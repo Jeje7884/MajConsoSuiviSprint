@@ -1,6 +1,6 @@
 ﻿namespace MajConsoSuiviSprint.Cli.Model
 {
-    internal class ErreurSaisieRemplissageTempsParSemaineModel
+    internal class SaisieRemplissageTempsParSemaineModel
     {
         public string Qui { get; set; } = default!;
         public int NumeroDeSemaine { get; set; } = default!;
