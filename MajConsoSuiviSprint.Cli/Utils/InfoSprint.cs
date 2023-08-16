@@ -39,13 +39,14 @@ namespace MajConsoSuiviSprint.Cli.Utils
          
             return result;
         }
-        
-        public static bool IsPeriodeToManaged(int numSemaineSaisie, int numSemaineDebut, int numSemaineFin)
+
+        public static bool IsPeriodeToManaged(DateTime dateSaisie, int numSemaineDebut, int numSemaineFin)
         {
             int numSemaineSaisie = GetNumSemaine(dateSaisie);
-            
-            return (numSemaineSaisie  >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
+
+            return (numSemaineSaisie >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
         }
+
 
         public static bool IsActivityToManaged(string activite)
         {

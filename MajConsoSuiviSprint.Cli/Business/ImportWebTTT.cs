@@ -215,7 +215,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private bool SaisieAPrendreEnComptePourTempsConsoFichierDeSuivi(ImportWebTTTExcelModel saisieInWebTTT)
         {
-            return (InfoSprint.IsActivityToManaged(saisieInWebTTT.Activite) && InfoSprint.IsPeriodeToManaged(saisieInWebTTT.NumeroDeSemaineDateActivite, _configurationApp.WebTTTInfoConfig.NumeroDebutSemaineAImporter, _configurationApp.WebTTTInfoConfig.NumeroFinSemaineAImporter));
+            return (InfoSprint.IsActivityToManaged(saisieInWebTTT.Activite) && InfoSprint.IsPeriodeToManaged(saisieInWebTTT.DateDeSaisie, _configurationApp.SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint, _configurationApp.SuiviSprintInfoConfig.NumeroSemaineFinDeSprint));
         }
     }
 }
