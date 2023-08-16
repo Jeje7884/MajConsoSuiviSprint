@@ -54,7 +54,7 @@ namespace MajConsoSuiviSprint.Cli
                     Console.WriteLine(" - Tapez \"Entrer\" pour choisir le fichier de config par défaut  ");
                     Console.WriteLine(" - sinon saisir le fichier de config à utiliser  : ");
                     Console.WriteLine("      => (par exemple c:\\temp\\MonFichierAppSettings.json) ");
-                    Console.WriteLine("       ou seulement le nom du fichier si dans le répertoire courrant (par exemple MonFichierAppSettings.json ");
+                    Console.WriteLine("       ou seulement le nom du fichier si dans le répertoire courant (par exemple MonFichierAppSettings.json) ");
 
                     string? choix = Console.ReadLine() ?? "";
 

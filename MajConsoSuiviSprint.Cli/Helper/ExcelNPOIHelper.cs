@@ -71,7 +71,7 @@ namespace MajConsoSuiviSprint.Cli.Helper
                     NumeroDeSemaineDateActivite = numeroDeSemaineDateActivite
                 } ;
             }
-            return dataFromRowWebTTT ?? new ImportWebTTTExcelModel();
+            return dataFromRowWebTTT;
         }
 
         //private static bool IsSaisieAPrendreEnCompte(int numeroDeSemaineDateActivite, WebTTTInfoConfigModel webTTTInfoConfigModel)
