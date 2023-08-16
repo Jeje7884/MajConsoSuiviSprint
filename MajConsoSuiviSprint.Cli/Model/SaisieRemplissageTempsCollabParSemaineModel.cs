@@ -1,9 +1,9 @@
 ﻿namespace MajConsoSuiviSprint.Cli.Model
 {
-    internal class SaisieRemplissageTempsParSemaineModel
+    internal class SaisieRemplissageTempsCollabParSemaineModel
     {
         public string Qui { get; set; } = default!;
         public int NumeroDeSemaine { get; set; } = default!;
-        public float HeuresDeclarees { get; set; } = default!;
+        public float TotalHeureDeclaree { get; set; } = default!;
     }
 }
