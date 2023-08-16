@@ -1,5 +1,6 @@
 ﻿using MajConsoSuiviSprint.Cli.Business;
 using MajConsoSuiviSprint.Cli.Constants;
+using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 
 namespace MajConsoSuiviSprint.Cli
@@ -34,7 +35,7 @@ namespace MajConsoSuiviSprint.Cli
                 }
 
                 var importWebTTT = new ImportWebTTT(configurationProcess);
-                var result = importWebTTT.ImportInfosFromWebTTT();
+                ResultImportWebTTT result = importWebTTT.ImportInfosFromWebTTT();
             }
             catch (Exception ex)
             {
