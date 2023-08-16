@@ -49,10 +49,10 @@ namespace MajConsoSuiviSprint.Cli.Business
             var sectionWebTTT = config.GetSection(AppliConstant.WebTTTSection);
             var webTTTInfo = new WebTTTInfoConfigModel()
             {
-                FileBilanErreurCSV = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? "",
-                Path = sectionWebTTT.GetValue<string>("Path") ?? "",
-                FileName = sectionWebTTT.GetValue<string>("FileName") ?? "",
-                SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? "",
+                FileBilanErreurCSV = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? default!,
+                Path = sectionWebTTT.GetValue<string>("Path") ?? default!,
+                FileName = sectionWebTTT.GetValue<string>("FileName") ?? default!,
+                SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? default!,
                 NbreDeSemaineAPrendreAvtLaSemaineEnCours = sectionWebTTT.GetValue<int>("NbreDeSemaineAPrendreAvtLaSemaineEnCours"),
                 NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine = sectionWebTTT.GetValue<int>("NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine"),
                 Headers = sectionWebTTT
@@ -61,7 +61,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                                 ?.AsReadOnly()
                                 ?? new List<HeadersWebTTTModel>().AsReadOnly()
             };
-            var maskSpecAutorise = sectionWebTTT
+            List<MaskSaisieModel> maskSpecAutorise = sectionWebTTT
                                 .GetSection("MaskSaisieModelDemande").GetSection("Spec")
                                 .Get<List<MaskSaisieModel>>()
                                 ?? new List<MaskSaisieModel>()
@@ -69,7 +69,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("Spec", maskSpecAutorise);
 
-            var maskdevQualAutorise = sectionWebTTT
+            List<MaskSaisieModel> maskdevQualAutorise = sectionWebTTT
                                 .GetSection("MaskSaisieModelDemande").GetSection("DevQual")
                                 .Get<List<MaskSaisieModel>>()
                                 ?? new List<MaskSaisieModel>();
@@ -85,33 +85,33 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             var suiviSprintInfo = new SuiviSprintInfoConfigModel()
             {
-                FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? "",
-                Path = sectionSuiviSprint.GetValue<string>("Path") ?? ""
+                FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? default!,
+                Path = sectionSuiviSprint.GetValue<string>("Path") ?? default!
             };
 
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint
                                                 .GetSection("TabSuivi")
-                                                .GetValue<string>("SheetName") ?? "";
+                                                .GetValue<string>("SheetName") ?? default!;
 
             suiviSprintInfo.TabSuivi.TableName = sectionSuiviSprint
                                                 .GetSection("TabSuivi")
-                                                .GetValue<string>("TableName") ?? "";
+                                                .GetValue<string>("TableName") ?? default!;
             int? numColonne = int.Parse(sectionSuiviSprint.GetSection("TabSuivi")
                                     .GetSection("NumColumnTable")
-                                    .GetValue<string>("NoColumnApplication") ?? "");
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnApplication = numColonne ?? 0;
+                                    .GetValue<string>("NoColumnApplication") ?? default!);
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnApplication = numColonne ?? default;
 
             numColonne = int.Parse(sectionSuiviSprint
                             .GetSection("TabSuivi")
                             .GetSection("NumColumnTable")
-                            .GetValue<string>("NoColumnDemande") ?? "");
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnDemande = numColonne ?? 0;
+                            .GetValue<string>("NoColumnDemande") ?? default!);
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnDemande = numColonne ?? default;
 
             numColonne = int.Parse(sectionSuiviSprint
                             .GetSection("TabSuivi")
                             .GetSection("NumColumnTable")
-                            .GetValue<string>("NoColumnHoursDevConsumed") ?? "");
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ?? 0;
+                            .GetValue<string>("NoColumnHoursDevConsumed") ?? default!);
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ??default;
             return suiviSprintInfo;
         }
 
