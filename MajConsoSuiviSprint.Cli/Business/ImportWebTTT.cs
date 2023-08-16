@@ -45,7 +45,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             Dictionary<string, TempsConsommeDemandeModel> tempsConsommesPardemandesEtParSprint = new();
            
             //Dictionary<string, Dictionary<int, float>> tempsDeclaresParCollab = new();
-            List<SaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
+            List<SaisieRemplissageTempsCollabParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
 
 
             foreach (ImportWebTTTExcelModel dataWebTTT in allDataInWebTTT)
@@ -73,14 +73,14 @@ namespace MajConsoSuiviSprint.Cli.Business
             };
         }
 
-        private List<SaisieRemplissageTempsParSemaineModel> GetListCollabErreurRemplissageHeruresWebTTTT(Dictionary<string, Dictionary<int, float>> listSaisiesTotale)
+        private List<SaisieRemplissageTempsCollabParSemaineModel> GetListCollabErreurRemplissageHeruresWebTTTT(Dictionary<string, Dictionary<int, float>> listSaisiesTotale)
         {
-            List<SaisieRemplissageTempsParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
+            List<SaisieRemplissageTempsCollabParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
             int nbreHeureMinimumParSemaineEtParCollab = _configurationApp.WebTTTInfoConfig.NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine;
             erreursSaisiesRemplissageTempsCollabParSemaine.AddRange(from KeyValuePair<string, Dictionary<int, float>> saisieParCollabEtParSemaine in listSaisiesTotale
                                                                     let heureDeclare = 10f
                                                                     where heureDeclare < nbreHeureMinimumParSemaineEtParCollab
-                                                                    let erreurRemplissage = new SaisieRemplissageTempsParSemaineModel()
+                                                                    let erreurRemplissage = new SaisieRemplissageTempsCollabParSemaineModel()
                                                                     {
                                                                         Qui = "aa",
                                                                         TotalHeureDeclaree = heureDeclare,
@@ -105,7 +105,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             return erreursSaisiesRemplissageTempsCollabParSemaine;
         }
 
-        private static void AddDictionnaireTempsDeclareParCollabEtParSemaine(List<SaisieRemplissageTempsParSemaineModel> tempsDeclaresParCollab, ImportWebTTTExcelModel dataWebTTT)
+        private static void AddDictionnaireTempsDeclareParCollabEtParSemaine(List<SaisieRemplissageTempsCollabParSemaineModel> tempsDeclaresParCollab, ImportWebTTTExcelModel dataWebTTT)
         {
             //if (!tempsDeclaresParCollab.ContainsKey(dataWebTTT.TrigrammeCollab))
             //{
@@ -136,8 +136,8 @@ namespace MajConsoSuiviSprint.Cli.Business
                 {
                     //NumeroDeDemande = dataWebTTT.NumeroDeDemande,
                     Application = dataWebTTT.Application,
-                    HeureDeDeveloppement = dataWebTTT.Activite.Equals(AppliConstant.LblActiviteDev) ? dataWebTTT.HeureDeclaree : 0f,
-                    HeureDeQualification = dataWebTTT.Activite.Equals(AppliConstant.LblActiviteQual) ? dataWebTTT.HeureDeclaree : 0f
+                    HeureTotaleDeDeveloppement = dataWebTTT.Activite.Equals(AppliConstant.LblActiviteDev) ? dataWebTTT.HeureDeclaree : 0f,
+                    HeureTotaleDeQualification = dataWebTTT.Activite.Equals(AppliConstant.LblActiviteQual) ? dataWebTTT.HeureDeclaree : 0f
                 };
                 tempsConsommesPardemandesEtParSprint.Add(dataWebTTT.NumeroDeDemande, tempsConsoDemande);
             }
@@ -193,15 +193,22 @@ namespace MajConsoSuiviSprint.Cli.Business
             return result;
         }
 
-        private void GenereExportCSVErreurSaisies(Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes)
-        {
+        //private void GenereExportCSVErreurSaisies(Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes)
+        //{
             
-            List<CleValeur<string, object>> dataList = new ();
-            foreach (var demande in erreursSaisiesDemandes)
-            {
-                dataList.Add(new CleValeur<string, object>(demande.Key, demande.Value));
-            }
-            CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, dataList, false);
+        //    List<CleValeur<string, object>> dataList = new ();
+        //    foreach (var demande in erreursSaisiesDemandes)
+        //    {
+        //        dataList.Add(new CleValeur<string, object>(demande.Key, demande.Value));
+        //    }
+        //    CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, dataList, false);
+
+        //}
+
+        private void GenereExportCSVErreurSaisies(List<ErreurSaisieDemandeModel> erreursSaisiesDemandes)
+        {
+
+            CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, erreursSaisiesDemandes, false);
 
         }
 

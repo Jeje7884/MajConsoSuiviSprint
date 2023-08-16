@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace MajConsoSuiviSprint.Cli.Helper
+namespace MajConsoSuiviSprint.Cli.Utils
 {
     [Serializable]
     internal class ExceptFileOpenException : Exception
