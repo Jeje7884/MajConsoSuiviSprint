@@ -29,17 +29,12 @@ namespace MajConsoSuiviSprint.Cli.Helper
 
         private static Encoding GetEncoding(string typeEncoding)
         {
-            switch (typeEncoding)
+            return typeEncoding switch
             {
-                case "utf8BOM":
-                    return new UTF8Encoding(true);
-
-                case "utf8":
-                    return new UTF8Encoding(false);
-
-                default:
-                    throw new NotSupportedException($"Encoding '{typeEncoding}' n'est pas géré dans l'export CSV");
-            }
+                "utf8BOM" => new UTF8Encoding(true),
+                "utf8" => new UTF8Encoding(false),
+                _ => throw new NotSupportedException($"Encoding '{typeEncoding}' n'est pas géré dans l'export CSV"),
+            };
         }
     }
 }
