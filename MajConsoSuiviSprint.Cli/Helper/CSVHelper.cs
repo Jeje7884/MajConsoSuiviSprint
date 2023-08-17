@@ -16,7 +16,7 @@ namespace MajConsoSuiviSprint.Cli.Helper
         //    csv.WriteRecords(data);
         //}
 
-        public static void GenerateCSVFile<T>(string fileName, List<T> data, bool isAppend, string typeEncoding = "utf8BOM")
+        public static void GenerateCSVFile<T>(string fileName, IList<T> data, bool isAppend, string typeEncoding = "utf8BOM")
         {
             Console.WriteLine("CSVModule.GenerateCSVFile");
 

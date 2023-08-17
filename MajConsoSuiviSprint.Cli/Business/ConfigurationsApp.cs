@@ -86,7 +86,8 @@ namespace MajConsoSuiviSprint.Cli.Business
             var suiviSprintInfo = new SuiviSprintInfoConfigModel()
             {
                 FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? default!,
-                Path = sectionSuiviSprint.GetValue<string>("Path") ?? default!
+                Path = sectionSuiviSprint.GetValue<string>("Path") ?? default!,
+                MajSuiviSprint = sectionSuiviSprint.GetValue<string>("MajSuiviSprint")?.ToUpper() ?? default!,
             };
 
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint
@@ -149,7 +150,8 @@ namespace MajConsoSuiviSprint.Cli.Business
 
 
 
-            WebTTTInfoConfig.SheetName = WebTTTInfoConfig.SheetName.Replace("{anneeEC}", DateTime.Now.Year.ToString());
+            WebTTTInfoConfig.SheetName = WebTTTInfoConfig.SheetName
+                                            .Replace("{anneeEC}", DateTime.Now.Year.ToString());
 
             if (Directory.Exists(WebTTTInfoConfig.Path))
             {

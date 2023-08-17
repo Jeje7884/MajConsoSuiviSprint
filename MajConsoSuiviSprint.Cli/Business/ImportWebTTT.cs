@@ -1,4 +1,5 @@
-﻿using MajConsoSuiviSprint.Cli.Business.Interfaces;
+﻿using DocumentFormat.OpenXml.Office2013.Word;
+using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
@@ -15,7 +16,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             _configurationApp = configuration;
         }
 
-        internal List<ImportWebTTTExcelModel> ImportInfosFromWebTTT()
+        internal IList<ImportWebTTTExcelModel> ImportInfosFromWebTTT()
         {
             if (Divers.IsFileOpened(_configurationApp.WebTTTInfoConfig.FullFileName))
             {
@@ -32,29 +33,24 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         }
 
-        public ResultImportWebTTT CheckSaisiesActiviteInWebTTT(List<ImportWebTTTExcelModel> allDataInWebTTT)
+        public ResultImportWebTTT CheckSaisiesActiviteInWebTTT(IList<ImportWebTTTExcelModel> allDataInWebTTT)
         {
             //Dictionary<string, ErreurSaisieDemandeModel> erreursSaisiesDemandes = new();
             List<ErreurSaisieDemandeModel> erreursSaisiesDemandes = new();
 
-            bool alreadyExists = erreursSaisiesDemandes.Any(x => x.NumeroDeDemande == "ooo");
-            if (erreursSaisiesDemandes.Exists(x => x.NumeroDeDemande == "200"))
-            {
-                //code
-            }
 
             //Dictionary<string, TempsConsommeDemandeModel> tempsConsommesPardemandesEtParSprint = new();
 
             //Dictionary<string, Dictionary<int, float>> tempsDeclaresParCollab = new();
-            List<SaisieRemplissageTempsCollabParSemaineModel> erreursSaisiesRemplissageTempsCollabParSemaine = new();
+            List<SaisieRemplissageTempsCollabParSemaineModel> saisiesRemplissageTempsCollabParSemaine = new();
 
-            foreach (ImportWebTTTExcelModel dataWebTTT in allDataInWebTTT)
+            foreach (ImportWebTTTExcelModel dataRowWebTTT in allDataInWebTTT)
             {
-                bool isDemandeValid = IsSaisieValid(dataWebTTT);
+                bool isDemandeValid = IsSaisieValid(dataRowWebTTT);
 
                 if (!isDemandeValid)
                 {
-                    AddListErreursDeSaisies(erreursSaisiesDemandes, dataWebTTT);
+                    AddListErreursDeSaisies(erreursSaisiesDemandes, dataRowWebTTT);
                 }
                 //if (SaisieAPrendreEnComptePourTempsConsoFichierDeSuivi(dataWebTTT))
                 //{
@@ -62,13 +58,13 @@ namespace MajConsoSuiviSprint.Cli.Business
 
                 //    tempsConsommesPardemandesEtParSprint[dataWebTTT.NumeroDeDemande].IsDemandeValide = isDemandeValid;
                 //}
-                AddDictionnaireTempsDeclareParCollabEtParSemaine(erreursSaisiesRemplissageTempsCollabParSemaine, dataWebTTT);
+                AddListTempsDeclareParCollabEtParSemaine(saisiesRemplissageTempsCollabParSemaine, dataRowWebTTT);
                 //erreursSaisiesRemplissageTempsCollabParSemaine = GetListCollabErreurRemplissageHeruresWebTTTT(tempsDeclaresParCollab);
             }
             return new ResultImportWebTTT()
             {
                 ErreursSaisiesDemandes = erreursSaisiesDemandes,
-                ErreursSaisiesRemplissageTempsCollabParSemaine = erreursSaisiesRemplissageTempsCollabParSemaine,
+                SaisiesRemplissageTempsCollabParSemaine = saisiesRemplissageTempsCollabParSemaine,
                 //TempsConsommesPardemandesEtParSprint = tempsConsommesPardemandesEtParSprint
             };
         }
@@ -105,32 +101,37 @@ namespace MajConsoSuiviSprint.Cli.Business
         //    return erreursSaisiesRemplissageTempsCollabParSemaine;
         //}
 
-        private static void AddDictionnaireTempsDeclareParCollabEtParSemaine(List<SaisieRemplissageTempsCollabParSemaineModel> tempsDeclaresParCollab, ImportWebTTTExcelModel dataWebTTT)
+        private static void AddListTempsDeclareParCollabEtParSemaine(IList<SaisieRemplissageTempsCollabParSemaineModel> tempsDeclaresParCollab, ImportWebTTTExcelModel dataRowWebTTT)
         {
-            //if (!tempsDeclaresParCollab.ContainsKey(dataWebTTT.TrigrammeCollab))
-            //{
-            //    var tempsdeclareCollab = new Dictionary<int, float>
-            //        {
-            //            { dataWebTTT.NumeroDeSemaineDateActivite, dataWebTTT.HeureDeclaree }
-            //        };
-            //    tempsDeclaresParCollab.Add(dataWebTTT.TrigrammeCollab, tempsdeclareCollab);
-            //}
-            //else
-            //{
-            //    if (tempsDeclaresParCollab[dataWebTTT.TrigrammeCollab].ContainsKey(dataWebTTT.NumeroDeSemaineDateActivite))
-            //    {
-            //        tempsDeclaresParCollab[dataWebTTT.TrigrammeCollab][dataWebTTT.NumeroDeSemaineDateActivite] += dataWebTTT.HeureDeclaree;
-            //    }
-            //    else
-            //    {
-            //        tempsDeclaresParCollab[dataWebTTT.TrigrammeCollab].Add(dataWebTTT.NumeroDeSemaineDateActivite, dataWebTTT.HeureDeclaree);
-            //    }
-            //}
+
+            if (!tempsDeclaresParCollab.Any(tps => tps.Qui.Equals(dataRowWebTTT.TrigrammeCollab)
+                                                                                        && tps.NumeroDeSemaine.Equals(dataRowWebTTT.NumeroDeSemaineDateActivite)))
+            {
+                SaisieRemplissageTempsCollabParSemaineModel saisieDemande = new()
+                {
+                    Qui = dataRowWebTTT.TrigrammeCollab,
+                    NumeroDeSemaine = dataRowWebTTT.NumeroDeSemaineDateActivite,                    
+                    TotalHeureDeclaree = dataRowWebTTT.HeureDeclaree
+                };
+                tempsDeclaresParCollab.Add(saisieDemande);
+            }
+            else
+            {
+                var tempsDuCollabEtPourUneSemaine = tempsDeclaresParCollab
+                                                                                        .FirstOrDefault(tps =>
+                                                                                            tps.Qui.Equals(dataRowWebTTT.TrigrammeCollab)
+                                                                                            && tps.NumeroDeSemaine.Equals(dataRowWebTTT.NumeroDeSemaineDateActivite)
+                                                                                            )
+                                                                                            ?? default!;
+
+
+                tempsDuCollabEtPourUneSemaine.TotalHeureDeclaree += dataRowWebTTT.HeureDeclaree;
+
+            }
         }
 
 
-
-        private static void AddListErreursDeSaisies(List<ErreurSaisieDemandeModel> erreursSaisiesDemandes, ImportWebTTTExcelModel dataWebTTT)
+        private static void AddListErreursDeSaisies(IList<ErreurSaisieDemandeModel> erreursSaisiesDemandes, ImportWebTTTExcelModel dataWebTTT)
         {
             if (!erreursSaisiesDemandes.Any(err => err.Equals(dataWebTTT.NumeroDeDemande)))
             {
@@ -191,17 +192,20 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         //}
 
-        public void GenereExportCSVErreurSaisies(List<ErreurSaisieDemandeModel> erreursSaisiesDemandes)
+        public void GenereExportCSVErreurSaisies(IList<ErreurSaisieDemandeModel> erreursSaisiesDemandes)
         {
             CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, erreursSaisiesDemandes, false);
         }
 
-        private bool SaisieAPrendreEnComptePourTempsConsoFichierDeSuivi(ImportWebTTTExcelModel saisieInWebTTT)
+        public void GenereExportCSVErreurTempsConsomme(IList<SaisieRemplissageTempsCollabParSemaineModel> tempsConsommes)
         {
-            return (InfoSprint.IsActivityToManaged(saisieInWebTTT.Activite) &&
-                    InfoSprint.IsPeriodeToManaged(saisieInWebTTT.DateDeSaisie,
-                                                _configurationApp.SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint,
-                                                _configurationApp.SuiviSprintInfoConfig.NumeroSemaineFinDeSprint));
+            var erreurDeTEmps = tempsConsommes.Where(tpsCollabParSemaine =>
+                                                                            tpsCollabParSemaine.TotalHeureDeclaree < _configurationApp.WebTTTInfoConfig.NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine);
+
+
+            CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilanErreurCSV, tempsConsommes, false);
         }
+
+       
     }
 }

@@ -4,7 +4,7 @@ namespace MajConsoSuiviSprint.Cli.Business.Interfaces
 {
     internal interface IImportWebTTT
     {
-        ResultImportWebTTT CheckSaisiesActiviteInWebTTT(List<ImportWebTTTExcelModel> allDataInWebTTT);
-        void GenereExportCSVErreurSaisies(List<ErreurSaisieDemandeModel> erreursSaisiesDemandes);
+        ResultImportWebTTT CheckSaisiesActiviteInWebTTT(IList<ImportWebTTTExcelModel> allDataInWebTTT);
+        void GenereExportCSVErreurSaisies(IList<ErreurSaisieDemandeModel> erreursSaisiesDemandes);
     }
 }
