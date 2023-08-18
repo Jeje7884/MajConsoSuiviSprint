@@ -39,8 +39,9 @@ namespace MajConsoSuiviSprint.Cli
                 IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
                 ResultImportWebTTT resultAnalyseImport= importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
                 
+         
                 importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
-                importWebTTT.GenereExportCSVErreurTempsConsomme(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
+                importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
             }
             catch (Exception ex)
             {

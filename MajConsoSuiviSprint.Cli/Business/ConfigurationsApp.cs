@@ -55,7 +55,8 @@ namespace MajConsoSuiviSprint.Cli.Business
                 FileName = sectionWebTTT.GetValue<string>("FileName") ?? default!,
                 SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? default!,
                 NbreDeSemaineAPrendreAvtLaSemaineEnCours = sectionWebTTT.GetValue<int>("NbreDeSemaineAPrendreAvtLaSemaineEnCours"),
-                NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine = sectionWebTTT.GetValue<int>("NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine"),
+                NbreHeureTotaleActiviteJour = sectionWebTTT.GetValue<int>("NbreHeureTotaleActiviteJour"),
+                NbreJourSemaine = sectionWebTTT.GetValue<int>("NbreJourSemaine"),
                 TopLaunchBilans = "O".Equals(sectionWebTTT.GetValue<string>("TopLaunchBilans"), StringComparison.OrdinalIgnoreCase),
                 Headers = sectionWebTTT
                                 .GetSection("Headers")

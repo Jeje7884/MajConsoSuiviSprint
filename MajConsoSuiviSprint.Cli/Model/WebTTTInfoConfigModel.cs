@@ -28,7 +28,8 @@ namespace MajConsoSuiviSprint.Cli.Model
         }
 
        
-        public int NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine { get; set; }
+        public int NbreJourSemaine { get; set; }
+        public int NbreHeureTotaleActiviteJour { get; set; }
 
         public Dictionary<string, List<MaskSaisieModel>> ReglesSaisiesAutorisesParActivite { get; set; } = new Dictionary<string, List<MaskSaisieModel>>();
     }
