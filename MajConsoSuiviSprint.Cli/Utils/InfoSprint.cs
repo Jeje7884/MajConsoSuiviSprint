@@ -41,14 +41,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return result;
         }
 
-        public static bool IsPeriodeToManaged(DateTime dateSaisie, int numSemaineDebut, int numSemaineFin)
-        {
-            int numSemaineSaisie = GetNumSemaine(dateSaisie);
-
-            return (numSemaineSaisie >= numSemaineDebut) && (numSemaineSaisie <= numSemaineFin);
-        }
-
-
+       
         public static bool IsActivityToManaged(string activite)
         {
             List<string> list = new() { AppliConstant.LblActiviteDev,AppliConstant.LblActiviteQual,AppliConstant.LblActiviteDev};
@@ -122,7 +115,7 @@ namespace MajConsoSuiviSprint.Cli.Utils
 
                 if (result)
                 {
-                    result = (saisieInWebTTT.Application == AppliConstant.LblApplicationParDefaut);
+                    result = !(saisieInWebTTT.Application == AppliConstant.LblApplicationParDefaut && !saisieInWebTTT.NumeroDeDemande.StartsWith("Inner"));
                 }
             }
 

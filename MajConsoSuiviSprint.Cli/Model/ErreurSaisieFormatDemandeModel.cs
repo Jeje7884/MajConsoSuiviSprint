@@ -1,6 +1,6 @@
 ﻿namespace MajConsoSuiviSprint.Cli.Model
 {
-    internal class ErreurSaisieDemandeModel
+    internal class ErreurSaisieFormatDemandeModel
     {
         public string Qui { get; set; } = default!;
         public string Application { get; set; } = default!;

@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-
-namespace MajConsoSuiviSprint.Cli.Utils
+﻿namespace MajConsoSuiviSprint.Cli.Utils
 {
     internal static class Divers
     {
@@ -32,6 +30,13 @@ namespace MajConsoSuiviSprint.Cli.Utils
             Console.ResetColor();
         }
 
+        public static void DisplayInfoMessageInConsole(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($" --> {message} ");
+            Console.ResetColor();
+        }
+
         public static string GetFileNameFromFullPathFilename(string fullPath)
         {
             return Path.GetFileName(fullPath);
@@ -51,7 +56,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
         {
             string fileName = Path.GetFileName(path);
             return path != fileName;
-
         }
 
         public static bool IsFileWithExtention(string file)
@@ -70,6 +74,5 @@ namespace MajConsoSuiviSprint.Cli.Utils
                 throw new Exception($"Le fichier {fullPath} ne peut être supprimé car il est ouvert");
             }
         }
-
     }
 }
