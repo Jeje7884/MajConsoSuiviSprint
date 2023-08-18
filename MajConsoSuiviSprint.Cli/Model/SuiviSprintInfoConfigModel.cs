@@ -27,8 +27,8 @@ namespace MajConsoSuiviSprint.Cli.Model
 
         public int NumeroSemaineDebutDeSprint { get; set; }
         public int NumeroSemaineFinDeSprint { get; set; }
-        public string MajSuiviSprint { get; set; }
-       
+        public bool TopMajSuiviSprint { get; set ; } = default!;
+
         public TableauSuivi TabSuivi { get; set; } = new TableauSuivi();
     }
 

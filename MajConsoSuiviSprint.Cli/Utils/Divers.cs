@@ -59,5 +59,17 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return Path.HasExtension(file);
         }
 
+        public static void DeleteFile(string fullPath)
+        {
+            if (!IsFileOpened(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+            else
+            {
+                throw new Exception($"Le fichier {fullPath} ne peut être supprimé car il est ouvert");
+            }
+        }
+
     }
 }

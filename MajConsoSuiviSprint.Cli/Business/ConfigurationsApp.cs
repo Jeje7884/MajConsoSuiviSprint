@@ -49,14 +49,21 @@ namespace MajConsoSuiviSprint.Cli.Business
             var sectionWebTTT = config.GetSection(AppliConstant.WebTTTSection);
             var webTTTInfo = new WebTTTInfoConfigModel()
             {
-                FileBilanErreurCSV = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieDansWebTTT") ?? default!,
+                FileBilansErreurFormatSaisieDemande = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieFormatDemande") ?? default!,
+                FileBilansErreurTempsSaisieSemaine = sectionWebTTT.GetValue<string>("FileNameBilanErreurSaisieTempsSemaine") ?? default!,
                 Path = sectionWebTTT.GetValue<string>("Path") ?? default!,
                 FileName = sectionWebTTT.GetValue<string>("FileName") ?? default!,
                 SheetName = sectionWebTTT.GetValue<string>("SheetName") ?? default!,
                 NbreDeSemaineAPrendreAvtLaSemaineEnCours = sectionWebTTT.GetValue<int>("NbreDeSemaineAPrendreAvtLaSemaineEnCours"),
                 NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine = sectionWebTTT.GetValue<int>("NbreHeureTotaleMinimumAdeclarerParCollabEtParSemaine"),
+                TopLaunchBilans = "O".Equals(sectionWebTTT.GetValue<string>("TopLaunchBilans"), StringComparison.OrdinalIgnoreCase),
                 Headers = sectionWebTTT
                                 .GetSection("Headers")
+                                .Get<List<HeadersWebTTTModel>>()
+                                ?.AsReadOnly()
+                                ?? new List<HeadersWebTTTModel>().AsReadOnly(),
+                JoursFeries = sectionWebTTT
+                                .GetSection("JourFeries")
                                 .Get<List<HeadersWebTTTModel>>()
                                 ?.AsReadOnly()
                                 ?? new List<HeadersWebTTTModel>().AsReadOnly()
@@ -87,7 +94,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? default!,
                 Path = sectionSuiviSprint.GetValue<string>("Path") ?? default!,
-                MajSuiviSprint = sectionSuiviSprint.GetValue<string>("MajSuiviSprint")?.ToUpper() ?? default!,
+                TopMajSuiviSprint = "O".Equals(sectionSuiviSprint.GetValue<string>("MajSuiviSprint"), StringComparison.OrdinalIgnoreCase) 
             };
 
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint

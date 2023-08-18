@@ -10,9 +10,13 @@ namespace MajConsoSuiviSprint.Cli.Model
         public string SheetName { get; set; } = default!;
         public List<MaskSaisieModel> ReglesSaisiesAutorisePourUneActivite { get; set; } = default!;
         public IReadOnlyCollection<HeadersWebTTTModel> Headers { get; set; } = default!;
+        public IReadOnlyCollection<HeadersWebTTTModel> JoursFeries { get; set; } = default!;
         public string Path { get; set; } = default!;
-        public string FileBilanErreurCSV { get; set; } = default!;
+        public string FileBilansErreurFormatSaisieDemande { get; set; } = default!;
+        public string FileBilansErreurTempsSaisieSemaine { get; set; } = default!;
         public int NbreDeSemaineAPrendreAvtLaSemaineEnCours { get; set; } = 0;
+
+        public bool TopLaunchBilans { get; set; } = default!;
         public int NumeroDeSemaineAPartirDuquelChecker
         {
             get { return CalculDuNumeroDeSemaineDePriseEnCompte(); }

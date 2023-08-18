@@ -1,4 +1,5 @@
 ﻿using MajConsoSuiviSprint.Cli.Constants;
+using MajConsoSuiviSprint.Cli.Model;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -94,6 +95,86 @@ namespace MajConsoSuiviSprint.Cli.Utils
             }
 
             return (debutSemaineSprint, finSemaineSprint);
+        }
+        public static bool IsDemandeValid(ImportWebTTTExcelModel saisieInWebTTT,  Dictionary<string,List<MaskSaisieModel>> maskAutorise)
+        {
+            bool result = true;
+
+            if (saisieInWebTTT.Activite== AppliConstant.LblActiviteSpecification)
+            {
+                maskAutorise["Spec"].ForEach(mask =>
+                {
+                    if (saisieInWebTTT.Activite.Contains(mask.Rule))
+                    {
+                        result = false;
+                    }
+                });
+            }
+            else if (saisieInWebTTT.Activite.Equals(AppliConstant.LblActiviteDev) || saisieInWebTTT.Activite.Equals(AppliConstant.LblActiviteQual))
+            {
+                maskAutorise["DevQual"].ForEach(mask =>
+                {
+                    if (saisieInWebTTT.Activite.Contains(mask.Rule))
+                    {
+                        result = false;
+                    }
+                });
+
+                if (result)
+                {
+                    result = (saisieInWebTTT.Application == AppliConstant.LblApplicationParDefaut);
+                }
+            }
+
+            return result;
+        }
+
+        public static string ModifyDemandeWebTTTToSuiviSprint(string numDemande,string application)
+        {
+            string result = default!;
+            if (numDemande.ToUpper().StartsWith("INNERSOURCE") || numDemande.ToUpper().StartsWith("#"))
+            {
+
+                if (numDemande.ToUpper().StartsWith("INNERSOURCE"))
+                {
+                    result = result.Substring(12);
+                }
+                else if (numDemande.ToUpper().StartsWith("#"))
+                {
+                    result = result.Substring(1);
+                }
+                result = application + "-" + result;
+            } else
+            {
+                string[] resultSplit = numDemande.Split('-');
+                if (resultSplit.Length > 1) {
+                    bool isnumeric=int.TryParse(resultSplit[1], out _);
+                    if (isnumeric)
+                    {
+                        result = resultSplit[1];
+                    }
+                    else 
+                    {
+                        isnumeric = int.TryParse(resultSplit[0], out _);
+                        if (isnumeric)
+                        {
+                            result = resultSplit[0];
+                        }
+                        else
+                        {
+                            result = numDemande;
+                        }
+                    }
+                }
+                else
+                {
+                    result = numDemande.Replace("BUG", "").Replace("TS", "").Replace("US", "").Trim();
+                }
+            }
+
+            return result.Trim();
+         
+
         }
     }
 }
