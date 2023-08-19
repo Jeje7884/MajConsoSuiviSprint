@@ -252,6 +252,60 @@ namespace MajConsoSuiviSprint.Cli.Business
             }
         }
 
+        public void Test()
+        {
+           
+             
+                string lblLigneFin = "RESERVE";
+
+                bool bTableau = true;
+                int starrow = 5;
+              
+                string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
+                int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
+
+
+                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
+                {
+                    WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                    string sheetNameToFind = "PI2023.08-1 Suivi Sprint-Init";
+                   
+                    foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
+                    {
+                        Worksheet ws = wsp.Worksheet;
+                        //WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                        WorksheetPart targetWorksheetPart = workbookPart.WorksheetParts.FirstOrDefault(
+                            wsp => wsp.Worksheet.GetAttributes().Any(x => x.Value == sheetNameToFind));
+                        // i want to do something like this
+
+                        SheetData sheetData = ws.GetFirstChild<SheetData>();
+                        int rowEC = 0;
+                        foreach (Row row in sheetData.Elements<Row>())
+                        {
+                            if (rowEC > 4)
+                            {
+                                int column = 0;
+                                foreach (Cell cell in row.Elements<Cell>())
+                                {
+
+                                    if (column == 31)
+                                    {
+                                        string cellValue = GetCellValue(cell, workbookPart);
+                                        Console.WriteLine($"N° demande {cellValue}\t");
+                                    }
+
+                                    column++;
+                                }
+
+
+                            }
+                            rowEC++;
+                        }
+                    }
+
+            }
+        }
+
         private static string GetCellValue(Cell cell)
         {
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)

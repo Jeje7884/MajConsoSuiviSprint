@@ -49,7 +49,8 @@ namespace MajConsoSuiviSprint.Cli
                     var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
                     if (GetTempsSuiviSprint.Count > 0)
                     {
-                        suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
+                        suiviSprint.Test();
+                        //suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
                     }
                     else
                     {
