@@ -33,7 +33,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private void CheckCoherenceParamNumDeSemaineAPartirDe()
         {
-            if (WebTTTInfoConfig.NumeroDeSemaineAPartirDuquelChecker > SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint)
+            if (WebTTTInfoConfig.NumeroDeSemaineDebutAChecker > SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint)
             {
                 throw new Exception($"Erreur de paramétrage. Le paramètre NumeroDeSemaineAPartirDuquelChecker ne peut être supérieur à la semaine du fichier de suivi {SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint}");
             }

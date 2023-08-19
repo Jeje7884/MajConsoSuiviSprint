@@ -18,7 +18,7 @@ namespace MajConsoSuiviSprint.Cli.Model
 
         public bool TopLaunchBilans { get; set; } = default!;
 
-        public int NumeroDeSemaineAPartirDuquelChecker
+        public int NumeroDeSemaineDebutAChecker
         {
             get { return CalculDuNumeroDeSemaineDePriseEnCompte(); }
         }
