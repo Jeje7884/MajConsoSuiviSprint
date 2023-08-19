@@ -1,5 +1,6 @@
 ﻿using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.IO;
 
 namespace MajConsoSuiviSprint.Cli.Helper
 {
@@ -49,7 +50,12 @@ namespace MajConsoSuiviSprint.Cli.Helper
             return Workbook.GetSheet(sheetName);
         }
 
-     
+        public ISheet GetSheetByID(int idSheet)
+        {
+            return Workbook.GetSheetAt(idSheet);
+        }
+
+
 
         public static Dictionary<string, int> GetIdColumns(IRow headerRow, List<string> columnsToImport)
         {
@@ -91,6 +97,7 @@ namespace MajConsoSuiviSprint.Cli.Helper
             return string.Empty;
         }
 
+       
 
     }
 }

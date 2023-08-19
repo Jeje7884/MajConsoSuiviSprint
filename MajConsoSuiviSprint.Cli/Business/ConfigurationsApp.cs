@@ -85,7 +85,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? default!,
                 Path = sectionSuiviSprint.GetValue<string>("Path") ?? default!,
-                TopMajSuiviSprint = "O".Equals(sectionSuiviSprint.GetValue<string>("MajSuiviSprint"), StringComparison.OrdinalIgnoreCase)
+                TopMajSuiviSprint = "O".Equals(sectionSuiviSprint.GetValue<string>("TopMajSuiviSprint"), StringComparison.OrdinalIgnoreCase)
             };
 
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint

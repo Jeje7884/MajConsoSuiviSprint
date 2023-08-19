@@ -41,6 +41,22 @@ namespace MajConsoSuiviSprint.Cli
 
                 importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
                 importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
+
+                if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
+                {
+                    
+                    var suiviSprint = new SuiviSprint(configurationProcess);
+                    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
+                    if (GetTempsSuiviSprint.Count > 0)
+                    {
+                        suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
+                    }
+                    else
+                    {
+                        Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
+                    }
+                        
+                }
             }
             catch (Exception ex)
             {
