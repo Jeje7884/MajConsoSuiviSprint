@@ -7,7 +7,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
 {
     internal static class InfoSprint
     {
-        
         public static string GetFileNameSuiviSprintEC()
         {
             Console.WriteLine("GetFileNameSuiviSprintEC");
@@ -37,14 +36,12 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     .Replace("{numFinDeSemaine}", numSemaineFinsSprint)
                     .Replace("{numPI}", numPI.ToString("D2"));
 
-         
             return result;
         }
 
-       
         public static bool IsActivityToManaged(string activite)
         {
-            List<string> list = new() { AppliConstant.LblActiviteDev,AppliConstant.LblActiviteQual,AppliConstant.LblActiviteDev};
+            List<string> list = new() { AppliConstant.LblActiviteDev, AppliConstant.LblActiviteQual, AppliConstant.LblActiviteDev };
             return list.Contains(activite);
         }
 
@@ -55,7 +52,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
 
         public static int GetNumSemaine(DateTime date)
         {
-
             CultureInfo culture = new("fr-FR", false);
             Calendar calendar = culture.Calendar;
             CalendarWeekRule weekRule = culture.DateTimeFormat.CalendarWeekRule;
@@ -63,7 +59,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
 
             int numberWeek = calendar.GetWeekOfYear(date, weekRule, dayOfWeek);
             return numberWeek;
-
         }
 
         private static bool IsMondayToday()
@@ -72,7 +67,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
 
             return (jourCourant.Equals("Monday") || jourCourant.Equals("Lundi"));
         }
-              
 
         public static (int debutSprint, int finSprint) ExtractSemainesSprint(string fichierDeSuivi)
         {
@@ -89,17 +83,18 @@ namespace MajConsoSuiviSprint.Cli.Utils
 
             return (debutSemaineSprint, finSemaineSprint);
         }
-        public static bool IsDemandeValid(ImportWebTTTExcelModel saisieInWebTTT,  Dictionary<string,List<MaskSaisieModel>> maskAutorise)
-        {
-            bool result = true;
 
-            if (saisieInWebTTT.Activite== AppliConstant.LblActiviteSpecification)
+        public static bool IsDemandeValid(ImportWebTTTExcelModel saisieInWebTTT, Dictionary<string, List<MaskSaisieModel>> maskAutorise)
+        {
+            bool result = false;
+
+            if (saisieInWebTTT.Activite == AppliConstant.LblActiviteSpecification)
             {
                 maskAutorise["Spec"].ForEach(mask =>
                 {
-                    if (saisieInWebTTT.Activite.Contains(mask.Rule))
+                    if (saisieInWebTTT.NumeroDeDemande.Contains(mask.Rule))
                     {
-                        result = false;
+                        result = true;
                     }
                 });
             }
@@ -107,9 +102,9 @@ namespace MajConsoSuiviSprint.Cli.Utils
             {
                 maskAutorise["DevQual"].ForEach(mask =>
                 {
-                    if (saisieInWebTTT.Activite.Contains(mask.Rule))
+                    if (saisieInWebTTT.NumeroDeDemande.Contains(mask.Rule))
                     {
-                        result = false;
+                        result = true;
                     }
                 });
 
@@ -122,12 +117,11 @@ namespace MajConsoSuiviSprint.Cli.Utils
             return result;
         }
 
-        public static string ModifyDemandeWebTTTToSuiviSprint(string numDemande,string application)
+        public static string ModifyDemandeWebTTTToSuiviSprint(string numDemande, string application)
         {
             string result = default!;
             if (numDemande.ToUpper().StartsWith("INNERSOURCE") || numDemande.ToUpper().StartsWith("#"))
             {
-
                 if (numDemande.ToUpper().StartsWith("INNERSOURCE"))
                 {
                     result = result.Substring(12);
@@ -137,16 +131,18 @@ namespace MajConsoSuiviSprint.Cli.Utils
                     result = result.Substring(1);
                 }
                 result = application + "-" + result;
-            } else
+            }
+            else
             {
                 string[] resultSplit = numDemande.Split('-');
-                if (resultSplit.Length > 1) {
-                    bool isnumeric=int.TryParse(resultSplit[1], out _);
+                if (resultSplit.Length > 1)
+                {
+                    bool isnumeric = int.TryParse(resultSplit[1], out _);
                     if (isnumeric)
                     {
                         result = resultSplit[1];
                     }
-                    else 
+                    else
                     {
                         isnumeric = int.TryParse(resultSplit[0], out _);
                         if (isnumeric)
@@ -166,8 +162,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
             }
 
             return result.Trim();
-         
-
         }
     }
 }

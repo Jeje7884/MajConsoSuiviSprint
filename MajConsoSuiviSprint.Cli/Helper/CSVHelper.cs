@@ -2,13 +2,11 @@
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.Text;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace MajConsoSuiviSprint.Cli.Helper
 {
     internal class CSVHelper
     {
-        
         public static void GenerateCSVFile<T>(string fileName, IList<T> data, bool isAppend, string typeEncoding = "utf8BOM")
         {
             Console.WriteLine("CSVModule.GenerateCSVFile");

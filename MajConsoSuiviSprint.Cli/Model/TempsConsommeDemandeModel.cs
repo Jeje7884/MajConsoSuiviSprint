@@ -7,6 +7,5 @@
         public float HeureTotaleDeDeveloppement { get; set; } = default!;
         public float HeureTotaleDeQualification { get; set; } = default!;
         public bool IsDemandeValide { get; set; } = default!;
-
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MajConsoSuiviSprint.Cli.Utils
+﻿using System.Diagnostics;
+
+namespace MajConsoSuiviSprint.Cli.Utils
 {
     internal static class Divers
     {
@@ -73,6 +75,13 @@
             {
                 throw new Exception($"Le fichier {fullPath} ne peut être supprimé car il est ouvert");
             }
+        }
+
+        public static void LaunchProcess(string fullPath)
+        {
+            Process.Start("explorer.exe", fullPath);
+
+
         }
     }
 }

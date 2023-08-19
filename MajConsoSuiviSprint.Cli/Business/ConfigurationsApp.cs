@@ -8,15 +8,12 @@ namespace MajConsoSuiviSprint.Cli.Business
 {
     internal class ConfigurationsApp : IConfigurationsApp
     {
-      
         public WebTTTInfoConfigModel WebTTTInfoConfig { get; set; } = default!;
         public SuiviSprintInfoConfigModel SuiviSprintInfoConfig { get; set; } = default!;
 
         public ConfigurationsApp(string pathAppSettings)
         {
-
             Console.WriteLine("Configuration");
-
 
             string jsonFile = Divers.GetFileNameFromFullPathFilename(pathAppSettings);
             string pathJson = Divers.GetPathFromFullPathFilename(pathAppSettings);
@@ -25,7 +22,6 @@ namespace MajConsoSuiviSprint.Cli.Business
                                     .SetBasePath(pathJson)
                                     .AddJsonFile(jsonFile, optional: false, reloadOnChange: true)
                                     .Build();
-           
 
             WebTTTInfoConfig = LoadInfosWebTTTFromSettings(config);
             SuiviSprintInfoConfig = LoadInfosSuiviSprintFromSettings(config);
@@ -45,7 +41,6 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private static WebTTTInfoConfigModel LoadInfosWebTTTFromSettings(IConfiguration config)
         {
-
             var sectionWebTTT = config.GetSection(AppliConstant.WebTTTSection);
             var webTTTInfo = new WebTTTInfoConfigModel()
             {
@@ -58,19 +53,15 @@ namespace MajConsoSuiviSprint.Cli.Business
                 NbreHeureTotaleActiviteJour = sectionWebTTT.GetValue<int>("NbreHeureTotaleActiviteJour"),
                 NbreJourSemaine = sectionWebTTT.GetValue<int>("NbreJourSemaine"),
                 TopLaunchBilans = "O".Equals(sectionWebTTT.GetValue<string>("TopLaunchBilans"), StringComparison.OrdinalIgnoreCase),
-                Headers = sectionWebTTT
-                                .GetSection("Headers")
-                                .Get<List<HeadersWebTTTModel>>()
-                                ?.AsReadOnly()
-                                ?? new List<HeadersWebTTTModel>().AsReadOnly(),
+              
                 JoursFeries = sectionWebTTT
                                 .GetSection("JourFeries")
-                                .Get<List<HeadersWebTTTModel>>()
+                                .Get<List<ListConfigsWebTTTModel>>()
                                 ?.AsReadOnly()
-                                ?? new List<HeadersWebTTTModel>().AsReadOnly()
+                                ?? new List<ListConfigsWebTTTModel>().AsReadOnly()
             };
             List<MaskSaisieModel> maskSpecAutorise = sectionWebTTT
-                                .GetSection("MaskSaisieModelDemande").GetSection("Spec")
+                                .GetSection("MaskSaisiesDemandes").GetSection("Spec")
                                 .Get<List<MaskSaisieModel>>()
                                 ?? new List<MaskSaisieModel>()
                                ;
@@ -78,14 +69,13 @@ namespace MajConsoSuiviSprint.Cli.Business
             webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("Spec", maskSpecAutorise);
 
             List<MaskSaisieModel> maskdevQualAutorise = sectionWebTTT
-                                .GetSection("MaskSaisieModelDemande").GetSection("DevQual")
+                                .GetSection("MaskSaisiesDemandes").GetSection("DevQual")
                                 .Get<List<MaskSaisieModel>>()
                                 ?? new List<MaskSaisieModel>();
 
             webTTTInfo.ReglesSaisiesAutorisesParActivite.Add("DevQual", maskdevQualAutorise);
             return webTTTInfo;
         }
-
 
         private static SuiviSprintInfoConfigModel LoadInfosSuiviSprintFromSettings(IConfiguration config)
         {
@@ -95,7 +85,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 FileName = sectionSuiviSprint.GetValue<string>("FileName") ?? default!,
                 Path = sectionSuiviSprint.GetValue<string>("Path") ?? default!,
-                TopMajSuiviSprint = "O".Equals(sectionSuiviSprint.GetValue<string>("MajSuiviSprint"), StringComparison.OrdinalIgnoreCase) 
+                TopMajSuiviSprint = "O".Equals(sectionSuiviSprint.GetValue<string>("MajSuiviSprint"), StringComparison.OrdinalIgnoreCase)
             };
 
             suiviSprintInfo.TabSuivi.SheetName = sectionSuiviSprint
@@ -120,13 +110,12 @@ namespace MajConsoSuiviSprint.Cli.Business
                             .GetSection("TabSuivi")
                             .GetSection("NumColumnTable")
                             .GetValue<string>("NoColumnHoursDevConsumed") ?? default!);
-            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ??default;
+            suiviSprintInfo.TabSuivi.NumColumnTable.NoColumnHoursDevConsumed = numColonne ?? default;
             return suiviSprintInfo;
         }
 
         private void InitInfosSuiviSprint()
         {
-
             string anneeEC = DateTime.Now.Year.ToString();
             if (string.IsNullOrEmpty(SuiviSprintInfoConfig.FileName))
             {
@@ -144,7 +133,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             bool isCheminAvecBackSlashALaFin = IsPathWithBackSlash(SuiviSprintInfoConfig.Path);
 
             SuiviSprintInfoConfig.FullFileName = $@"{SuiviSprintInfoConfig.Path}{(!isCheminAvecBackSlashALaFin ? "\\" : "")}{SuiviSprintInfoConfig.FileName}";
-
         }
 
         private void InitWebTTT()
@@ -155,8 +143,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             WebTTTInfoConfig.Path = WebTTTInfoConfig.Path
                                         .Replace("{anneeEC}", anneeEC)
                                         .Replace("{userName}", Environment.UserName);
-
-
 
             WebTTTInfoConfig.SheetName = WebTTTInfoConfig.SheetName
                                             .Replace("{anneeEC}", DateTime.Now.Year.ToString());

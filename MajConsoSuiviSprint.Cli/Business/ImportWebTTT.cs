@@ -9,6 +9,7 @@ namespace MajConsoSuiviSprint.Cli.Business
     internal class ImportWebTTT : IImportWebTTT
     {
         private readonly IConfigurationsApp _configurationApp;
+        private readonly List<string> Headers = new() { "Date", "Activity", "Domain", "Demand number", "Hours", "Collaborator" };
 
         public ImportWebTTT(IConfigurationsApp configuration)
         {
@@ -21,7 +22,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 throw new ExceptFileOpenException($"Le fichier {_configurationApp.WebTTTInfoConfig.FullFileName} est ouvert");
             }
-            var result = ExceLNPOIHelper.ImportFichierWebTTTExcel(_configurationApp.WebTTTInfoConfig);
+            var result = ExceLNPOIHelper.ImportFichierWebTTTExcel(_configurationApp.WebTTTInfoConfig, Headers);
             Console.WriteLine($" {result.Count} lignes ont été récupérés du fichier {_configurationApp.WebTTTInfoConfig.FileName}");
 
             return result;
@@ -35,13 +36,18 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             foreach (ImportWebTTTExcelModel dataRowWebTTT in allDataInWebTTT)
             {
-                bool isDemandeValid = InfoSprint.IsDemandeValid(dataRowWebTTT, _configurationApp.WebTTTInfoConfig.ReglesSaisiesAutorisesParActivite);
+                if (InfoSprint.IsActivityToManaged(dataRowWebTTT.Activite))
+                   {
+                    bool isDemandeValid = InfoSprint.IsDemandeValid(dataRowWebTTT, _configurationApp.WebTTTInfoConfig.ReglesSaisiesAutorisesParActivite);
 
-                if (!isDemandeValid)
-                {
-                    AddListErreursFormatDeSaisiesDemandes(erreursSaisiesDemandes, dataRowWebTTT);
+                    if (!isDemandeValid)
+                    {
+                        AddListErreursFormatDeSaisiesDemandes(erreursSaisiesDemandes, dataRowWebTTT);
+                    }
                 }
                 AddListTempsDeclareParCollabEtParSemaine(saisiesRemplissageTempsCollabParSemaine, dataRowWebTTT);
+
+
             }
             return new ResultImportWebTTT()
             {
@@ -135,26 +141,30 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         public void GenereExportCSVErreurSaisies(IList<ErreurSaisieFormatDemandeModel> erreursSaisiesDemandes)
         {
-            if (_configurationApp.WebTTTInfoConfig.TopLaunchBilans)
-            {
-                if (null !=erreursSaisiesDemandes)
+           
+                if (erreursSaisiesDemandes.Count !=0)
                 {
+                    erreursSaisiesDemandes= erreursSaisiesDemandes
+                                                                .OrderBy(err =>err.Qui)
+                                                                .ThenBy(err =>err.DateDeSaisie).ToList();
+
                     CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilansErreurFormatSaisieDemande, erreursSaisiesDemandes, false);
+                    if ( _configurationApp.WebTTTInfoConfig.TopLaunchBilans)
+                    {
+                        Divers.LaunchProcess(_configurationApp.WebTTTInfoConfig.FileBilansErreurFormatSaisieDemande);
+                    }
                 }
                 else
                 {
                     Divers.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
                 }
-                
-            }
             
         }
 
         public void GenereBilanErreurTempsConsommeSemaine(IList<SaisieRemplissageTempsCollabParSemaineModel> tempsConsommesParCollab)
         {
-            if (_configurationApp.WebTTTInfoConfig.TopLaunchBilans)
-            {
                 IList<SemaineAvecJourFerieModel> jourFerie = GetListJoursFeries();
+                int NumeroSemaineEC = InfoSprint.GetNumSemaine(DateTime.Now);
                 foreach (var tempsConso in tempsConsommesParCollab)
                 {
                     int nbreJourSemaine = _configurationApp.WebTTTInfoConfig.NbreJourSemaine;
@@ -162,19 +172,26 @@ namespace MajConsoSuiviSprint.Cli.Business
 
                     tempsConso.TotalHeureTempsPlein = _configurationApp.WebTTTInfoConfig.NbreHeureTotaleActiviteJour * (nbreJourSemaine - nbrejourFerieDansLaSemaine);
                 }
+                
+               var erreurDeTEmps = tempsConsommesParCollab.Where(tpsCollabParSemaine =>
+                                                                                tpsCollabParSemaine.TotalHeureDeclaree < tpsCollabParSemaine.TotalHeureTempsPlein
+                                                                                && tpsCollabParSemaine.NumeroDeSemaine <= NumeroSemaineEC)
+                                                                                .OrderBy(tpsCollab => tpsCollab.Qui)
+                                                                                .ThenBy(tps => tps.NumeroDeSemaine)
+                                                                                .ToList();
 
-                var erreurDeTEmps = tempsConsommesParCollab.Where(tpsCollabParSemaine =>
-                                                                                tpsCollabParSemaine.TotalHeureDeclaree < tpsCollabParSemaine.TotalHeureTempsPlein).ToList();
-
-                if (null != erreurDeTEmps)
+            if (erreurDeTEmps.Count != 0)
                 {
                     CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilansErreurTempsSaisieSemaine, erreurDeTEmps, false);
+                    if (_configurationApp.WebTTTInfoConfig.TopLaunchBilans)
+                    {
+                        Divers.LaunchProcess(_configurationApp.WebTTTInfoConfig.FileBilansErreurTempsSaisieSemaine);
+                    }
                 }
                 else
                 {
                     Divers.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
                 }
-            }
             
         }
 
@@ -188,7 +205,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 if (listJourFerieAvecNumSemaine.Any(j => j.NumeroDeSemaine.Equals(numSemaineDuJourFerie)))
                 {
                     var semaineFerie = listJourFerieAvecNumSemaine.FirstOrDefault(j => j.NumeroDeSemaine.Equals(numSemaineDuJourFerie));
-                    if (null !=semaineFerie)
+                    if (null != semaineFerie)
                     {
                         semaineFerie.NombreDeJourFerie += 1;
                     }

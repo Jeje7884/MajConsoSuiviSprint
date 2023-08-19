@@ -7,7 +7,8 @@ namespace MajConsoSuiviSprint.Cli.Model
         public string Qui { get; set; } = default!;
         public int NumeroDeSemaine { get; set; } = default!;
         public float TotalHeureDeclaree { get; set; } = default!;
+
         [Ignore]
-        public int TotalHeureTempsPlein{ get; set; } = default!;
+        public int TotalHeureTempsPlein { get; set; } = default!;
     }
 }

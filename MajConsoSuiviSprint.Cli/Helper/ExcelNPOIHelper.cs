@@ -7,13 +7,13 @@ namespace MajConsoSuiviSprint.Cli.Helper
 {
     internal static class ExceLNPOIHelper
     {
-        public static List<ImportWebTTTExcelModel> ImportFichierWebTTTExcel(WebTTTInfoConfigModel WebTTTInfoConfigModel)
+        public static List<ImportWebTTTExcelModel> ImportFichierWebTTTExcel(WebTTTInfoConfigModel WebTTTInfoConfigModel,List<string> columnsToImport)
 
         {
             string pathFile = WebTTTInfoConfigModel.FullFileName;
 
             string sheetName = WebTTTInfoConfigModel.SheetName;
-            List<HeadersWebTTTModel> columnsToImport = WebTTTInfoConfigModel.Headers.ToList();
+     
 
             var result = new List<ImportWebTTTExcelModel>();
             var dictionnaireNumeroDecolonne = new Dictionary<string, int>();
@@ -28,19 +28,17 @@ namespace MajConsoSuiviSprint.Cli.Helper
                 dictionnaireNumeroDecolonne = InitDictionnaireNumeroColonne(headerRow, columnsToImport);
                 Dictionary<int, string> columnIndexToHeader = new();
 
-              
                 for (int row = 1; row <= worksheet.LastRowNum; row++)
                 {
                     IRow dataRow = worksheet.GetRow(row);
 
                     if (dataRow != null)
                     {
-                        var data= GetDataFromRowWebTTT(WebTTTInfoConfigModel, result, dictionnaireNumeroDecolonne, dataRow);
-                        if (null!=data)
+                        var data = GetDataFromRowWebTTT(WebTTTInfoConfigModel, result, dictionnaireNumeroDecolonne, dataRow);
+                        if (null != data)
                         {
                             result.Add(data);
                         }
-                        
                     }
                 }
             }
@@ -49,42 +47,37 @@ namespace MajConsoSuiviSprint.Cli.Helper
 
         private static ImportWebTTTExcelModel GetDataFromRowWebTTT(WebTTTInfoConfigModel WebTTTInfoConfigModel, List<ImportWebTTTExcelModel> result, Dictionary<string, int> dictionnaireNumeroDecolonne, IRow dataRow)
         {
-            string collab = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Collaborator"]) ?? "";
-            DateTime dateDeSaisie = DateTime.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));
-            string activite = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Activity"]) ?? "";
-            string application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? "";
-            float heureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"]));
+            DateTime dateDeSaisie = DateTime.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));           
             int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
-            ImportWebTTTExcelModel dataFromRowWebTTT=default!;
-          
+            ImportWebTTTExcelModel dataFromRowWebTTT = default!;
+
             if (numeroDeSemaineDateActivite >= WebTTTInfoConfigModel.NumeroDeSemaineAPartirDuquelChecker)
             {
                 dataFromRowWebTTT = new ImportWebTTTExcelModel
                 {
-                    TrigrammeCollab = collab,
-                    Activite = activite,
-                    Application = application,
+                    TrigrammeCollab = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Collaborator"]) ?? default!,
+                    Activite = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Activity"]) ?? default!,
+                    Application = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Domain"]) ?? default!,
                     DateDeSaisie = dateDeSaisie,
-                    HeureDeclaree = heureDeclaree,
+                    NumeroDeDemande = GetCellValue(dataRow, dictionnaireNumeroDecolonne["Demand number"]) ?? default!,
+                    HeureDeclaree = float.Parse(GetCellValue(dataRow, dictionnaireNumeroDecolonne["Hours"])),
                     NumeroDeSemaineDateActivite = numeroDeSemaineDateActivite
-                } ;
+                };
             }
             return dataFromRowWebTTT;
         }
 
-    
-
-        private static Dictionary<string, int> InitDictionnaireNumeroColonne(IRow headerRow, List<HeadersWebTTTModel> columnsToImport)
+        private static Dictionary<string, int> InitDictionnaireNumeroColonne(IRow headerRow, List<string> columnsToImport)
         {
             Dictionary<string, int> dictionnaireColonne = new();
 
             if (columnsToImport?.Count > 0)
             {
-                foreach (HeadersWebTTTModel column in columnsToImport)
+                foreach (string column in columnsToImport)
                 {
-                    int numColonne = GetColumnIndex(headerRow, column.Value);
+                    int numColonne = GetColumnIndex(headerRow, column);
 
-                    dictionnaireColonne.Add(column.Value, numColonne);
+                    dictionnaireColonne.Add(column, numColonne);
                 }
             }
 
