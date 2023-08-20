@@ -1,12 +1,11 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 //using DocumentFormat.OpenXml.Wordprocessing;
 using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
-using DocumentFormat.OpenXml;
-using System.Collections.Generic;
 
 
 namespace MajConsoSuiviSprint.Cli.Business
@@ -62,10 +61,9 @@ namespace MajConsoSuiviSprint.Cli.Business
                     }
                 }
             }
-            
-            var sort2= result.OrderBy(tps => tps.Key).ToList(); 
-           // var sortedList = result.ToList();
-            //sortedList.Sort((pair1, pair2) => pair1.Value.NumeroDeDemande(pair2.Value));
+
+            var sortedList = result.ToList();
+            sortedList.Sort(comparison: (pair1, pair2) => (pair1.Value.ToString() ?? "").CompareTo(pair2.Value));
             return result;
         }
 
@@ -73,34 +71,6 @@ namespace MajConsoSuiviSprint.Cli.Business
         {
             if (Divers.IsFileExist(_configurationApp.SuiviSprintInfoConfig.FullFileName))
             {
-                //using ClosedXmlHelper closedXmlHelper = new(_configurationApp.SuiviSprintInfoConfig.FullFileName);
-                //var sheet = closedXmlHelper.GetWorksheetByName(_configurationApp.SuiviSprintInfoConfig.TabSuivi.SheetName);
-
-                //sheet ??= closedXmlHelper.GetWorksheetById(1);
-
-                //var table = ClosedXmlHelper.GetTableByName(sheet, _configurationApp.SuiviSprintInfoConfig.TabSuivi.TableName);
-
-                //foreach (var row in table.DataRange.Rows())
-                //{
-                //    int idUs = _configurationApp.SuiviSprintInfoConfig.TabSuivi.NumColumnTable.NoColumnDemande;
-                //    string numDemande = ClosedXmlHelper.GetValueInCellFromTable(row, idUs);
-                //    Console.WriteLine($"value us {numDemande} ");
-                //    if (dataSaisie.ContainsKey(numDemande))
-                //    {
-                //        Console.WriteLine($"La valeur saisie est  {dataSaisie[numDemande].HeureTotaleDeDeveloppement}");
-                //    }
-
-                //}
-
-                //using ExceLNPOIHelper exceLNPOIHelper = new(_configurationApp.SuiviSprintInfoConfig.FullFileName);
-
-                // var sheet = exceLNPOIHelper.GetSheetByID(0); var rowHeaders = sheet.GetRow(3);
-
-                //var numpUS = ExceLNPOIHelper.GetCellValue(rowHeaders, 30);
-                string lblLigneFin = "RESERVE";
-
-                bool bTableau = true;
-                int starrow = 5;
                 //if (ExceLNPOIHelper.GetCellValue(rowHeaders, 40).Equals("Heure tot DEV\n Consommé"))
                 //{
                 //    while (row <= sheet.LastRowNum && bTableau)
@@ -128,7 +98,6 @@ namespace MajConsoSuiviSprint.Cli.Business
                 //}
 
                 string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
-                int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
 
                 //using (SpreadsheetDocument mySpreadsheet = SpreadsheetDocument.Open(filePath, false))
 
@@ -180,7 +149,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                                 int column = 0;
                                 foreach (Cell cell in row.Elements<Cell>())
                                 {
-                                    
+
                                     if (column == 31)
                                     {
                                         string cellValue = GetCellValue(cell, workbookPart);
@@ -261,20 +230,12 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         public void TestLectureToutOngletSuiviSprint()
         {
-           
-             
-                string lblLigneFin = "RESERVE";
-
-                bool bTableau = true;
-                int starrow = 5;
-              
-                string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
-                int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
+            string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
 
 
-                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
-                {
-                    WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
                 //string sheetNameToFind = "PI2023.08-1 Suivi Sprint-Init";
                 var sheets = workbookPart.Workbook.Sheets.Cast<Sheet>().ToList();
 
@@ -283,42 +244,42 @@ namespace MajConsoSuiviSprint.Cli.Business
                       , x.Id.Value, x.Name.Value, x.SheetId.Value)));
 
                 foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
-                    {
-                        
-                    
+                {
+
+
                     Worksheet ws = wsp.Worksheet;
-                   
+
 
                     string partRelationshipId = workbookPart.GetIdOfPart(wsp);
 
 
                     SheetData sheetData = ws.GetFirstChild<SheetData>();
-                    
 
-                        int rowEC = 0;
-                        foreach (Row row in sheetData.Elements<Row>())
+
+                    int rowEC = 0;
+                    foreach (Row row in sheetData.Elements<Row>())
+                    {
+                        if (rowEC > 4)
                         {
-                            if (rowEC > 4)
+                            int column = 0;
+                            foreach (Cell cell in row.Elements<Cell>())
                             {
-                                int column = 0;
-                                foreach (Cell cell in row.Elements<Cell>())
+
+                                if (column == 31)
                                 {
-
-                                    if (column == 31)
-                                    {
-                                        string cellValue = GetCellValue(cell, workbookPart);
-                                        Console.WriteLine($"N° demande {cellValue}\t");
-                                    }
-
-                                    column++;
+                                    string cellValue = GetCellValue(cell, workbookPart);
+                                    Console.WriteLine($"N° demande {cellValue}\t");
                                 }
 
-
+                                column++;
                             }
-                            rowEC++;
+
+
                         }
+                        rowEC++;
                     }
-                spreadsheetDocument.Save();
+                }
+                //  spreadsheetDocument.Save();
             }
         }
 
@@ -328,7 +289,6 @@ namespace MajConsoSuiviSprint.Cli.Business
 
 
             string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
-            int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
 
 
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
@@ -366,18 +326,18 @@ namespace MajConsoSuiviSprint.Cli.Business
 
                             if (string.Compare(cellReference, startCellReference) >= 0 && string.Compare(cellReference, endCellReference) <= 0)
                             {
-                                    int column = 0;
-                                    foreach (Cell cell in row.Elements<Cell>())
+                                int column = 0;
+                                foreach (Cell cell in row.Elements<Cell>())
+                                {
+
+                                    if (column == 31)
                                     {
-
-                                        if (column == 31)
-                                        {
-                                            string cellValue = GetCellValue(cell, workbookPart);
-                                            Console.WriteLine($"N° demande {cellValue}\t");
-                                        }
-
-                                        column++;
+                                        string cellValue = GetCellValue(cell, workbookPart);
+                                        Console.WriteLine($"N° demande {cellValue}\t");
                                     }
+
+                                    column++;
+                                }
 
 ;
                             }
@@ -393,9 +353,8 @@ namespace MajConsoSuiviSprint.Cli.Business
 
 
             string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
-            int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
 
-          
+
             string tableNameToClear = "TableName";
 
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
@@ -423,13 +382,13 @@ namespace MajConsoSuiviSprint.Cli.Business
         private static void ClearTableData(TableDefinitionPart tableDefinitionPart, WorksheetPart ws)
         {
             Table table = tableDefinitionPart.Table;
-        //   var relId = worksheetPart.GetIdOfPart(tableDefinitionPart);
-          // WorksheetPart worksheetPart = (WorksheetPart)table.Parent;
+            //   var relId = worksheetPart.GetIdOfPart(tableDefinitionPart);
+            // WorksheetPart worksheetPart = (WorksheetPart)table.Parent;
             SheetData sheetData = ws.Worksheet.GetFirstChild<SheetData>();
 
             Row lastRow = sheetData.Elements<Row>().LastOrDefault();
             // Get the worksheet data
-            
+
 
             // Remove all rows in the table except for the header row
             foreach (Row row in sheetData.Elements<Row>())
@@ -481,24 +440,24 @@ namespace MajConsoSuiviSprint.Cli.Business
         {
             string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
-        {
-            WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-    WorksheetPart worksheetPart = workbookPart.WorksheetParts.FirstOrDefault();
-
-            if (worksheetPart != null)
             {
-                TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                WorksheetPart worksheetPart = workbookPart.WorksheetParts.FirstOrDefault();
 
-                if (tableDefinitionPart != null)
+                if (worksheetPart != null)
                 {
-                    // Add rows to the table
-                    AddRowsToTable(tableDefinitionPart);
-}
-            }
+                    TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
 
-            // Save the changes
-            workbookPart.Workbook.Save();
-        }
+                    if (tableDefinitionPart != null)
+                    {
+                        // Add rows to the table
+                        AddRowsToTable(tableDefinitionPart);
+                    }
+                }
+
+                // Save the changes
+                workbookPart.Workbook.Save();
+            }
         }
         private static void AddRowsToTable(TableDefinitionPart tableDefinitionPart)
         {
@@ -507,11 +466,11 @@ namespace MajConsoSuiviSprint.Cli.Business
             SheetData sheetData2 = tableDefinitionPart.Table.Elements<SheetData>().First();
 
             // Create a new row
-            Row newRow = new Row();
+            Row newRow = new();
 
             // Add cells to the row with appropriate values
-            Cell cell1 = new Cell(new CellValue("Value1")); // Column 1
-            Cell cell2 = new Cell(new CellValue("Value2")); // Column 2
+            Cell cell1 = new(new CellValue("Value1")); // Column 1
+            Cell cell2 = new(new CellValue("Value2")); // Column 2
 
             newRow.Append(cell1, cell2);
 
@@ -523,7 +482,7 @@ namespace MajConsoSuiviSprint.Cli.Business
         {
             // Create the table definition and properties
             TableDefinitionPart tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>();
-            Table table = new Table()
+            Table table = new()
             {
                 Id = 1,
                 Name = "TableName",
