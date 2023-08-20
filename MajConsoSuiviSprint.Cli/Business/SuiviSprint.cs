@@ -1,10 +1,13 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+//using DocumentFormat.OpenXml.Wordprocessing;
 using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
-using System;
+using DocumentFormat.OpenXml;
+using System.Collections.Generic;
+
 
 namespace MajConsoSuiviSprint.Cli.Business
 {
@@ -24,7 +27,8 @@ namespace MajConsoSuiviSprint.Cli.Business
                                                                             .Where(data => data.NumeroDeSemaineDateActivite.Equals(_configurationApp.SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint)
                                                                                                             ||
                                                                                                             data.NumeroDeSemaineDateActivite.Equals(_configurationApp.SuiviSprintInfoConfig.NumeroSemaineFinDeSprint)
-                                                                                 );
+                                                                                 )
+                                                                            .OrderBy(data => data.NumeroDeDemande);
 
             if (saisiesActivitesSurLeSprint.Any())
             {
@@ -58,7 +62,10 @@ namespace MajConsoSuiviSprint.Cli.Business
                     }
                 }
             }
-
+            
+            var sort2= result.OrderBy(tps => tps.Key).ToList(); 
+           // var sortedList = result.ToList();
+            //sortedList.Sort((pair1, pair2) => pair1.Value.NumeroDeDemande(pair2.Value));
             return result;
         }
 
@@ -252,7 +259,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             }
         }
 
-        public void Test()
+        public void TestLectureToutOngletSuiviSprint()
         {
            
              
@@ -268,17 +275,26 @@ namespace MajConsoSuiviSprint.Cli.Business
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
                 {
                     WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                    string sheetNameToFind = "PI2023.08-1 Suivi Sprint-Init";
-                   
-                    foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
-                    {
-                        Worksheet ws = wsp.Worksheet;
-                        //WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                        WorksheetPart targetWorksheetPart = workbookPart.WorksheetParts.FirstOrDefault(
-                            wsp => wsp.Worksheet.GetAttributes().Any(x => x.Value == sheetNameToFind));
-                        // i want to do something like this
+                //string sheetNameToFind = "PI2023.08-1 Suivi Sprint-Init";
+                var sheets = workbookPart.Workbook.Sheets.Cast<Sheet>().ToList();
 
-                        SheetData sheetData = ws.GetFirstChild<SheetData>();
+                sheets.ForEach(x => Console.WriteLine(
+                      String.Format("RelationshipId:{0}\n SheetName:{1}\n SheetId:{2}"
+                      , x.Id.Value, x.Name.Value, x.SheetId.Value)));
+
+                foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
+                    {
+                        
+                    
+                    Worksheet ws = wsp.Worksheet;
+                   
+
+                    string partRelationshipId = workbookPart.GetIdOfPart(wsp);
+
+
+                    SheetData sheetData = ws.GetFirstChild<SheetData>();
+                    
+
                         int rowEC = 0;
                         foreach (Row row in sheetData.Elements<Row>())
                         {
@@ -302,7 +318,135 @@ namespace MajConsoSuiviSprint.Cli.Business
                             rowEC++;
                         }
                     }
+                spreadsheetDocument.Save();
+            }
+        }
 
+        public void TestLectureTableauSuiviSprint()
+        {
+
+
+
+            string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
+            int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
+
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+
+                IEnumerable<Sheet> sheets =
+                workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name.Value == "PI2023.08-1 Suivi Sprint-Init");
+
+                string relationshipId = sheets?.First().Id.Value; //rId2 ou rId1 
+
+                WorksheetPart MyworksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId);
+                TableDefinitionPart tableDefinitionPart = MyworksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauSuiviSprint");
+                if (tableDefinitionPart != null)
+                {
+
+                    Table table = tableDefinitionPart.Table;
+
+                    string reference = table.Reference;
+                    string[] parts = reference.Split(':');
+                    string startCellReference = parts[0];
+                    string endCellReference = parts[1];
+                    // Get the worksheet data
+                    Worksheet ws = MyworksheetPart.Worksheet;
+                    SheetData sheetData = ws.GetFirstChild<SheetData>();
+                    //SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+                    foreach (Row row in sheetData.Elements<Row>())
+                    {
+                        Cell firstCell = row.Elements<Cell>().FirstOrDefault();
+
+                        if (firstCell != null)
+                        {
+                            string cellReference = firstCell.CellReference.Value;
+
+                            if (string.Compare(cellReference, startCellReference) >= 0 && string.Compare(cellReference, endCellReference) <= 0)
+                            {
+                                    int column = 0;
+                                    foreach (Cell cell in row.Elements<Cell>())
+                                    {
+
+                                        if (column == 31)
+                                        {
+                                            string cellValue = GetCellValue(cell, workbookPart);
+                                            Console.WriteLine($"N° demande {cellValue}\t");
+                                        }
+
+                                        column++;
+                                    }
+
+;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void TestLectureTableauConso2()
+        {
+
+
+
+            string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
+            int startRowIndex = 5; // Indice de la première ligne à partir de laquelle vous voulez lire
+
+          
+            string tableNameToClear = "TableName";
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                WorksheetPart worksheetPart = workbookPart.WorksheetParts.FirstOrDefault();
+
+                if (worksheetPart != null)
+                {
+                    TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == tableNameToClear);
+
+                    if (tableDefinitionPart != null)
+                    {
+                        // Clear existing rows in the table
+                        ClearTableData(tableDefinitionPart, worksheetPart);
+                    }
+                }
+
+                // Save the changes
+                workbookPart.Workbook.Save();
+            }
+
+        }
+
+        private static void ClearTableData(TableDefinitionPart tableDefinitionPart, WorksheetPart ws)
+        {
+            Table table = tableDefinitionPart.Table;
+        //   var relId = worksheetPart.GetIdOfPart(tableDefinitionPart);
+          // WorksheetPart worksheetPart = (WorksheetPart)table.Parent;
+            SheetData sheetData = ws.Worksheet.GetFirstChild<SheetData>();
+
+            Row lastRow = sheetData.Elements<Row>().LastOrDefault();
+            // Get the worksheet data
+            
+
+            // Remove all rows in the table except for the header row
+            foreach (Row row in sheetData.Elements<Row>())
+            {
+                Cell firstCell = row.Elements<Cell>().FirstOrDefault();
+
+                if (firstCell != null)
+                {
+                    string cellReference = firstCell.CellReference.Value;
+
+                    // Check if the cell is within the table range
+                    if (string.Compare(cellReference, table.Reference.Value) > 0)
+                    {
+                        // Remove the row
+                        row.Remove();
+                    }
+                }
             }
         }
 
@@ -330,6 +474,70 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 return cell.InnerText;
             }
+        }
+
+
+        public void TestAvecTableauConso()
+        {
+            string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
+        {
+            WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+    WorksheetPart worksheetPart = workbookPart.WorksheetParts.FirstOrDefault();
+
+            if (worksheetPart != null)
+            {
+                TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
+
+                if (tableDefinitionPart != null)
+                {
+                    // Add rows to the table
+                    AddRowsToTable(tableDefinitionPart);
+}
+            }
+
+            // Save the changes
+            workbookPart.Workbook.Save();
+        }
+        }
+        private static void AddRowsToTable(TableDefinitionPart tableDefinitionPart)
+        {
+            // Get the worksheet data
+            //SheetData sheetData =tableDefinitionPart.GetFirstChild<Table>().Elements<SheetData>().First();
+            SheetData sheetData2 = tableDefinitionPart.Table.Elements<SheetData>().First();
+
+            // Create a new row
+            Row newRow = new Row();
+
+            // Add cells to the row with appropriate values
+            Cell cell1 = new Cell(new CellValue("Value1")); // Column 1
+            Cell cell2 = new Cell(new CellValue("Value2")); // Column 2
+
+            newRow.Append(cell1, cell2);
+
+            // Append the row to the sheet data
+            sheetData2.Append(newRow);
+        }
+
+        private static void CreateTable(WorksheetPart worksheetPart)
+        {
+            // Create the table definition and properties
+            TableDefinitionPart tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>();
+            Table table = new Table()
+            {
+                Id = 1,
+                Name = "TableName",
+                DisplayName = "Table Display Name",
+                Reference = "A1:C10", // Adjust the range as needed
+                TotalsRowCount = 0
+            };
+            table.AppendChild(new AutoFilter() { Reference = table.Reference });
+
+            // Attach the table to the worksheet
+            tableDefinitionPart.Table = table;
+
+            // Save the changes
+            tableDefinitionPart.Table.Save();
         }
     }
 }
