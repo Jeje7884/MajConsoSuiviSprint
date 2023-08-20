@@ -347,7 +347,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             }
         }
 
-        public void TestLectureTableauConso2()
+        public void TestTableauConso2()
         {
 
 
@@ -448,11 +448,15 @@ namespace MajConsoSuiviSprint.Cli.Business
                 {
                     TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
 
-                    if (tableDefinitionPart != null)
-                    {
-                        // Add rows to the table
-                        AddRowsToTable(tableDefinitionPart);
-                    }
+
+                    // Remove the existing table
+                    //worksheetPart.DeletePart(tableDefinitionPart);
+                    // Clear existing rows in the table
+                    ClearTableData(tableDefinitionPart, worksheetPart);
+
+                    // Add rows to the table
+                    AddRowsToTable(tableDefinitionPart);
+
                 }
 
                 // Save the changes
@@ -477,6 +481,33 @@ namespace MajConsoSuiviSprint.Cli.Business
             // Append the row to the sheet data
             sheetData2.Append(newRow);
         }
+        private static void AddRows2ToTable()
+        {
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filename, true))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                Sheet sheet = workbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == "Sheet1").First();
+                WorksheetPart worksheetPart = workbookPart.GetPartById(sheet.Id) as WorksheetPart;
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+
+                //write some new data
+                for (int i = 1; i < 11; i++)
+                {
+                    //rowIndex takes into account the header (i.e. we're filling A2-A11)
+                    uint rowIndex = (uint)i + 1;
+                    Row row = new() { RowIndex = rowIndex };
+                    Cell cell = new() { CellReference = $"A{rowIndex}", CellValue = new CellValue(i), DataType = CellValues.Number };
+                    row.Append(cell);
+
+                    sheetData.Append(row);
+                }
+                //find the table
+                Table table = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "MyTable")?.Table;
+                //update the reference of the table (11 is 10 data rows and 1 header)
+                table.Reference = "A1:A11";
+            }
+        }
+
 
         private static void CreateTable(WorksheetPart worksheetPart)
         {
@@ -497,6 +528,38 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             // Save the changes
             tableDefinitionPart.Table.Save();
+        }
+
+        private static void DefineTable(WorksheetPart worksheetPart, int rowMin, int rowMax, int colMin, int colMax)
+        {
+            TableDefinitionPart tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>("rId" + (worksheetPart.TableDefinitionParts.Count() + 1));
+            int tableNo = worksheetPart.TableDefinitionParts.Count();
+
+            string reference = ((char)(64 + colMin)).ToString() + rowMin + ":" + ((char)(64 + colMax)).ToString() + rowMax;
+
+            Table table = new Table() { Id = (UInt32)tableNo, Name = "Table" + tableNo, DisplayName = "Table" + tableNo, Reference = reference, TotalsRowShown = false };
+            AutoFilter autoFilter = new AutoFilter() { Reference = reference };
+
+            TableColumns tableColumns = new TableColumns() { Count = (UInt32)(colMax - colMin + 1) };
+            for (int i = 0; i < (colMax - colMin + 1); i++)
+            {
+                tableColumns.Append(new TableColumn() { Id = (UInt32)(i + 1), Name = "Column" + i });
+            }
+
+            TableStyleInfo tableStyleInfo = new TableStyleInfo() { Name = "TableStyleLight1", ShowFirstColumn = false, ShowLastColumn = false, ShowRowStripes = true, ShowColumnStripes = false };
+
+            table.Append(autoFilter);
+            table.Append(tableColumns);
+            table.Append(tableStyleInfo);
+
+            tableDefinitionPart.Table = table;
+
+            TableParts tableParts = new TableParts() { Count = (UInt32)1 };
+            TablePart tablePart = new TablePart() { Id = "rId" + tableNo };
+
+            tableParts.Append(tablePart);
+
+            worksheetPart.Worksheet.Append(tableParts);
         }
     }
 }
