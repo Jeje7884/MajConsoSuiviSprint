@@ -7,9 +7,7 @@ namespace MajConsoSuiviSprint.Cli.Helper
     {
         public IWorkbook Workbook;
 
-
         private bool Disposed = false;
-
 
         ~ExceLNPOIHelper() => Dispose(false);
 
@@ -42,14 +40,12 @@ namespace MajConsoSuiviSprint.Cli.Helper
         {
             FileStream fileStream = new(pathFile, FileMode.Open, FileAccess.Read);
             Workbook = new XSSFWorkbook(fileStream);
-
         }
+
         public ISheet GetSheet(string sheetName)
         {
             return Workbook.GetSheet(sheetName);
         }
-
-     
 
         public static Dictionary<string, int> GetIdColumns(IRow headerRow, List<string> columnsToImport)
         {
@@ -67,8 +63,6 @@ namespace MajConsoSuiviSprint.Cli.Helper
 
             return dictionnaireColonne;
         }
-
-
 
         private static int GetColumnIndex(IRow headerRow, string columnName)
         {
@@ -90,7 +84,5 @@ namespace MajConsoSuiviSprint.Cli.Helper
             }
             return string.Empty;
         }
-
-
     }
 }

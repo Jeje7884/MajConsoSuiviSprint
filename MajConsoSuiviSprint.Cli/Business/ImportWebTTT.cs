@@ -57,7 +57,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             DateTime dateDeSaisie = DateTime.Parse(ExceLNPOIHelper.GetCellValue(dataRow, dictionnaireNumeroDecolonne["Date"]));
             int numeroDeSemaineDateActivite = InfoSprint.GetNumSemaine(dateDeSaisie);
 
-
             if (numeroDeSemaineDateActivite >= _configurationApp.WebTTTInfoConfig.NumeroDeSemaineDebutAChecker)
             {
                 dataFromRowWebTTT = new ImportWebTTTExcelModel
@@ -92,8 +91,6 @@ namespace MajConsoSuiviSprint.Cli.Business
                     }
                 }
                 AddListTempsDeclareParCollabEtParSemaine(saisiesRemplissageTempsCollabParSemaine, dataRowWebTTT);
-
-
             }
             return new ResultImportWebTTT()
             {
@@ -109,35 +106,24 @@ namespace MajConsoSuiviSprint.Cli.Business
         //    var saisiesActivitesSurLeSprint = saisiesActivitesInWebTTT.Where(data => data.NumeroDeSemaineDateActivite.Equals(_configurationApp.SuiviSprintInfoConfig.NumeroSemaineDebutDeSprint) ||
         //     data.NumeroDeSemaineDateActivite.Equals(_configurationApp.SuiviSprintInfoConfig.NumeroSemaineFinDeSprint));
 
-        //    foreach (var saisieActivite in saisiesActivitesSurLeSprint)
-        //    {
-        //        string numeroFormatSuiviSprint = InfoSprint.ModifyDemandeWebTTTToSuiviSprint(saisieActivite.NumeroDeDemande, saisieActivite.Activite);
-        //        if (InfoSprint.IsActivityToManaged(saisieActivite.Activite))
-        //        {
-        //            if (result.ContainsKey(numeroFormatSuiviSprint))
-        //            {
-        //                if (saisieActivite.Activite.Equals(AppliConstant.LblActiviteQual))
-        //                {
-        //                    result[numeroFormatSuiviSprint].HeureTotaleDeQualification += saisieActivite.HeureDeclaree;
-        //                }
-        //                else
-        //                {
-        //                    result[numeroFormatSuiviSprint].HeureTotaleDeDeveloppement += saisieActivite.HeureDeclaree;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                var conso = new TempsConsommeDemandeModel
-        //                {
-        //                    Application = saisieActivite.Application,
-        //                    HeureTotaleDeDeveloppement = saisieActivite.Activite.Equals(AppliConstant.LblActiviteDev) ? saisieActivite.HeureDeclaree : 0,
-        //                    HeureTotaleDeQualification = saisieActivite.Activite.Equals(AppliConstant.LblActiviteQual) ? saisieActivite.HeureDeclaree : 0,
-        //                    IsDemandeValide = InfoSprint.IsDemandeValid(saisieActivite, _configurationApp.WebTTTInfoConfig.ReglesSaisiesAutorisesParActivite)
-        //                };
-        //                result.Add(numeroFormatSuiviSprint, conso);
-        //            }
-        //        }
-        //    }
+        // foreach (var saisieActivite in saisiesActivitesSurLeSprint) { string
+        // numeroFormatSuiviSprint =
+        // InfoSprint.ModifyDemandeWebTTTToSuiviSprint(saisieActivite.NumeroDeDemande,
+        // saisieActivite.Activite); if (InfoSprint.IsActivityToManaged(saisieActivite.Activite)) {
+        // if (result.ContainsKey(numeroFormatSuiviSprint)) { if
+        // (saisieActivite.Activite.Equals(AppliConstant.LblActiviteQual)) {
+        // result[numeroFormatSuiviSprint].HeureTotaleDeQualification +=
+        // saisieActivite.HeureDeclaree; } else {
+        // result[numeroFormatSuiviSprint].HeureTotaleDeDeveloppement +=
+        // saisieActivite.HeureDeclaree; } } else { var conso = new TempsConsommeDemandeModel {
+        // Application = saisieActivite.Application, HeureTotaleDeDeveloppement =
+        // saisieActivite.Activite.Equals(AppliConstant.LblActiviteDev) ?
+        // saisieActivite.HeureDeclaree : 0, HeureTotaleDeQualification =
+        // saisieActivite.Activite.Equals(AppliConstant.LblActiviteQual) ?
+        // saisieActivite.HeureDeclaree : 0, IsDemandeValide =
+        // InfoSprint.IsDemandeValid(saisieActivite,
+        // _configurationApp.WebTTTInfoConfig.ReglesSaisiesAutorisesParActivite) };
+        // result.Add(numeroFormatSuiviSprint, conso); } } }
 
         //    return result;
         //}
@@ -187,7 +173,6 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         public void GenereExportCSVErreurSaisies(IList<ErreurSaisieFormatDemandeModel> erreursSaisiesDemandes)
         {
-
             if (erreursSaisiesDemandes.Count != 0)
             {
                 erreursSaisiesDemandes = erreursSaisiesDemandes
@@ -204,7 +189,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 Divers.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
             }
-
         }
 
         public void GenereBilanErreurTempsConsommeSemaine(IList<SaisieRemplissageTempsCollabParSemaineModel> tempsConsommesParCollab)
@@ -238,7 +222,6 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 Divers.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
             }
-
         }
 
         private IList<SemaineAvecJourFerieModel> GetListJoursFeries()

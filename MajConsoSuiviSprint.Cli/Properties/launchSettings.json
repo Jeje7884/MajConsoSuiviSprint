@@ -2,7 +2,8 @@
   "profiles": {
     "MajConsoSuiviSprint.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Temp\\Cd13\\AppliSuiviWebTTT\\appSettingsDebug.json"
+      //"commandLineArgs": "C:\\Temp\\Cd13\\AppliSuiviWebTTT\\appSettingsDebug.json"
+      "commandLineArgs": ""
     }
   }
 }

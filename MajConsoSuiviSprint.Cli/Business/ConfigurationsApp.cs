@@ -53,7 +53,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 NbreHeureTotaleActiviteJour = sectionWebTTT.GetValue<int>("NbreHeureTotaleActiviteJour"),
                 NbreJourSemaine = sectionWebTTT.GetValue<int>("NbreJourSemaine"),
                 TopLaunchBilans = "O".Equals(sectionWebTTT.GetValue<string>("TopLaunchBilans"), StringComparison.OrdinalIgnoreCase),
-              
+
                 JoursFeries = sectionWebTTT
                                 .GetSection("JourFeries")
                                 .Get<List<ListConfigsWebTTTModel>>()

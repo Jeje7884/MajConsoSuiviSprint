@@ -7,10 +7,10 @@ namespace MajConsoSuiviSprint.Cli.Model
         public string FolderName { get; set; } = default!;
         public string FileName { get; set; } = default!;
         public string FullFileName { get; set; } = default!;
-        public string SheetName { get; set; } = default!;  
+        public string SheetName { get; set; } = default!;
 
         public IReadOnlyCollection<ListConfigsWebTTTModel> JoursFeries { get; set; } = default!;
-    
+
         public string Path { get; set; } = default!;
         public string FileBilansErreurFormatSaisieDemande { get; set; } = default!;
         public string FileBilansErreurTempsSaisieSemaine { get; set; } = default!;

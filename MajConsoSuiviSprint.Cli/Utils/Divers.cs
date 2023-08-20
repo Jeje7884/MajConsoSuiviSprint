@@ -80,8 +80,6 @@ namespace MajConsoSuiviSprint.Cli.Utils
         public static void LaunchProcess(string fullPath)
         {
             Process.Start("explorer.exe", fullPath);
-
-
         }
     }
 }

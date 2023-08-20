@@ -9,7 +9,7 @@
         internal const string LblApplicationParDefaut = "default";
         internal const string MessageErreurSaisie = "Erreur: La demande ne respecte pas le formalisme de déclaration qui a été définit par Coco.";
         internal const string ExtensionAppSettings = ".json";
-        internal const string FileAppSettingsParDefaut = "appSettings.json";
+        internal const string FileAppSettingsParDefaut = "appSettingsCheckConsoSprint.json";
         internal const string WebTTTSection = "WebTTT";
         internal const string SuiviSprintSection = "SuiviSprint";
     }
