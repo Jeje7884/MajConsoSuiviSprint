@@ -407,6 +407,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                     }
                 }
             }
+            //tableDefinitionPart.Table.Save();//moi qui est ajouté
         }
 
         private static string GetCellValue(Cell cell)
@@ -456,14 +457,20 @@ namespace MajConsoSuiviSprint.Cli.Business
 
                     // Add rows to the table
                     AddRowsToTable(tableDefinitionPart);
-
+                    /** moi**/
+                    Table table = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "MyTable")?.Table;
+                    //update the reference of the table (11 is 10 data rows and 1 header)
+                    table.Reference = "A1:A11";
+                    table.Save();
+                   
                 }
+
 
                 // Save the changes
                 workbookPart.Workbook.Save();
             }
         }
-        private static void AddRowsToTable(TableDefinitionPart tableDefinitionPart)
+        private  void AddRowsToTable(TableDefinitionPart tableDefinitionPart)
         {
             // Get the worksheet data
             //SheetData sheetData =tableDefinitionPart.GetFirstChild<Table>().Elements<SheetData>().First();
@@ -481,8 +488,9 @@ namespace MajConsoSuiviSprint.Cli.Business
             // Append the row to the sheet data
             sheetData2.Append(newRow);
         }
-        private static void AddRows2ToTable()
+        private void AddRows2ToTable()
         {
+            string filename = _configurationApp.SuiviSprintInfoConfig.FullFileName;
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filename, true))
             {
                 WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
@@ -511,6 +519,8 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         private static void CreateTable(WorksheetPart worksheetPart)
         {
+
+            List<object> list= new List<object> { new { Id = 001, FirstName = "John", LastName = "Doe", Department = "Marketing" }, new { Id = 002, FirstName = "Jane", LastName = "Doe", Department = "Accounting" } };
             // Create the table definition and properties
             TableDefinitionPart tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>();
             Table table = new()
