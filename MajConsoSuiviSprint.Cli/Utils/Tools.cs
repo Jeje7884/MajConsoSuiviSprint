@@ -2,7 +2,7 @@
 
 namespace MajConsoSuiviSprint.Cli.Utils
 {
-    internal static class Divers
+    internal static class Tools
     {
         public static bool IsFileOpened(string fullNameFile)
         {

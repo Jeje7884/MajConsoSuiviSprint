@@ -44,7 +44,7 @@ namespace MajConsoSuiviSprint.Cli
             }
             catch (Exception ex)
             {
-                Divers.DisplayErrorMessageInConsole(ex.Message);
+                Tools.DisplayErrorMessageInConsole(ex.Message);
             }
             finally
             {
@@ -78,13 +78,13 @@ namespace MajConsoSuiviSprint.Cli
                 }
                 else
                 {
-                    if (Divers.IsFileWithPath(choix))
+                    if (Tools.IsFileWithPath(choix))
                     {
                         pathConfigJson = choix;
                     }
                     else
                     {
-                        if (!Divers.IsFileWithExtention(choix))
+                        if (!Tools.IsFileWithExtention(choix))
                         {
                             choix += AppliConstant.ExtensionAppSettings;
                         }
@@ -92,7 +92,7 @@ namespace MajConsoSuiviSprint.Cli
                     }
                 }
             }
-            if (!Divers.IsFileExist(pathConfigJson))
+            if (!Tools.IsFileExist(pathConfigJson))
             {
                 throw new Exception($"Le fichier json {pathConfigJson} n'existe pas");
             }

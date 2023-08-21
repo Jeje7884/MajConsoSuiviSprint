@@ -15,8 +15,8 @@ namespace MajConsoSuiviSprint.Cli.Business
         {
             Console.WriteLine("Configuration");
 
-            string jsonFile = Divers.GetFileNameFromFullPathFilename(pathAppSettings);
-            string pathJson = Divers.GetPathFromFullPathFilename(pathAppSettings);
+            string jsonFile = Tools.GetFileNameFromFullPathFilename(pathAppSettings);
+            string pathJson = Tools.GetPathFromFullPathFilename(pathAppSettings);
 
             IConfiguration config = new ConfigurationBuilder()
                                     .SetBasePath(pathJson)

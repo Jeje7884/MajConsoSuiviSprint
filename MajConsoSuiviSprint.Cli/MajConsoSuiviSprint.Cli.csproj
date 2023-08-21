@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="appSettingsCheckConsoSprint.json" />
+    <None Remove="appSettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appSettingsCheckConsoSprint.json">
+    <Content Include="appSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

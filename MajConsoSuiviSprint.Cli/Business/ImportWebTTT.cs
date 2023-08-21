@@ -19,7 +19,7 @@ namespace MajConsoSuiviSprint.Cli.Business
 
         internal IList<ImportWebTTTExcelModel> ImportInfosFromWebTTT()
         {
-            if (Divers.IsFileOpened(_configurationApp.WebTTTInfoConfig.FullFileName))
+            if (Tools.IsFileOpened(_configurationApp.WebTTTInfoConfig.FullFileName))
             {
                 throw new ExceptFileOpenException($"Le fichier {_configurationApp.WebTTTInfoConfig.FullFileName} est ouvert");
             }
@@ -45,8 +45,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 }
             }
 
-            Console.WriteLine($" {result.Count} lignes ont été récupérés du fichier {_configurationApp.WebTTTInfoConfig.FileName}");
-
+            Tools.DisplayInfoMessageInConsole($" {result.Count} lignes ont été récupérées dans le fichier {_configurationApp.WebTTTInfoConfig.FileName}");
             return result;
         }
 
@@ -182,12 +181,12 @@ namespace MajConsoSuiviSprint.Cli.Business
                 CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilansErreurFormatSaisieDemande, erreursSaisiesDemandes, false);
                 if (_configurationApp.WebTTTInfoConfig.TopLaunchBilans)
                 {
-                    Divers.LaunchProcess(_configurationApp.WebTTTInfoConfig.FileBilansErreurFormatSaisieDemande);
+                    Tools.LaunchProcess(_configurationApp.WebTTTInfoConfig.FileBilansErreurFormatSaisieDemande);
                 }
             }
             else
             {
-                Divers.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
+                Tools.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
             }
         }
 
@@ -215,12 +214,12 @@ namespace MajConsoSuiviSprint.Cli.Business
                 CSVHelper.GenerateCSVFile(_configurationApp.WebTTTInfoConfig.FileBilansErreurTempsSaisieSemaine, erreurDeTEmps, false);
                 if (_configurationApp.WebTTTInfoConfig.TopLaunchBilans)
                 {
-                    Divers.LaunchProcess(_configurationApp.WebTTTInfoConfig.FileBilansErreurTempsSaisieSemaine);
+                    Tools.LaunchProcess(_configurationApp.WebTTTInfoConfig.FileBilansErreurTempsSaisieSemaine);
                 }
             }
             else
             {
-                Divers.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
+                Tools.DisplayInfoMessageInConsole("Aucune erreur de temps de saisie pour les semaines a été détecté");
             }
         }
 
