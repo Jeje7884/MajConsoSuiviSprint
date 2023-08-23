@@ -62,6 +62,10 @@ namespace MajConsoSuiviSprint.Cli
             if (@params.Length == 1)
             {
                 pathConfigJson = @params[0];
+                if (!Tools.IsFileWithPath(pathConfigJson))
+                {
+                    pathConfigJson = Directory.GetCurrentDirectory() + "\\" + pathConfigJson;
+                }
             }
             else
             {
