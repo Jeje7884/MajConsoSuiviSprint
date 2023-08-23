@@ -60,12 +60,8 @@ namespace MajConsoSuiviSprint.Cli
             string pathConfigJson;
 
             if (@params.Length == 1)
-            {
-                pathConfigJson = @params[0];
-                if (!Tools.IsFileWithPath(pathConfigJson))
-                {
-                    pathConfigJson = Directory.GetCurrentDirectory() + "\\" + pathConfigJson;
-                }
+            {  
+                pathConfigJson = CompleteJsonPath(@params[0]);
             }
             else
             {
@@ -82,23 +78,31 @@ namespace MajConsoSuiviSprint.Cli
                 }
                 else
                 {
-                    if (Tools.IsFileWithPath(choix))
-                    {
-                        pathConfigJson = choix;
-                    }
-                    else
-                    {
-                        if (!Tools.IsFileWithExtention(choix))
-                        {
-                            choix += AppliConstant.ExtensionAppSettings;
-                        }
-                        pathConfigJson = Directory.GetCurrentDirectory() + "\\" + choix;
-                    }
+                    pathConfigJson = CompleteJsonPath(choix);
                 }
             }
             if (!Tools.IsFileExist(pathConfigJson))
             {
                 throw new Exception($"Le fichier json {pathConfigJson} n'existe pas");
+            }
+
+            return pathConfigJson;
+        }
+
+        private static string CompleteJsonPath(string choix)
+        {
+            string pathConfigJson;
+            if (Tools.IsFileWithPath(choix))
+            {
+                pathConfigJson = choix;
+            }
+            else
+            {
+                if (!Tools.IsFileWithExtention(choix))
+                {
+                    choix += AppliConstant.ExtensionAppSettings;
+                }
+                pathConfigJson = Directory.GetCurrentDirectory() + "\\" + choix;
             }
 
             return pathConfigJson;
