@@ -41,41 +41,39 @@ namespace MajConsoSuiviSprint.Cli
                 }
 
 
-                //var importWebTTT = new ImportWebTTT(configurationProcess);
+                var importWebTTT = new ImportWebTTT(configurationProcess);
 
-                //IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
-                //ResultImportWebTTT resultAnalyseImport = importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
-                //if (configurationProcess.WebTTTInfoConfig.TopLaunchBilans)
-                //{
-                //    importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
-                //    importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
-                //}
+                IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
+                ResultImportWebTTT resultAnalyseImport = importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
+                if (configurationProcess.WebTTTInfoConfig.TopLaunchBilans)
+                {
+                    importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
+                    importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
+                }
 
-                EPPlus.GetInfoFichierSuiviEEPlus();
-                
-
-                //if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
-                //{
-
-                //    var suiviSprint = new SuiviSprint(configurationProcess);
-                //    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
-                //    //if (GetTempsSuiviSprint.Count > 0)
-                //    //{
-
-                //    //    suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
-                //    //}
-                //    //else
-                //    //{
-                //    //    Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
-                //    //}
-
-                //    // suiviSprint.TestLectureTableauSuiviSprint();
-                //    //suiviSprint.TestUpdateTableauConso();
+                // EPPlus.GetInfoFichierSuiviEEPlus();
 
 
+                if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
+                {
+
+                    var suiviSprint = new SuiviSprint(configurationProcess);
+                    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
+                    //if (GetTempsSuiviSprint.Count > 0)
+                    //{
+
+                        //A réactiver à la fin// suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
+                        // suiviSprint.TestLectureTableauSuiviSprint();
+                        //suiviSprint.TestUpdateTableauConso();
+
+                    //}
+                    //else
+                    //{
+                    //    Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
+                    //}
 
 
-                //}
+                }
             }
 
             catch (Exception ex)
