@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 //using DocumentFormat.OpenXml.Wordprocessing;
@@ -6,6 +7,8 @@ using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
+
+//using NPOI.SS.Formula.Functions;
 
 
 namespace MajConsoSuiviSprint.Cli.Business
@@ -71,73 +74,21 @@ namespace MajConsoSuiviSprint.Cli.Business
         {
             if (Divers.IsFileExist(_configurationApp.SuiviSprintInfoConfig.FullFileName))
             {
-                //if (ExceLNPOIHelper.GetCellValue(rowHeaders, 40).Equals("Heure tot DEV\n Consommé"))
-                //{
-                //    while (row <= sheet.LastRowNum && bTableau)
-                //    {
-                //        IRow dataRow = sheet.GetRow(row);
-                //        string numpAppli = ExceLNPOIHelper.GetCellValue(dataRow, 30);
-                //        int idColonneUS = 31;// _configurationApp.SuiviSprintInfoConfig.TabSuivi.NumColumnTable.NoColumnDemande;
-                //        string numDemande = ExceLNPOIHelper.GetCellValue(dataRow, idColonneUS);
-                //        string conso = ExceLNPOIHelper.GetCellValue(dataRow, 41);
-
-                // for (int cellIndex = 0; cellIndex < dataRow.LastCellNum; cellIndex++) { ICell
-                // cell = dataRow.GetCell(cellIndex); // Accédez à la cellule spécifiée
-
-                // if (cell != null) { string cellValue = cell.ToString();
-                // Console.WriteLine($"Valeur de la cellule [{dataRow},{cellIndex}] : {cellValue}");
-                // } } Console.WriteLine($"value us {numDemande} nbe colonne {dataRow.Count()} -
-                // valeur : {conso}" );
-
-                // if (row == 10) { Console.WriteLine("te"); } if
-                // (dataSaisie.ContainsKey(numDemande)) { Console.WriteLine($"La valeur saisie est
-                // {dataSaisie[numDemande].HeureTotaleDeDeveloppement}"); } if
-                // (ExceLNPOIHelper.GetCellValue(dataRow, 13).Contains(lblLigneFin)) {
-                // bTableau=false; } row++; }
-
-                //}
+             
 
                 string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
 
-                //using (SpreadsheetDocument mySpreadsheet = SpreadsheetDocument.Open(filePath, false))
-
-                //{
-                //    var sheets = mySpreadsheet.WorkbookPart.Workbook.Sheets;
-
-                // For each sheet, display the sheet information.
-
-                // foreach (var sheet in sheets)
-
-                // { var arttib = sheet.GetAttributes();
-
-                // foreach (var attr in sheet.GetAttributes())
-
-                // { if (attr.Value == "rId1") { break; } }
-
-                // var rowList = sheet.Elements<Row>(); foreach (Row row in sheet.Elements<Row>())
-
-                // { foreach (Cell cell in row.Elements<Cell>()) { string cellValue =
-                // GetCellValue(cell); Console.Write($"{cellValue}\t"); }
-
-                // Console.WriteLine(); // Nouvelle ligne pour la prochaine rangée }
-
-                //    }
-                //}
+               
 
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
                 {
                     WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                    string sheetNameToFind = "PI2023.08-1 Suivi Sprint-Init";
-                    //    var sheetName = workbookPart.Workbook.Descendants<Sheet>().ElementAt(0).Name;
-                    //WorksheetPart targetWorksheetPart = workbookPart.WorksheetParts.FirstOrDefault(
-                    //    wsp => wsp.Worksheet.LocalName == sheetNameToFind);
-
+                
                     foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
                     {
-                        Worksheet ws = wsp.Worksheet;
-                        //WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                        WorksheetPart targetWorksheetPart = workbookPart.WorksheetParts.FirstOrDefault(
-                            wsp => wsp.Worksheet.GetAttributes().Any(x => x.Value == sheetNameToFind));
+                        Worksheet ws = wsp.Worksheet;                       
+                    
+                        WorksheetPart targetWorksheetPart = workbookPart.WorksheetParts.First();
                         // i want to do something like this
 
                         SheetData sheetData = ws.GetFirstChild<SheetData>();
@@ -153,7 +104,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                                     if (column == 31)
                                     {
                                         string cellValue = GetCellValue(cell, workbookPart);
-                                        Console.WriteLine($"N° demande {cellValue}\t");
+                                        // Console.WriteLine($"N° demande {cellValue}\t");
                                     }
 
                                     column++;
@@ -165,66 +116,8 @@ namespace MajConsoSuiviSprint.Cli.Business
                         }
                     }
 
-                    // WorkbookPart workbookPart = doc.WorkbookPart; SharedStringTablePart sstpart =
-                    // workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-                    // SharedStringTable sst = sstpart.SharedStringTable;
-
-                    // WorksheetPart worksheetPart = workbookPart.WorksheetParts.First(); Worksheet
-                    // sheet = worksheetPart.Worksheet; SheetData sheetData = sheet.GetFirstChild<SheetData>();
-
-                    // var cells = sheetData.Descendants<Cell>(); var rows = sheetData.Descendants<Row>();
-
-                    // Console.WriteLine("Row count = {0}", rows.LongCount());
-                    // Console.WriteLine("Cell count = {0}", cells.LongCount());
-
-                    // // One way: go through each cell in the sheet foreach (Cell cell in cells) {
-                    // if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString)) {
-                    // int ssid = int.Parse(cell.CellValue.Text); string str =
-                    // sst.ChildElements[ssid].InnerText; Console.WriteLine("Shared string {0}:
-                    // {1}", ssid, str); } else if (cell.CellValue != null) {
-                    // Console.WriteLine("Cell contents: {0}", cell.CellValue.Text); } }
-
-                    //    // Or... via each row
-                    //    foreach (Row row in rows)
-                    //    {
-                    //        foreach (Cell c in row.Elements<Cell>())
-                    //        {
-                    //            if ((c.DataType != null) && (c.DataType == CellValues.SharedString))
-                    //            {
-                    //                int ssid = int.Parse(c.CellValue.Text);
-                    //                string str = sst.ChildElements[ssid].InnerText;
-                    //                Console.WriteLine("Shared string {0}: {1}", ssid, str);
-                    //            }
-                    //            else if (c.CellValue != null)
-                    //            {
-                    //                Console.WriteLine("Cell contents: {0}", c.CellValue.Text);
-                    //            }
-                    //        }
-                    //    }
-                    //}
                 }
-
-                //using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(_configurationApp.SuiviSprintInfoConfig.FullFileName, false))
-                //{
-                //    WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                //    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
-                //    int startRowIndex = 5;
-                //    Worksheet worksheet = worksheetPart.Worksheet;
-                //    SheetData sheetData = worksheet.GetFirstChild<SheetData>();
-                //    int rowIndex = 1; // Indice pour le suivi des lignes (commence à 1)
-                //    var val = sheetData.Elements<Row>();
-
-                // foreach (Row rowdata in sheetData.Elements<Row>()) { if (rowIndex >=
-                // startRowIndex) { Cell cell = rowdata.Elements<Cell>().ElementAtOrDefault(31);
-                // //foreach (Cell cell in rowdata.Elements<Cell>()) //{ // // Ici, vous pouvez
-                // traiter les valeurs de cellule comme nécessaire // string cellValue =
-                // GetCellValue(cell); // Console.Write($"{cellValue}\t"); //}
-
-                // // Ici, vous pouvez traiter les valeurs de cellule comme nécessaire string
-                // cellValue = GetCellValue(cell); Console.Write($"{cellValue}\t");
-                // Console.WriteLine(); // Nouvelle ligne pour la prochaine rangée } rowIndex++; }
-
-                //}
+                
             }
         }
 
@@ -237,13 +130,13 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
                 //string sheetNameToFind = "PI2023.08-1 Suivi Sprint-Init";
-                var sheets = workbookPart.Workbook.Sheets.Cast<Sheet>().ToList();
+                var sheets = workbookPart?.Workbook?.Sheets?.Cast<Sheet>().ToList();
 
-                sheets.ForEach(x => Console.WriteLine(
+                sheets?.ForEach(x => Console.WriteLine(
                       String.Format("RelationshipId:{0}\n SheetName:{1}\n SheetId:{2}"
-                      , x.Id.Value, x.Name.Value, x.SheetId.Value)));
+                      , x?.Id?.Value, x?.Name?.Value, x?.SheetId?.Value)));
 
-                foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
+                foreach (WorksheetPart wsp in workbookPart?.WorksheetParts)
                 {
 
 
@@ -279,7 +172,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                         rowEC++;
                     }
                 }
-                //  spreadsheetDocument.Save();
+                
             }
         }
 
@@ -296,7 +189,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
 
                 IEnumerable<Sheet> sheets =
-                workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name.Value == "PI2023.08-1 Suivi Sprint-Init");
+                workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name.Value == "PI2023.08-1 Suivi Sprint");
 
                 string relationshipId = sheets?.First().Id.Value; //rId2 ou rId1 
 
@@ -315,69 +208,235 @@ namespace MajConsoSuiviSprint.Cli.Business
                     Worksheet ws = MyworksheetPart.Worksheet;
                     SheetData sheetData = ws.GetFirstChild<SheetData>();
                     //SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+                    int rowEC = 0;
 
+                    //int columnNumDemande = 31;
+                    int columnNumDemande = 33;
+                    int columnNumDemandeReelle = columnNumDemande;
+                    int nbColumnTotal = 55;
                     foreach (Row row in sheetData.Elements<Row>())
                     {
-                        Cell firstCell = row.Elements<Cell>().FirstOrDefault();
 
-                        if (firstCell != null)
+                        if (rowEC >= 4)
                         {
-                            string cellReference = firstCell.CellReference.Value;
+                            Cell firstCell = row.Elements<Cell>().ElementAtOrDefault(35);
 
-                            if (string.Compare(cellReference, startCellReference) >= 0 && string.Compare(cellReference, endCellReference) <= 0)
+                            if (firstCell != null)
                             {
-                                int column = 0;
-                                foreach (Cell cell in row.Elements<Cell>())
+                                string cellReference = firstCell.CellReference.Value;
+
+                                if (string.Compare(cellReference, startCellReference) >= 0 && string.Compare(cellReference, endCellReference) <= 0)
                                 {
-
-                                    if (column == 31)
+                                    var nbCell = row.Elements<Cell>().Count();
+                                    //var decalage = nbColumnTotal - nbCell;
+                                    var decalage = GetNbColumnDecalage(nbColumnTotal, nbCell);
+                                    //if (decalage >0)
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande - (decalage+1);
+                                    //}
+                                    //else if((decalage < 0))
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande + decalage;
+                                    //}
+                                    //else
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande-1;
+                                    //}
+                                    if (rowEC == 29)
                                     {
-                                        string cellValue = GetCellValue(cell, workbookPart);
-                                        Console.WriteLine($"N° demande {cellValue}\t");
+                                        Console.Write("test");
+                                        //cellDemandeAffecte = row.Elements<Cell>().ElementAtOrDefault(28);
+                                        //string cellValue = GetCellValue(cellDemande);
+                                        //cellValueAff = GetCellValue(cellDemandeAffecte, workbookPart);
                                     }
+                                    //int numAffect;
+                                    if (decalage >= 0)
+                                    {
+                                        // numAffect = columnNumAffec + decalage;
+                                        columnNumDemandeReelle = columnNumDemande - decalage;
+                                    }
+                                    else
+                                    {
+                                        //numAffect = columnNumAffec - decalage;
+                                        columnNumDemandeReelle = columnNumDemande + decalage;
+                                    }
+                                    //cellDemandeAffecte = row.Elements<Cell>().ElementAtOrDefault(numAffect);
+                                    //cellValueAff = GetCellValue(cellDemandeAffecte, workbookPart);
 
-                                    column++;
+                                    //Console.WriteLine($"valeur affecté  {cellValueAff}\t nb cell : {nbCell} numLigne {rowEC}");
+                                    //if (decalage >0)
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande - (decalage+1);
+                                    //}
+                                    //else if((decalage < 0))
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande + decalage;
+                                    //}
+                                    //else
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande-1;
+                                    //}
+                                    //if (rowEC ==29)
+                                    //{
+                                    //    Console.Write("test");
+                                    //    cellDemandeAffecte = row.Elements<Cell>().ElementAtOrDefault(28);
+                                    //    //string cellValue = GetCellValue(cellDemande);
+                                    //    cellValueAff = GetCellValue(cellDemandeAffecte, workbookPart);
+                                    //}
+
+
+                                    //if (cellValueAff!="")
+
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemandeReelle + 1;
+                                    //}
+
+                                    //if (rowEC == 4)
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande - 2;
+                                    //}
+                                    //else
+                                    //{
+                                    //    columnNumDemandeReelle = columnNumDemande;
+                                    //}
+
+                                    //if (row.Elements<Cell>().Count())
+                                    //{
+
+                                    //}
+                                    var cellDemande = row.Elements<Cell>().ElementAtOrDefault(columnNumDemandeReelle);
+                                    //string cellValue = GetCellValue(cellDemande);
+                                    string cellValue = GetCellValue(cellDemande, workbookPart);
+                                    Console.WriteLine($"valeur  {cellValue}\t nb cell : {nbCell} numLigne {rowEC}");
+
+
                                 }
+                                //foreach (Cell cell in row.Elements<Cell>())
+                                //{
 
-;
+
+                                //    string cellValue = GetCellValue(cell, workbookPart);
+                                //    Console.WriteLine($"valeur  {cellValue}\t column : {column}");
+                                //    //if (column == 31)
+                                //    //{
+                                //    //    string cellValue = GetCellValue(cell, workbookPart);
+                                //    //    Console.WriteLine($"N° demande {cellValue}\t");
+                                //    //}
+
+                                //    column++;
+                                //}
+
+    ;
                             }
                         }
+                        rowEC++;
                     }
+
+
                 }
             }
         }
 
-        public void TestTableauConso2()
+        public void TestUpdateTableauConso()
         {
-
 
 
             string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
 
 
-            string tableNameToClear = "TableName";
-
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
             {
                 WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                WorksheetPart worksheetPart = workbookPart.WorksheetParts.FirstOrDefault();
 
-                if (worksheetPart != null)
+                IEnumerable<Sheet> sheets =
+                workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name.Value == "Conso");
+
+                string relationshipId = sheets?.First().Id.Value; //rId2 ou rId1 
+
+                WorksheetPart MyworksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId);
+                TableDefinitionPart tableDefinitionPart = MyworksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
+                if (tableDefinitionPart != null)
                 {
-                    TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == tableNameToClear);
 
-                    if (tableDefinitionPart != null)
+                    Table table = tableDefinitionPart.Table;
+                    ClearTableData(tableDefinitionPart, MyworksheetPart);
+                    table.Reference = "A1:C2";
+                    table.Save();
+
+                    Dictionary<string, TempsConsommeDemandeModel> dataSaisie = new Dictionary<string, TempsConsommeDemandeModel>();
+
+                    var saisie = new TempsConsommeDemandeModel()
                     {
-                        // Clear existing rows in the table
-                        ClearTableData(tableDefinitionPart, worksheetPart);
+                        HeureTotaleDeDeveloppement = 10,
+                        HeureTotaleDeQualification = 20
+                    };
+                    dataSaisie.Add("12596", saisie);
+
+                    saisie = new TempsConsommeDemandeModel()
+                    {
+                        HeureTotaleDeDeveloppement = 10,
+                        HeureTotaleDeQualification = 2
+                    };
+                    dataSaisie.Add("12599", saisie);
+
+                    saisie = new TempsConsommeDemandeModel()
+                    {
+                        HeureTotaleDeDeveloppement = 30,
+                        HeureTotaleDeQualification = 50,
+                        IsDemandeValide =false
+                    };
+                    dataSaisie.Add("9999", saisie);
+
+                    foreach (var item in dataSaisie)
+                    {
+                        // SheetData sheetData = tableDefinitionPart.GetFirstChild<Table>().Elements<SheetData>().First();
+                        SheetData sheetData = MyworksheetPart.Worksheet.GetFirstChild<SheetData>();
+                        Row newRow = new ();
+                        Cell cell1 = new (new CellValue(item.Key));
+                        var valKey = item.Key;
+                        var valValue = item.Value.HeureTotaleDeQualification;
+                       
+                        Cell cell2 = new (new CellValue(item.Value.HeureTotaleDeDeveloppement));
+                       
+                        Cell cell3 = new (new CellValue(item.Value.HeureTotaleDeQualification));
+
+                        newRow.Append(cell1, cell2, cell3);
+                        sheetData.Append(newRow);
+
                     }
+
+                    table.Reference = $"A1:C{dataSaisie.Count+1}";
+                    table.Save();
+
+                    // Save the changes
+                    workbookPart.Workbook.Save();
                 }
-
-                // Save the changes
-                workbookPart.Workbook.Save();
             }
-
         }
+
+   
+        private int GetNbColumnDecalage(int nbColumnTotal, int nbColumnNonVide)
+        {
+            int nbColumnDecalage = 0;
+            var decalage = nbColumnTotal - nbColumnNonVide;
+            if (decalage > 0)
+            {
+                nbColumnDecalage = -(decalage + 1);
+            }
+            else if ((decalage < 0))
+            {
+                nbColumnDecalage = decalage;
+            }
+            else
+            {
+                nbColumnDecalage = -1;
+            }
+           
+
+            return nbColumnDecalage;
+        }
+      
+       
 
         private static void ClearTableData(TableDefinitionPart tableDefinitionPart, WorksheetPart ws)
         {
@@ -386,30 +445,63 @@ namespace MajConsoSuiviSprint.Cli.Business
             // WorksheetPart worksheetPart = (WorksheetPart)table.Parent;
             SheetData sheetData = ws.Worksheet.GetFirstChild<SheetData>();
 
-            Row lastRow = sheetData.Elements<Row>().LastOrDefault();
+            // Row lastRow = sheetData.Elements<Row>().LastOrDefault();
             // Get the worksheet data
+            int nbRow = sheetData.Elements< Row >().Count();
+            int numRow = 0;
 
+            for (int i = 0; i <nbRow; i++)
+            {
+
+                var currentRow = sheetData.Elements<Row>().ElementAt(i);
+                if (i > 0)
+                {
+
+                    currentRow.Remove();
+
+                    // }
+
+                }
+                numRow++;
+
+
+            }
 
             // Remove all rows in the table except for the header row
-            foreach (Row row in sheetData.Elements<Row>())
-            {
-                Cell firstCell = row.Elements<Cell>().FirstOrDefault();
+            //foreach (Row row in sheetData.Elements<Row>())
+            //{
+            //    if (numRow > 0)
+            //    {
+            //        Cell firstCell = row.Elements<Cell>().FirstOrDefault();
+            //        if (firstCell != null)
+            //        {
+            //            string cellReference = firstCell.CellReference.Value;
 
-                if (firstCell != null)
-                {
-                    string cellReference = firstCell.CellReference.Value;
+            //            // Check if the cell is within the table range
+            //            // if (string.Compare(cellReference, table.Reference.Value) > 0)
+            //            // {
+            //            //int nbColumns = row.Elements<Cell>().Count();
+            //            //for (int i = 0; i <= nbColumns; i++)
+            //            //{
 
-                    // Check if the cell is within the table range
-                    if (string.Compare(cellReference, table.Reference.Value) > 0)
-                    {
-                        // Remove the row
-                        row.Remove();
-                    }
-                }
-            }
-            //tableDefinitionPart.Table.Save();//moi qui est ajouté
+            //            //}
+            //            // Remove the row
+            //            row.Remove();
+
+            //            // }
+            //        }
+            //    }
+            //    numRow++;
+
+
+            //}
+
+            //  tableDefinitionPart.Table.Save();//moi qui est ajouté
+        
         }
 
+
+        
         private static string GetCellValue(Cell cell)
         {
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
@@ -420,6 +512,8 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 return cell.InnerText;
             }
+
+            
         }
 
         private static string GetCellValue(Cell cell, WorkbookPart workbookPart)
@@ -437,40 +531,7 @@ namespace MajConsoSuiviSprint.Cli.Business
         }
 
 
-        public void TestAvecTableauConso()
-        {
-            string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
-            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
-            {
-                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                WorksheetPart worksheetPart = workbookPart.WorksheetParts.FirstOrDefault();
-
-                if (worksheetPart != null)
-                {
-                    TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
-
-
-                    // Remove the existing table
-                    //worksheetPart.DeletePart(tableDefinitionPart);
-                    // Clear existing rows in the table
-                    ClearTableData(tableDefinitionPart, worksheetPart);
-
-                    // Add rows to the table
-                    AddRowsToTable(tableDefinitionPart);
-                    /** moi**/
-                    Table table = worksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "MyTable")?.Table;
-                    //update the reference of the table (11 is 10 data rows and 1 header)
-                    table.Reference = "A1:A11";
-                    table.Save();
-                   
-                }
-
-
-                // Save the changes
-                workbookPart.Workbook.Save();
-            }
-        }
-        private  void AddRowsToTable(TableDefinitionPart tableDefinitionPart)
+        private void AddRowsToTable(TableDefinitionPart tableDefinitionPart)
         {
             // Get the worksheet data
             //SheetData sheetData =tableDefinitionPart.GetFirstChild<Table>().Elements<SheetData>().First();
@@ -520,7 +581,7 @@ namespace MajConsoSuiviSprint.Cli.Business
         private static void CreateTable(WorksheetPart worksheetPart)
         {
 
-            List<object> list= new List<object> { new { Id = 001, FirstName = "John", LastName = "Doe", Department = "Marketing" }, new { Id = 002, FirstName = "Jane", LastName = "Doe", Department = "Accounting" } };
+            List<object> list = new() { new { Id = 001, FirstName = "John", LastName = "Doe", Department = "Marketing" }, new { Id = 002, FirstName = "Jane", LastName = "Doe", Department = "Accounting" } };
             // Create the table definition and properties
             TableDefinitionPart tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>();
             Table table = new()
@@ -547,16 +608,16 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             string reference = ((char)(64 + colMin)).ToString() + rowMin + ":" + ((char)(64 + colMax)).ToString() + rowMax;
 
-            Table table = new Table() { Id = (UInt32)tableNo, Name = "Table" + tableNo, DisplayName = "Table" + tableNo, Reference = reference, TotalsRowShown = false };
-            AutoFilter autoFilter = new AutoFilter() { Reference = reference };
+            Table table = new() { Id = (UInt32)tableNo, Name = "Table" + tableNo, DisplayName = "Table" + tableNo, Reference = reference, TotalsRowShown = false };
+            AutoFilter autoFilter = new() { Reference = reference };
 
-            TableColumns tableColumns = new TableColumns() { Count = (UInt32)(colMax - colMin + 1) };
+            TableColumns tableColumns = new() { Count = (UInt32)(colMax - colMin + 1) };
             for (int i = 0; i < (colMax - colMin + 1); i++)
             {
                 tableColumns.Append(new TableColumn() { Id = (UInt32)(i + 1), Name = "Column" + i });
             }
 
-            TableStyleInfo tableStyleInfo = new TableStyleInfo() { Name = "TableStyleLight1", ShowFirstColumn = false, ShowLastColumn = false, ShowRowStripes = true, ShowColumnStripes = false };
+            TableStyleInfo tableStyleInfo = new() { Name = "TableStyleLight1", ShowFirstColumn = false, ShowLastColumn = false, ShowRowStripes = true, ShowColumnStripes = false };
 
             table.Append(autoFilter);
             table.Append(tableColumns);
@@ -564,8 +625,8 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             tableDefinitionPart.Table = table;
 
-            TableParts tableParts = new TableParts() { Count = (UInt32)1 };
-            TablePart tablePart = new TablePart() { Id = "rId" + tableNo };
+            TableParts tableParts = new() { Count = 1 };
+            TablePart tablePart = new() { Id = "rId" + tableNo };
 
             tableParts.Append(tablePart);
 

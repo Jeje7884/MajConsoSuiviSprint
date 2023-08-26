@@ -1,7 +1,11 @@
-﻿using MajConsoSuiviSprint.Cli.Business;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using MajConsoSuiviSprint.Cli.Business;
+using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
+using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
+using NPOI.SS.UserModel;
 
 namespace MajConsoSuiviSprint.Cli
 {
@@ -33,39 +37,41 @@ namespace MajConsoSuiviSprint.Cli
                 {
                     throw new Exception("Les paramétrages \"Path\"  et  \"FileName\" de la saction SuiviSprint sont erronés");
                 }
-                //FileInfo fi = new FileInfo(@"C:\temp\cd13\AppliSuiviWebTTT\Test.xlsx");
-                //testTable.GenericExcelTable(fi);
+               
 
-                Divers.testPwh();
+                var importWebTTT = new ImportWebTTT(configurationProcess);
 
-                //var importWebTTT = new ImportWebTTT(configurationProcess);
-
-                //IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
-                //ResultImportWebTTT resultAnalyseImport = importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
-
-                //importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
-                //importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
-
-
-                //if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
-                //{
-
-                //    var suiviSprint = new SuiviSprint(configurationProcess);
-                //    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
-                //    if (GetTempsSuiviSprint.Count > 0)
-                //    {
-                        
-                //        suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
-                //    }
-                //    else
-                //    {
-                //        Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
-                //    }
-                //    suiviSprint.TestLectureToutOnletSuiviSprint();
-                //    suiviSprint.TestLectureTableauConso();
-
-                //    }
+                IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
+                ResultImportWebTTT resultAnalyseImport = importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
+                if (configurationProcess.WebTTTInfoConfig.TopLaunchBilans)
+                {
+                    importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
+                    importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
                 }
+
+
+
+                if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
+                {
+
+                    var suiviSprint = new SuiviSprint(configurationProcess);
+                    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
+                    //if (GetTempsSuiviSprint.Count > 0)
+                    //{
+
+                    //    suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
+                    //}
+                    //else
+                    //{
+                    //    Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
+                    //}
+
+                     suiviSprint.TestLectureTableauSuiviSprint();
+                    suiviSprint.TestUpdateTableauConso();
+               
+                  
+                }
+            }
 
             catch (Exception ex)
             {
