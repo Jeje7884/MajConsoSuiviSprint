@@ -70,6 +70,11 @@ namespace MajConsoSuiviSprint.Cli.Business
             return result;
         }
 
+        /// <summary>
+        /// méthode ne fonctionne pas car la position du temps conso change
+        /// car le nombre de colonne connu correspond au nombre de cellules renseignés par ligne
+        /// </summary>
+        /// <param name="dataSaisie"></param>
         public void UpdateFichierSuiviSprint(Dictionary<string, TempsConsommeDemandeModel> dataSaisie)
         {
             if (Divers.IsFileExist(_configurationApp.SuiviSprintInfoConfig.FullFileName))
@@ -337,6 +342,9 @@ namespace MajConsoSuiviSprint.Cli.Business
             }
         }
 
+        /// <summary>
+        /// Méthod qui peut marcher si on crée un onglet dédié, référençant le temps par demande
+        /// </summary>
         public void TestUpdateTableauConso()
         {
 
@@ -346,71 +354,80 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
             {
-                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                WorkbookPart? workbookPart = spreadsheetDocument.WorkbookPart;
 
-                IEnumerable<Sheet> sheets =
-                workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name.Value == "Conso");
-
-                string relationshipId = sheets?.First().Id.Value; //rId2 ou rId1 
-
-                WorksheetPart MyworksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId);
-                TableDefinitionPart tableDefinitionPart = MyworksheetPart.TableDefinitionParts.FirstOrDefault(t => t.Table.Name == "TableauConso");
-                if (tableDefinitionPart != null)
+                if (null!=workbookPart)
                 {
+                    IEnumerable<Sheet>? sheets =
+                                                workbookPart?.Workbook?.GetFirstChild<Sheets>()?.Elements<Sheet>()?.Where(s => s?.Name?.Value == "Conso");
 
-                    Table table = tableDefinitionPart.Table;
-                    ClearTableData(tableDefinitionPart, MyworksheetPart);
-                    table.Reference = "A1:C2";
-                    table.Save();
+                    string? relationshipId = sheets?.First().Id?.Value; //rId2 ou rId1 
 
-                    Dictionary<string, TempsConsommeDemandeModel> dataSaisie = new Dictionary<string, TempsConsommeDemandeModel>();
+                    WorksheetPart? worksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId??"rd1")?? null;
 
-                    var saisie = new TempsConsommeDemandeModel()
+                    TableDefinitionPart? tableDefinitionPart = worksheetPart?.TableDefinitionParts?.FirstOrDefault(t => t?.Table?.Name == "TableauConso");
+
+                    if (tableDefinitionPart != null && worksheetPart !=null)
                     {
-                        HeureTotaleDeDeveloppement = 10,
-                        HeureTotaleDeQualification = 20
-                    };
-                    dataSaisie.Add("12596", saisie);
 
-                    saisie = new TempsConsommeDemandeModel()
-                    {
-                        HeureTotaleDeDeveloppement = 10,
-                        HeureTotaleDeQualification = 2
-                    };
-                    dataSaisie.Add("12599", saisie);
+                        Table table = tableDefinitionPart.Table;
 
-                    saisie = new TempsConsommeDemandeModel()
-                    {
-                        HeureTotaleDeDeveloppement = 30,
-                        HeureTotaleDeQualification = 50,
-                        IsDemandeValide =false
-                    };
-                    dataSaisie.Add("9999", saisie);
+                        ClearTableData(tableDefinitionPart, worksheetPart);
 
-                    foreach (var item in dataSaisie)
-                    {
-                        // SheetData sheetData = tableDefinitionPart.GetFirstChild<Table>().Elements<SheetData>().First();
-                        SheetData sheetData = MyworksheetPart.Worksheet.GetFirstChild<SheetData>();
-                        Row newRow = new ();
-                        Cell cell1 = new (new CellValue(item.Key));
-                        var valKey = item.Key;
-                        var valValue = item.Value.HeureTotaleDeQualification;
-                       
-                        Cell cell2 = new (new CellValue(item.Value.HeureTotaleDeDeveloppement));
-                       
-                        Cell cell3 = new (new CellValue(item.Value.HeureTotaleDeQualification));
+                        table.Reference = "A1:C2";
+                        table.Save();
 
-                        newRow.Append(cell1, cell2, cell3);
-                        sheetData.Append(newRow);
+                        Dictionary<string, TempsConsommeDemandeModel> dataSaisie = new ();
 
+                        var saisie = new TempsConsommeDemandeModel()
+                        {
+                            HeureTotaleDeDeveloppement = 10,
+                            HeureTotaleDeQualification = 20
+                        };
+                        dataSaisie.Add("12596", saisie);
+
+                        saisie = new TempsConsommeDemandeModel()
+                        {
+                            HeureTotaleDeDeveloppement = 10,
+                            HeureTotaleDeQualification = 2
+                        };
+                        dataSaisie.Add("12599", saisie);
+
+                        saisie = new TempsConsommeDemandeModel()
+                        {
+                            HeureTotaleDeDeveloppement = 30,
+                            HeureTotaleDeQualification = 50,
+                            IsDemandeValide = false
+                        };
+                        dataSaisie.Add("9999", saisie);
+
+                        foreach (var item in dataSaisie)
+                        {
+                            // SheetData sheetData = tableDefinitionPart.GetFirstChild<Table>().Elements<SheetData>().First();
+                            SheetData? sheetData = worksheetPart?.Worksheet?.GetFirstChild<SheetData>();
+                            Row newRow = new();
+                            Cell cell1 = new(new CellValue(item.Key));
+                            var valKey = item.Key;
+                            var valValue = item.Value.HeureTotaleDeQualification;
+
+                            Cell cell2 = new(new CellValue(item.Value.HeureTotaleDeDeveloppement));
+
+                            Cell cell3 = new(new CellValue(item.Value.HeureTotaleDeQualification));
+
+                            newRow.Append(cell1, cell2, cell3);
+                            sheetData?.Append(newRow);
+
+                        }
+
+                        table.Reference = $"A1:C{dataSaisie.Count + 1}";
+                        table.Save();
+
+                        // Save the changes
+                        workbookPart.Workbook.Save();
                     }
-
-                    table.Reference = $"A1:C{dataSaisie.Count+1}";
-                    table.Save();
-
-                    // Save the changes
-                    workbookPart.Workbook.Save();
                 }
+
+                
             }
         }
 

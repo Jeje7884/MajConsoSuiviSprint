@@ -1,11 +1,13 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿
 using MajConsoSuiviSprint.Cli.Business;
 using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
-using NPOI.SS.UserModel;
+
+using OfficeOpenXml.Table;
+using OfficeOpenXml;
 
 namespace MajConsoSuiviSprint.Cli
 {
@@ -37,40 +39,43 @@ namespace MajConsoSuiviSprint.Cli
                 {
                     throw new Exception("Les paramétrages \"Path\"  et  \"FileName\" de la saction SuiviSprint sont erronés");
                 }
-               
-
-                var importWebTTT = new ImportWebTTT(configurationProcess);
-
-                IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
-                ResultImportWebTTT resultAnalyseImport = importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
-                if (configurationProcess.WebTTTInfoConfig.TopLaunchBilans)
-                {
-                    importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
-                    importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
-                }
 
 
+                //var importWebTTT = new ImportWebTTT(configurationProcess);
 
-                if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
-                {
+                //IList<ImportWebTTTExcelModel> resultImport = importWebTTT.ImportInfosFromWebTTT();
+                //ResultImportWebTTT resultAnalyseImport = importWebTTT.CheckSaisiesActiviteInWebTTT(resultImport);
+                //if (configurationProcess.WebTTTInfoConfig.TopLaunchBilans)
+                //{
+                //    importWebTTT.GenereExportCSVErreurSaisies(resultAnalyseImport.ErreursSaisiesDemandes);
+                //    importWebTTT.GenereBilanErreurTempsConsommeSemaine(resultAnalyseImport.SaisiesRemplissageTempsCollabParSemaine);
+                //}
 
-                    var suiviSprint = new SuiviSprint(configurationProcess);
-                    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
-                    //if (GetTempsSuiviSprint.Count > 0)
-                    //{
+                EPPlus.GetInfoFichierSuiviEEPlus();
+                
 
-                    //    suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
-                    //}
-                    //else
-                    //{
-                    //    Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
-                    //}
+                //if (configurationProcess.SuiviSprintInfoConfig.TopMajSuiviSprint)
+                //{
 
-                     suiviSprint.TestLectureTableauSuiviSprint();
-                    suiviSprint.TestUpdateTableauConso();
-               
-                  
-                }
+                //    var suiviSprint = new SuiviSprint(configurationProcess);
+                //    var GetTempsSuiviSprint = suiviSprint.GetTempsConsommeesParDemandeSurUneSemaine(resultImport);
+                //    //if (GetTempsSuiviSprint.Count > 0)
+                //    //{
+
+                //    //    suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
+                //    //}
+                //    //else
+                //    //{
+                //    //    Divers.DisplayInfoMessageInConsole($"Aucune donnée à mettre à jour dans le fichier de suivi {configurationProcess.SuiviSprintInfoConfig.FileName}");
+                //    //}
+
+                //    // suiviSprint.TestLectureTableauSuiviSprint();
+                //    //suiviSprint.TestUpdateTableauConso();
+
+
+
+
+                //}
             }
 
             catch (Exception ex)
@@ -84,6 +89,8 @@ namespace MajConsoSuiviSprint.Cli
                 Console.WriteLine("Taper sur 'Entrée' pour terminer...");
                 Console.ReadLine();
             }
+
+           
         }
 
         private static string InitPathJsonConfig(string[] @params)
