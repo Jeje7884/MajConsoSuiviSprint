@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 //using DocumentFormat.OpenXml.Wordprocessing;
@@ -79,20 +78,20 @@ namespace MajConsoSuiviSprint.Cli.Business
         {
             if (Divers.IsFileExist(_configurationApp.SuiviSprintInfoConfig.FullFileName))
             {
-             
+
 
                 string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
 
-               
+
 
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, false))
                 {
                     WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                
+
                     foreach (WorksheetPart wsp in workbookPart.WorksheetParts)
                     {
-                        Worksheet ws = wsp.Worksheet;                       
-                    
+                        Worksheet ws = wsp.Worksheet;
+
                         WorksheetPart targetWorksheetPart = workbookPart.WorksheetParts.First();
                         // i want to do something like this
 
@@ -122,7 +121,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                     }
 
                 }
-                
+
             }
         }
 
@@ -177,7 +176,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                         rowEC++;
                     }
                 }
-                
+
             }
         }
 
@@ -331,21 +330,119 @@ namespace MajConsoSuiviSprint.Cli.Business
                                 //    column++;
                                 //}
 
-    ;
+
                             }
                         }
                         rowEC++;
                     }
-
-
                 }
             }
         }
 
         /// <summary>
+        /// mise à jour de la colonne "AR"
+        /// marche plus à partir de la ligne 28, je sais pas pourquoi
+        /// </summary>
+        public void TestUpdateTableauSuiviSprintByRefColumn()
+        {
+
+            string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
+
+            using SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true);
+
+            WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+
+            //   IEnumerable<Sheet> sheets =
+            //    workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s? .Name?.Value == "PI2023.08-1 Suivi Sprint");
+            IEnumerable<Sheet> sheets =
+            workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+
+            string relationshipId = sheets.First().Id.Value; //récupération du 1er onglet
+
+
+            WorksheetPart worksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId);
+            TableDefinitionPart tableDefinitionPart = worksheetPart.TableDefinitionParts
+                                                                                .FirstOrDefault(t => t.Table.Name == "TableauSuiviSprint");
+
+            if (tableDefinitionPart != null)
+            {
+
+                Table table = tableDefinitionPart.Table;
+
+                string reference = table.Reference;
+                string[] parts = reference.Split(':');
+                string startCellReference = parts[0];
+                string endCellReference = parts[1];
+                // Get the worksheet data
+                Worksheet ws = worksheetPart.Worksheet;
+                SheetData sheetData = ws.GetFirstChild<SheetData>();
+                int rowEC = 5;
+
+
+                foreach (Row row in sheetData.Elements<Row>().Skip(4))
+                {
+
+
+                    Cell firstCell = row.Elements<Cell>().ElementAtOrDefault(35);// colonne de rérérence du tableau
+
+                    if (firstCell != null)
+                    {
+                        string cellReference = firstCell.CellReference.Value;
+
+                        if (string.Compare(cellReference, startCellReference) >= 0 && string.Compare(cellReference, endCellReference) <= 0)
+                        {
+                            var nbCell = row.Elements<Cell>().Count();
+                            string cellReferenceNumDemande = $"AH{rowEC}";
+                            Cell cellNumDemande = worksheetPart.Worksheet.Descendants<Cell>()
+                                .FirstOrDefault(c => c.CellReference.Value == cellReferenceNumDemande);
+
+
+                            if (cellNumDemande != null)
+                            {
+                                string cellNumDemandeValue = cellNumDemande.InnerText;
+                                Console.WriteLine($"La valeur de la cellule {cellReferenceNumDemande} est : {cellNumDemandeValue}");
+
+                                if (rowEC <= 28)
+                                {
+                                    Cell cellheureConso = worksheetPart?.Worksheet?.Descendants<Cell>()
+                                            ?.FirstOrDefault(c => c.CellReference.Value == $"AR{rowEC}");
+
+                                    cellheureConso ??= InsertCellInWorksheet(ws, $"AR{rowEC}");
+                                    cellheureConso.CellValue = new CellValue("99");
+                                    cellheureConso.DataType = new EnumValue<CellValues>(CellValues.String);
+
+                                }
+
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Cellule {cellNumDemande} non trouvée.");
+                            }
+                        }
+
+                    }
+                    rowEC++;
+                }
+
+
+            }
+            spreadsheetDocument.Save();
+        }
+
+
+
+        private static Cell InsertCellInWorksheet(Worksheet worksheet, string cellReference)
+        {
+            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            Cell cell = new() { CellReference = cellReference };
+            sheetData.Append(cell);
+            return cell;
+        }
+
+        /// <summary>
         /// Méthod qui peut marcher si on crée un onglet dédié, référençant le temps par demande
         /// </summary>
-        public void TestUpdateTableauConso()
+        public void TestUpdateTableauConsoInNewTab()
         {
 
 
@@ -356,18 +453,21 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 WorkbookPart? workbookPart = spreadsheetDocument.WorkbookPart;
 
-                if (null!=workbookPart)
+                if (null != workbookPart)
                 {
                     IEnumerable<Sheet>? sheets =
-                                                workbookPart?.Workbook?.GetFirstChild<Sheets>()?.Elements<Sheet>()?.Where(s => s?.Name?.Value == "Conso");
+                                                workbookPart?.Workbook?
+                                                .GetFirstChild<Sheets>()?
+                                                .Elements<Sheet>()?
+                                                .Where(s => s?.Name?.Value == "Conso");
 
                     string? relationshipId = sheets?.First().Id?.Value; //rId2 ou rId1 
 
-                    WorksheetPart? worksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId??"rd1")?? null;
+                    WorksheetPart? worksheetPart = (WorksheetPart)workbookPart.GetPartById(relationshipId ?? "rd1") ?? null;
 
                     TableDefinitionPart? tableDefinitionPart = worksheetPart?.TableDefinitionParts?.FirstOrDefault(t => t?.Table?.Name == "TableauConso");
 
-                    if (tableDefinitionPart != null && worksheetPart !=null)
+                    if (tableDefinitionPart != null && worksheetPart != null)
                     {
 
                         Table table = tableDefinitionPart.Table;
@@ -377,7 +477,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                         table.Reference = "A1:C2";
                         table.Save();
 
-                        Dictionary<string, TempsConsommeDemandeModel> dataSaisie = new ();
+                        Dictionary<string, TempsConsommeDemandeModel> dataSaisie = new();
 
                         var saisie = new TempsConsommeDemandeModel()
                         {
@@ -426,12 +526,11 @@ namespace MajConsoSuiviSprint.Cli.Business
                         workbookPart.Workbook.Save();
                     }
                 }
-
-                
             }
         }
 
-   
+       
+
         private int GetNbColumnDecalage(int nbColumnTotal, int nbColumnNonVide)
         {
             int nbColumnDecalage = 0;
@@ -448,12 +547,12 @@ namespace MajConsoSuiviSprint.Cli.Business
             {
                 nbColumnDecalage = -1;
             }
-           
+
 
             return nbColumnDecalage;
         }
-      
-       
+
+
 
         private static void ClearTableData(TableDefinitionPart tableDefinitionPart, WorksheetPart ws)
         {
@@ -464,10 +563,10 @@ namespace MajConsoSuiviSprint.Cli.Business
 
             // Row lastRow = sheetData.Elements<Row>().LastOrDefault();
             // Get the worksheet data
-            int nbRow = sheetData.Elements< Row >().Count();
+            int nbRow = sheetData.Elements<Row>().Count();
             int numRow = 0;
 
-            for (int i = 0; i <nbRow; i++)
+            for (int i = 0; i < nbRow; i++)
             {
 
                 var currentRow = sheetData.Elements<Row>().ElementAt(i);
@@ -514,11 +613,11 @@ namespace MajConsoSuiviSprint.Cli.Business
             //}
 
             //  tableDefinitionPart.Table.Save();//moi qui est ajouté
-        
+
         }
 
 
-        
+
         private static string GetCellValue(Cell cell)
         {
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
@@ -530,7 +629,7 @@ namespace MajConsoSuiviSprint.Cli.Business
                 return cell.InnerText;
             }
 
-            
+
         }
 
         private static string GetCellValue(Cell cell, WorkbookPart workbookPart)

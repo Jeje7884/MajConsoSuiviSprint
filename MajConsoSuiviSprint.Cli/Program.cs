@@ -1,13 +1,9 @@
 ﻿
 using MajConsoSuiviSprint.Cli.Business;
-using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
-using MajConsoSuiviSprint.Cli.Helper;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
 
-using OfficeOpenXml.Table;
-using OfficeOpenXml;
 
 namespace MajConsoSuiviSprint.Cli
 {
@@ -62,9 +58,10 @@ namespace MajConsoSuiviSprint.Cli
                     //if (GetTempsSuiviSprint.Count > 0)
                     //{
 
-                        //A réactiver à la fin// suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
-                        // suiviSprint.TestLectureTableauSuiviSprint();
-                        //suiviSprint.TestUpdateTableauConso();
+                    //A réactiver à la fin// suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
+                    // suiviSprint.TestLectureTableauSuiviSprint();
+                    //suiviSprint.TestUpdateTableauConso();
+                    suiviSprint.TestUpdateTableauSuiviSprintByRefColumn();
 
                     //}
                     //else
@@ -88,7 +85,7 @@ namespace MajConsoSuiviSprint.Cli
                 Console.ReadLine();
             }
 
-           
+
         }
 
         private static string InitPathJsonConfig(string[] @params)
