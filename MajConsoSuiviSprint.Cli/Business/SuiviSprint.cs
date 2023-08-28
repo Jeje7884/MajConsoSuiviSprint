@@ -6,6 +6,7 @@ using MajConsoSuiviSprint.Cli.Business.Interfaces;
 using MajConsoSuiviSprint.Cli.Constants;
 using MajConsoSuiviSprint.Cli.Model;
 using MajConsoSuiviSprint.Cli.Utils;
+using System.Text.RegularExpressions;
 
 //using NPOI.SS.Formula.Functions;
 
@@ -340,10 +341,10 @@ namespace MajConsoSuiviSprint.Cli.Business
         }
 
         /// <summary>
-        /// mise à jour de la colonne "AR"
-        /// marche plus à partir de la ligne 28, je sais pas pourquoi
+        /// mise à jour de la colonne "AR" qd le num demande est trouvée
+        /// 
         /// </summary>
-        public void TestUpdateTableauSuiviSprintByRefColumn()
+        public void TestUpdateTableauSuiviSprintByRefColumn(bool couldUpdateColumnConso)
         {
 
             string filePath = _configurationApp.SuiviSprintInfoConfig.FullFileName;
@@ -377,47 +378,74 @@ namespace MajConsoSuiviSprint.Cli.Business
                 Worksheet ws = worksheetPart.Worksheet;
                 SheetData sheetData = ws.GetFirstChild<SheetData>();
                 int rowEC = 5;
-
+                int nbLigneMaxTableau= int.Parse(Regex.Match(endCellReference, @"\d+").Value);
 
                 foreach (Row row in sheetData.Elements<Row>().Skip(4))
                 {
+                    if (rowEC > nbLigneMaxTableau)
 
+                    {
+                        break;
+                    }
 
                     Cell firstCell = row.Elements<Cell>().ElementAtOrDefault(35);// colonne de rérérence du tableau
 
                     if (firstCell != null)
                     {
                         string cellReference = firstCell.CellReference.Value;
+                        if (rowEC>=41)
+                        {
+                            Console.WriteLine("ic");
+                        }
 
                         if (string.Compare(cellReference, startCellReference) >= 0 && string.Compare(cellReference, endCellReference) <= 0)
                         {
                             var nbCell = row.Elements<Cell>().Count();
                             string cellReferenceNumDemande = $"AH{rowEC}";
-                            Cell cellNumDemande = worksheetPart.Worksheet.Descendants<Cell>()
-                                .FirstOrDefault(c => c.CellReference.Value == cellReferenceNumDemande);
 
+                            string? cellValue;
 
-                            if (cellNumDemande != null)
+                            var celltest = row.Elements<Cell>().Where(s => s.CellReference == cellReferenceNumDemande);
+                            if (celltest.Any())
                             {
-                                string cellNumDemandeValue = cellNumDemande.InnerText;
-                                Console.WriteLine($"La valeur de la cellule {cellReferenceNumDemande} est : {cellNumDemandeValue}");
-
-                                if (rowEC <= 28)
-                                {
-                                    Cell cellheureConso = worksheetPart?.Worksheet?.Descendants<Cell>()
-                                            ?.FirstOrDefault(c => c.CellReference.Value == $"AR{rowEC}");
-
-                                    cellheureConso ??= InsertCellInWorksheet(ws, $"AR{rowEC}");
-                                    cellheureConso.CellValue = new CellValue("99");
-                                    cellheureConso.DataType = new EnumValue<CellValues>(CellValues.String);
-
-                                }
-
+                                cellValue = GetCellValue(celltest.First(), workbookPart);
                             }
                             else
                             {
-                                Console.WriteLine($"Cellule {cellNumDemande} non trouvée.");
+
+                                Cell? cellNumDemande = worksheetPart.Worksheet.Descendants<Cell>()
+                                    .FirstOrDefault(c => c?.CellReference?.Value == cellReferenceNumDemande);
+
+                                if(cellNumDemande != null)
+                                {
+                                    cellValue = GetCellValue(cellNumDemande);
+                                }
+                                else
+                                {
+                                    cellValue = null;
+                                }
+                                
+                            }                   
+
+                            Console.WriteLine($"La valeur de la cellule demande {cellReferenceNumDemande} est : {cellValue}");
+                            if (couldUpdateColumnConso & cellValue != null)
+                            {
+                              
+                                var cellsheureConso = row.Elements<Cell>().Where(s => s.CellReference == $"AR{rowEC}");
+                                Cell cellheureConso = cellsheureConso.First();
+                                cellheureConso ??= InsertCellInWorksheet(ws, $"AR{rowEC}");
+                                
+                                if (cellValue=="#2")
+                                {
+                                    cellheureConso.CellValue = new CellValue("Erreur : 5");
+                                }
+                                else
+                                {
+                                    cellheureConso.CellValue = new CellValue("5");
+                                }
+                                cellheureConso.DataType = new EnumValue<CellValues>(CellValues.String);
                             }
+   
                         }
 
                     }
@@ -529,7 +557,7 @@ namespace MajConsoSuiviSprint.Cli.Business
             }
         }
 
-       
+
 
         private int GetNbColumnDecalage(int nbColumnTotal, int nbColumnNonVide)
         {

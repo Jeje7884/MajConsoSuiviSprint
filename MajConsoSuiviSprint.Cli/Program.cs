@@ -61,7 +61,7 @@ namespace MajConsoSuiviSprint.Cli
                     //A réactiver à la fin// suiviSprint.UpdateFichierSuiviSprint(GetTempsSuiviSprint);
                     // suiviSprint.TestLectureTableauSuiviSprint();
                     //suiviSprint.TestUpdateTableauConso();
-                    suiviSprint.TestUpdateTableauSuiviSprintByRefColumn();
+                    suiviSprint.TestUpdateTableauSuiviSprintByRefColumn(true);
 
                     //}
                     //else
